@@ -39,4 +39,4 @@ tmp
 dist
 solana-ledger
 .anchor
-./anchor/target
+anchor/target
