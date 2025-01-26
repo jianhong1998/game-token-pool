@@ -1,0 +1,27 @@
+services:
+  solana-test-validator:
+    image: robojosef/solana-test-validator
+    # command: solana-test-validator --bpf-program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s /lib/program-fixture/metadata_program.so
+    command: solana-test-validator
+    ports:
+      - '8899:8899'
+      - '8900:8900'
+    volumes:
+      - ./solana-ledger:/test-ledger
+      - ./anchor/tests/fixtures:/lib/program-fixture
+    environment:
+      - RUST_LOG=solana=info
+    network_mode: host
+  client:
+    ports:
+      - '3000:3000'
+    build:
+      dockerfile: Dockerfile.client
+    network_mode: host
+    develop:
+      watch:
+        - path: ./src
+          target: /apps/crud-dapp/src
+          action: sync
+        - path: ./package.json
+          action: rebuild
