@@ -6,14 +6,14 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-gametokenpool = "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF"
+gametokenpool = "EhDLy2sf4xcfSdConKqXbZSKnb6P21oJ2WGsZpyHpJk7"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "~/.config/solana/id.json"
+wallet = "./tests/fixtures/keys/program-owner.json"
 
 [scripts]
 test = "../node_modules/.bin/jest --preset ts-jest"
