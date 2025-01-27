@@ -30,6 +30,10 @@ solana/set/dev:
 solana/set/local:
 	@solana config set -ul -k ~/.config/solana/local-id.json
 
+build:
+	@cd ./anchor && \
+		anchor build
+
 test:
 	@cd anchor && \
 		IS_TESTING_ON_CHAIN=false anchor test --skip-local-validator --skip-deploy
@@ -43,5 +47,11 @@ test/onchain/skip-deploy:
 		IS_TESTING_ON_CHAIN=true anchor test --skip-local-validator --skip-deploy
 
 deploy:
-	@anchor build
-	@anchor deploy
+	@$(MAKE) build
+	@cd ./anchor && \
+		anchor deploy
+
+deploy/dev: 
+	@$(MAKE) build
+	@cd ./anchor && \
+		anchor deploy --provider.cluster devnet --provider.wallet ~/.config/solana/devnet-id.json
