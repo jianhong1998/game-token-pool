@@ -1,7 +1,7 @@
 mod add_user;
-mod init;
+mod init_pool;
 mod transfer_token;
 
 pub use add_user::*;
-pub use init::*;
+pub use init_pool::*;
 pub use transfer_token::*;

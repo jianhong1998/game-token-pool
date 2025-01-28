@@ -3,10 +3,7 @@ use anchor_spl::token_interface::{
   transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
 
-use crate::{
-  constants::ErrorCodes,
-  states::{Pool, User},
-};
+use crate::states::{Pool, User};
 
 #[derive(Accounts)]
 #[instruction(from_user_name: String, to_user_name: String)]
@@ -108,34 +105,6 @@ pub fn process_transfer_token_between_users(
   );
   transfer_checked(cpi_context, amount, decimals)?;
   msg!("Token transferred from {} to {} successfully ✅", from_user_name, to_user_name);
-
-  msg!("Verifying amount after transfering...");
-
-  let from_user_updated_token_amount = context.accounts.from_user_token_account.amount;
-  let to_user_updated_token_amount = context.accounts.to_user_token_account.amount;
-
-  let expected_from_user_token_amount = from_user_initial_token_amount.checked_sub(amount).unwrap();
-  let expected_to_user_token_amount = to_user_initial_token_amount.checked_add(amount).unwrap();
-
-  if from_user_updated_token_amount != expected_from_user_token_amount {
-    msg!(
-      "Sender post amount ({}) is not equal to expected amount ({}) ❌",
-      from_user_updated_token_amount,
-      expected_from_user_token_amount
-    );
-    return Err(ErrorCodes::TokenAmountUntidy.into());
-  }
-
-  if to_user_updated_token_amount != expected_to_user_token_amount {
-    msg!(
-      "Receipient post amount ({}) is not equal to expected amount ({}) ❌",
-      to_user_updated_token_amount,
-      expected_to_user_token_amount
-    );
-    return Err(ErrorCodes::TokenAmountUntidy.into());
-  }
-
-  msg!("Amount verified ✅");
 
   Ok(())
 }
