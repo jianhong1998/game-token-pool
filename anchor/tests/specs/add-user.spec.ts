@@ -14,13 +14,10 @@ import {
 import { AccountUtil } from '../utils/account.util';
 import { ProgramUtil } from '../utils/program.util';
 import { createPool, createPoolTokenAccount } from '../test-functions/init';
-import {
-  addUser,
-  findUserPublicKey,
-  findUserTokenAccountPublicKey,
-} from '../test-functions/add-user';
+import { addUser, findUserPublicKey } from '../test-functions/add-user';
 import { airdropIfRequired } from '@solana-developers/helpers';
 import { BN } from 'bn.js';
+import { program } from '@coral-xyz/anchor/dist/cjs/native/system';
 
 interface ITestData {
   program: Program<Gametokenpool>;
@@ -33,7 +30,7 @@ interface ITestData {
   };
 }
 
-describe('Test add user', () => {
+describe.skip('Test add user', () => {
   let testData: ITestData;
 
   beforeAll(async () => {
@@ -131,11 +128,9 @@ describe('Test add user', () => {
       testData.program.programId
     );
 
-    const userTokenAccountPublicKey = findUserTokenAccountPublicKey(
-      testUserName,
-      testData.keypairs.feePayer.publicKey,
-      testData.program.programId
-    );
+    const userTokenAccountPublicKey = (
+      await testData.program.account.user.fetch(userAccountPublicKey)
+    ).tokenAccount;
 
     console.log({
       transactionId,

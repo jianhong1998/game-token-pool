@@ -11,7 +11,7 @@ export const createPool = async (params: {
   program: Program<Gametokenpool>;
   sendPreflight?: boolean;
 }) => {
-  const { program, signers, sendPreflight } = params;
+  const { program, signers, sendPreflight = true } = params;
 
   if (signers.length === 0) {
     throw new Error('Signer must be more than 1');
@@ -36,7 +36,7 @@ export const createPoolTokenAccount = async (params: {
   program: Program<Gametokenpool>;
   sendPreflight?: boolean;
 }) => {
-  const { program, signers, sendPreflight } = params;
+  const { program, signers, sendPreflight = true } = params;
 
   if (signers.length === 0) {
     throw new Error('Signer must be more than 1');
@@ -49,5 +49,7 @@ export const createPoolTokenAccount = async (params: {
       signer: signers[0].publicKey,
     })
     .signers(signers)
-    .rpc();
+    .rpc({
+      skipPreflight: !sendPreflight,
+    });
 };

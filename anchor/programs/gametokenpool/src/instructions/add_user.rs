@@ -63,7 +63,7 @@ pub struct AddUserToPool<'info> {
     init,
     payer = signer,
     seeds = [
-      user.key().as_ref()
+      user.key().as_ref(),
     ],
     bump,
     token::mint = mint,

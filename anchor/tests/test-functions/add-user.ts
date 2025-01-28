@@ -11,7 +11,13 @@ export const addUser = async (params: {
   program: Program<Gametokenpool>;
   sendPreflight?: boolean;
 }) => {
-  const { program, signers, userName, sendPreflight, depositAmount } = params;
+  const {
+    program,
+    signers,
+    userName,
+    sendPreflight = true,
+    depositAmount,
+  } = params;
 
   if (signers.length === 0) {
     throw new Error('Signer must be more than 1');
@@ -47,23 +53,23 @@ export const findUserPublicKey = (
   return userAccountPublicKey;
 };
 
-export const findUserTokenAccountPublicKey = (
-  userName: string,
-  signerPublicKey: PublicKey,
-  programId: PublicKey
-): PublicKey => {
-  const userAccountPublicKey = findUserPublicKey(
-    userName,
-    signerPublicKey,
-    programId
-  );
+// export const findUserTokenAccountPublicKey = (
+//   userName: string,
+//   signerPublicKey: PublicKey,
+//   programId: PublicKey
+// ): PublicKey => {
+//   const userAccountPublicKey = findUserPublicKey(
+//     userName,
+//     signerPublicKey,
+//     programId
+//   );
 
-  const seeds = [userAccountPublicKey.toBuffer()];
+//   const seeds = [userAccountPublicKey.toBuffer()];
 
-  const [userTokenAccountPublicKey] = PublicKey.findProgramAddressSync(
-    seeds,
-    programId
-  );
+//   const [userTokenAccountPublicKey] = PublicKey.findProgramAddressSync(
+//     seeds,
+//     programId
+//   );
 
-  return userTokenAccountPublicKey;
-};
+//   return userTokenAccountPublicKey;
+// };

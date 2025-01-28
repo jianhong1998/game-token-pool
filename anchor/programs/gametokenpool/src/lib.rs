@@ -29,4 +29,13 @@ pub mod gametokenpool {
   ) -> Result<()> {
     process_add_user_to_pool(context, user_name, amount)
   }
+
+  pub fn transfer_token_between_users(
+    context: Context<TransferTokenBetweenUsers>,
+    from_user_name: String,
+    to_user_name: String,
+    amount: u64,
+  ) -> Result<()> {
+    process_transfer_token_between_users(context, from_user_name, to_user_name, amount)
+  }
 }
