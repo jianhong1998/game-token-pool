@@ -8,6 +8,9 @@ skip-lint = false
 [programs.localnet]
 gametokenpool = "3eVNw2R4rSaPew9D5SDJRL1roF4fV4EgJe1W5EMvAGNm"
 
+[programs.devnet]
+gametokenpool = "3eVNw2R4rSaPew9D5SDJRL1roF4fV4EgJe1W5EMvAGNm"
+
 [registry]
 url = "https://api.apr.dev"
 

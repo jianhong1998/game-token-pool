@@ -55,3 +55,14 @@ deploy/dev:
 	@$(MAKE) build
 	@cd ./anchor && \
 		anchor deploy --provider.cluster devnet --provider.wallet ~/.config/solana/devnet-id.json
+
+airdrop/program-owner:
+	@solana airdrop 10 8SFmQipCrfKr9sZQarTD71zxa56z41Qv7LJDwBeEYWQ1
+
+airdrop/fee-payer:
+	@solana airdrop 10 FPhqPEd6qKRJNaLYJ2rLimYnSHMrzPxqq1Mwe6RFMZQA
+
+deploy/with-airdrop:
+	@$(MAKE) airdrop/program-owner && \
+		$(MAKE) airdrop/fee-payer && \
+		$(MAKE) deploy

@@ -7,18 +7,19 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
  * @returns Transaction signature
  */
 export const createPool = async (params: {
+  poolName: string;
   signers: Keypair[];
   program: Program<Gametokenpool>;
   sendPreflight?: boolean;
 }) => {
-  const { program, signers, sendPreflight = true } = params;
+  const { program, signers, poolName, sendPreflight = true } = params;
 
   if (signers.length === 0) {
     throw new Error('Signer must be more than 1');
   }
 
   return await program.methods
-    .initPool()
+    .initPool(poolName)
     .accounts({
       signer: signers[0].publicKey,
     })

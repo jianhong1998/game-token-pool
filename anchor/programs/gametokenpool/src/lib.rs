@@ -14,8 +14,8 @@ pub mod gametokenpool {
 
   use super::*;
 
-  pub fn init_pool(context: Context<InitPool>) -> Result<()> {
-    process_init_pool(context)
+  pub fn init_pool(context: Context<InitPool>, pool_name: String) -> Result<()> {
+    process_init_pool(context, pool_name)
   }
 
   pub fn init_pool_token_account(context: Context<InitPoolTokenAccount>) -> Result<()> {
@@ -37,5 +37,13 @@ pub mod gametokenpool {
     amount: u64,
   ) -> Result<()> {
     process_transfer_token_between_users(context, from_user_name, to_user_name, amount)
+  }
+
+  pub fn deposit(context: Context<Deposit>, user_name: String, amount: u64) -> Result<()> {
+    process_deposit(context, user_name, amount)
+  }
+
+  pub fn user_end_game(context: Context<UserEndGame>, user_name: String) -> Result<()> {
+    process_user_end_game(context, user_name)
   }
 }

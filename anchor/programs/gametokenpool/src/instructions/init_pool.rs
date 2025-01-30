@@ -69,10 +69,11 @@ pub struct InitPoolTokenAccount<'info> {
   pub pool_token_account: InterfaceAccount<'info, TokenAccount>,
 }
 
-pub fn process_init_pool(context: Context<InitPool>) -> Result<()> {
+pub fn process_init_pool(context: Context<InitPool>, pool_name: String) -> Result<()> {
   let pool = &mut context.accounts.pool;
 
   pool.bump = context.bumps.pool;
+  pool.pool_name = pool_name;
 
   Ok(())
 }

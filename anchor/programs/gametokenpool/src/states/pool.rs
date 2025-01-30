@@ -6,4 +6,6 @@ pub struct Pool {
   pub bump: u8,
   pub mint_bump: u8,
   pub pool_token_account_bump: u8,
+  #[max_len(100)]
+  pub pool_name: String,
 }

@@ -1,7 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{
-  transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
-  MintTo, mint_to,
+  mint_to, transfer_checked, Mint, MintTo, TokenAccount, TokenInterface, TransferChecked,
 };
 
 use crate::states::{Pool, User};
@@ -32,7 +31,6 @@ pub struct AddUserToPool<'info> {
       signer.key().as_ref()
     ],
     bump = pool.pool_token_account_bump,
-    
   )]
   pub pool_token_account: InterfaceAccount<'info, TokenAccount>,
 
@@ -80,22 +78,29 @@ pub fn process_add_user_to_pool(
   let signer_key = context.accounts.signer.key();
   let user = &mut context.accounts.user;
   let pool = &context.accounts.pool;
-
   let cpi_program = context.accounts.token_program.to_account_info();
+
+  // Create user accounts
+  user.authority = signer_key.clone();
+  user.bump = context.bumps.user;
+  user.token_account_bump = context.bumps.user_token_account;
+  user.name = user_name;
+  user.token_account = context.accounts.user_token_account.key();
+
+  if amount == 0 {
+    return Ok(());
+  }
 
   // Mint token
   msg!("Minting token...");
   let mint_to_cpi_accounts = MintTo {
     authority: context.accounts.mint.to_account_info(),
     mint: context.accounts.mint.to_account_info(),
-    to: context.accounts.pool_token_account.to_account_info()
+    to: context.accounts.pool_token_account.to_account_info(),
   };
-  let mint_to_signer_seeds: &[&[&[u8]]] = &[&[
-    b"mint",
-    signer_key.as_ref(),
-    &[pool.mint_bump]
-  ]];
-  let mint_to_cpi_context = CpiContext::new_with_signer(cpi_program.clone(), mint_to_cpi_accounts, mint_to_signer_seeds);
+  let mint_to_signer_seeds: &[&[&[u8]]] = &[&[b"mint", signer_key.as_ref(), &[pool.mint_bump]]];
+  let mint_to_cpi_context =
+    CpiContext::new_with_signer(cpi_program.clone(), mint_to_cpi_accounts, mint_to_signer_seeds);
   mint_to(mint_to_cpi_context, amount)?;
   msg!("Token minted successfully ✅");
 
@@ -114,13 +119,7 @@ pub fn process_add_user_to_pool(
   transfer_checked(transfer_token_cpi_context, amount, decimals)?;
   msg!("Token transfered to user token account ({}) ✅", context.accounts.user_token_account.key());
 
-  // Create user accounts
-  user.authority = signer_key.clone();
-  user.bump = context.bumps.user;
-  user.token_account_bump = context.bumps.user_token_account;
-  user.name = user_name;
   user.total_deposited_amount = amount;
-  user.token_account = context.accounts.user_token_account.key();
 
   Ok(())
 }

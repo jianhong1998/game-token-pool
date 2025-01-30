@@ -27,6 +27,7 @@ interface ITestData {
 
 describe.skip('Test init()', () => {
   let testData: ITestData;
+  const POOL_NAME = 'test pool';
 
   beforeAll(async () => {
     const feePayer = await AccountUtil.getAccount(TEST_FEE_PAYER_ID_FILE_PATH);
@@ -77,6 +78,7 @@ describe.skip('Test init()', () => {
 
     const initPoolTransactionId = await createPool({
       program: testData.program,
+      poolName: POOL_NAME,
       signers,
     });
 

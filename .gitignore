@@ -40,3 +40,4 @@ dist
 solana-ledger
 .anchor
 anchor/target
+.env
