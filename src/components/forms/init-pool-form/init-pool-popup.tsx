@@ -10,7 +10,8 @@ type InitPoolPopupProps = {
 
 const InitPoolPopup: FC<InitPoolPopupProps> = ({ isOpen, closePopup }) => {
   const [poolName, setPoolName] = useState<string>('');
-  const { mutateAsync: initPoolFn } = useInitPool();
+  const { mutateAsync: initPoolFn, isPending: isInitPoolPending } =
+    useInitPool();
 
   const handleSubmit = async () => {
     await initPoolFn(poolName);
@@ -48,6 +49,7 @@ const InitPoolPopup: FC<InitPoolPopupProps> = ({ isOpen, closePopup }) => {
           <button
             className='btn btn-primary w-full'
             onClick={handleSubmit}
+            disabled={isInitPoolPending}
           >
             Submit
           </button>

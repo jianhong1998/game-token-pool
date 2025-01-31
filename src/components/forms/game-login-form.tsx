@@ -25,36 +25,6 @@ const GameLoginForm: FC = () => {
     if (result.isLoginSuccess) {
       router.replace(`/game/${result.username}`);
     }
-
-    // try {
-    //   const result = await userLogin({
-    //     username,
-    //   });
-
-    //   const { isLoginSuccess } = result;
-
-    //   if (isLoginSuccess) {
-    //     const { username: resultUsername } = result;
-
-    //     toast.success('Login successfully', { position: 'top-right' });
-
-    // router.replace(`/game/${result.username}`);
-    //   } else {
-    //     throw new Error(result.errorMessage);
-    //   }
-    // } catch (error) {
-    //   const errorMessage = (error as Error).message;
-
-    //   if (errorMessage === ErrorCode.USER_NOT_EXIST) {
-    //     toast.error('User not added to pool. Please register first.', {
-    //       position: 'top-right',
-    //     });
-    //     return;
-    //   }
-
-    //   toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
-    //   console.error(errorMessage);
-    // }
   };
 
   const handleRegister = async () => {
@@ -63,22 +33,6 @@ const GameLoginForm: FC = () => {
     if (result.isLoginSuccess) {
       router.replace(`/game/${result.username}`);
     }
-
-    // try {
-    //   const result = await userRegister({
-    //     username,
-    //   });
-    //   if (result.isLoginSuccess) {
-    //     toast.success('Register successfully', { position: 'top-right' });
-    //     router.replace(`/game/${result.username}`);
-    //   } else {
-    //     throw new Error(result.errorMessage);
-    //   }
-    // } catch (error) {
-    //   const errorMessage = (error as Error).message;
-    //   toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
-    //   console.error(errorMessage);
-    // }
   };
 
   const handleKey: KeyboardEventHandler<HTMLInputElement> = (event) => {

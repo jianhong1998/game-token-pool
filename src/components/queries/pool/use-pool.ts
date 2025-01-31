@@ -21,8 +21,7 @@ export const useInitPool = () => {
   return useMutation({
     mutationKey: ['pool', 'init'],
     mutationFn: async (poolName: string) => {
-      const result = await initPool({ poolName });
-      return result;
+      return await initPool({ poolName });
     },
     onSuccess: async (data) => {
       toast.success(`Pool initialization request sent`, {
