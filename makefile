@@ -18,8 +18,12 @@ down:
 
 down/clean:
 	@$(MAKE) down && \
-		rm -rf ./solana-ledger && \
+		$(MAKE) clean && \
 		$(MAKE) clean-image
+
+clean:
+	@rm -rf ./solana-ledger && \
+		rm -rf ./.next
 
 clean-image:
 	@docker image prune -f

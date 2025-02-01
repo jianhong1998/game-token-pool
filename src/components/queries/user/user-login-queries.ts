@@ -1,3 +1,5 @@
+'use client';
+
 import { userLogin, userRegister } from '@/app/actions/user-login';
 import { ErrorCode } from '@/constants/error';
 import { useMutation } from '@tanstack/react-query';

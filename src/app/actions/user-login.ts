@@ -42,6 +42,8 @@ export const userLogin = async (params: {
   try {
     await program.account.user.fetch(userPublicKey);
 
+    console.log(`[User Login] User (${userPublicKey}) login success.`);
+
     return {
       isLoginSuccess: true,
       publicKey: userPublicKey.toBase58(),

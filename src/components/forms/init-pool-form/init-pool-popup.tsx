@@ -41,6 +41,7 @@ const InitPoolPopup: FC<InitPoolPopupProps> = ({ isOpen, closePopup }) => {
             className='input w-full input-bordered rounded-md input-primary bg-white text-black'
             placeholder='Pool Name'
             value={poolName}
+            disabled={isInitPoolPending}
             onChange={(e) => setPoolName(e.target.value)}
             onKeyUp={handleEnter}
           />

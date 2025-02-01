@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { FC, KeyboardEventHandler, useState } from 'react';
 import {
   useUserLogin,
   useUserRegister,
 } from '../queries/user/user-login-queries';
-import { useRouter } from 'next/navigation';
 
 const GameLoginForm: FC = () => {
   const [username, setUsername] = useState<string>('');
