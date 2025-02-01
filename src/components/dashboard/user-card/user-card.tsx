@@ -16,7 +16,7 @@ const UserCard: FC<UserCardProps> = ({ userData }) => {
     NumberUtil.getDisplayAmount(userData.token.totalDepositedAmount);
 
   return (
-    <div className='card max-w-sm rounded overflow-scroll shadow-lg bg-white z-0'>
+    <div className='card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl'>
       <div className='card-body'>
         <div className='w-full'>
           <table className='w-full'>
