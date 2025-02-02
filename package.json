@@ -8,9 +8,10 @@
     "anchor-localnet": "cd anchor && anchor localnet",
     "anchor-test": "cd anchor && anchor test",
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run copy:assets",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "copy:assets": "mkdir ./.next/assets && cp ./src/config/keypairs/fee-payer.json ./.next/assets/fee-payer.json"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",

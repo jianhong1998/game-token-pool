@@ -95,9 +95,7 @@ export const closePool = async () => {
   const transaction = new VersionedTransaction(message);
   transaction.sign([signer]);
 
-  const transactionId = await connection.sendTransaction(transaction, {
-    skipPreflight: true,
-  });
+  const transactionId = await connection.sendTransaction(transaction);
 
   console.log(`${LOG_KEY} Close pool transaction is sent: ${transactionId}`);
 

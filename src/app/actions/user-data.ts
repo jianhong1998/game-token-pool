@@ -3,7 +3,6 @@
 import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
 import { getAccount } from '@solana/spl-token';
-import { PublicKey } from '@solana/web3.js';
 
 export type IUserData = {
   user: {
