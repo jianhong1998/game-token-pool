@@ -1,12 +1,11 @@
-import { ANCHOR_WALLET, SOLANA_CLUSTER_TYPE } from '@/constants';
+import { FEE_PAYER, SOLANA_CLUSTER_TYPE } from '@/constants';
 import { AnchorProvider, Program, setProvider } from '@coral-xyz/anchor';
 import {
   getGametokenpoolProgram,
   getGametokenpoolProgramId,
 } from '@project/anchor';
-import { clusterApiUrl, Connection, Keypair, PublicKey } from '@solana/web3.js';
+import { clusterApiUrl, Connection, Keypair } from '@solana/web3.js';
 import { Gametokenpool } from '../../../anchor/target/types/gametokenpool';
-import { FileUtil } from './file.util';
 import { ClusterType } from '@/types/cluster-type.type';
 
 interface IConnectionMapValue {
@@ -67,10 +66,7 @@ export class ConnectionUtil {
     const programId = getGametokenpoolProgramId(clusterType);
     this.program = getGametokenpoolProgram(this.provider, programId);
 
-    const anchorWalletString = FileUtil.readFile(ANCHOR_WALLET);
-    this.signerKeypair = Keypair.fromSecretKey(
-      Uint8Array.from(JSON.parse(anchorWalletString) as number[])
-    );
+    this.signerKeypair = ConnectionUtil.getFeePayerKeypair();
   }
 
   public static getConnection() {
@@ -100,6 +96,14 @@ export class ConnectionUtil {
 
   public static getSigner() {
     return this.getSelf().signerKeypair;
+  }
+
+  private static getFeePayerKeypair() {
+    const keyString = FEE_PAYER;
+    if (!keyString) throw new Error(`Invalid FEE_PAYER_KEY: ${keyString}`);
+
+    const uint8 = Uint8Array.from(JSON.parse(keyString) as number[]);
+    return Keypair.fromSecretKey(uint8);
   }
 
   private static getSelf(): ConnectionUtil {
