@@ -30,7 +30,7 @@ const SelfUserCard: FC<UserCardProps> = ({ userData }) => {
 
   return (
     <>
-      <div className='card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl'>
+      <div className='card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl mx-auto'>
         <div className='card-body'>
           <div className='w-full'>
             <table className='w-full'>
@@ -53,13 +53,15 @@ const SelfUserCard: FC<UserCardProps> = ({ userData }) => {
                 <tr>
                   <td>Balance</td>
                   <td>
-                    <p className='text-right'>{balanceCashAmountString}</p>
+                    <p className='text-right font-mono'>
+                      {balanceCashAmountString}
+                    </p>
                   </td>
                 </tr>
                 <tr>
                   <td>Total Deposited</td>
                   <td>
-                    <p className='text-right'>
+                    <p className='text-right font-mono'>
                       {totalDepositedCashAmountString}
                     </p>
                   </td>

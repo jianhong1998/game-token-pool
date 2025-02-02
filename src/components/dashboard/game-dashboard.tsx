@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGetAllUsers, useGetUser } from '../queries/user/user-data-queries';
 import { ErrorCode } from '@/constants/error';
@@ -8,6 +8,8 @@ import SelfUserCard from './user-card/self-user-card';
 import { ErrorUtil } from '@/util/shared/error.util';
 import { NotificationUtil } from '@/util/client/notification.util';
 import OtherUserList from './user-card/other-user-list';
+import TransferPopup from '../forms/transfer-popup/transfer-popup';
+import { useTransfer } from '../queries/user/user-transfer-queries';
 
 type GameDashboardProps = {
   username: string;
@@ -15,11 +17,34 @@ type GameDashboardProps = {
 
 const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
   const router = useRouter();
+  const transferFrom = useRef<string>(username);
+  const transferTo = useRef<string>('');
+
+  const [isTransferPopupOpen, setIsTransferPopupOpen] =
+    useState<boolean>(false);
+
+  const openTransferPopup = (toUsername: string) => {
+    transferTo.current = toUsername;
+
+    setIsTransferPopupOpen(true);
+  };
+
+  const closeTransferPopup = () => {
+    setIsTransferPopupOpen(false);
+  };
 
   const { data: userData, error: getUserError } = useGetUser(username);
   const { data: allUsersData, error: getAllUsersError } = useGetAllUsers();
+  const { mutateAsync: transferFn, isPending: isTransferPending } = useTransfer(
+    transferFrom.current
+  );
 
-  console.log({ allUsersData });
+  const transferHandler = async (transferCashAmount: number) => {
+    await transferFn({
+      toUsername: transferTo.current,
+      cashAmount: transferCashAmount,
+    });
+  };
 
   // Handle get user error
   useEffect(() => {
@@ -57,7 +82,21 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
   return (
     <>
       <SelfUserCard userData={userData} />
-      <OtherUserList users={allUsersData} />
+      <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
+      <OtherUserList
+        users={allUsersData.filter(
+          (user) => user.user.publicKey !== userData.user.publicKey
+        )}
+        openTransferPopupFn={openTransferPopup}
+      />
+      <TransferPopup
+        isPopupOpen={isTransferPopupOpen}
+        closePopupFn={closeTransferPopup}
+        toUsername={transferTo.current}
+        isTransfering={isTransferPending}
+        maxTransferAmount={userData.token.currentAmount / 100}
+        transferFn={transferHandler}
+      />
     </>
   );
 };
