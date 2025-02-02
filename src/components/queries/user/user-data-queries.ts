@@ -1,6 +1,6 @@
 'use client';
 
-import { getUserData } from '@/app/actions/user-data';
+import { getAllUserData, getUserData } from '@/app/actions/user-data';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetUser = (username: string) => {
@@ -9,9 +9,16 @@ export const useGetUser = (username: string) => {
     queryFn: async () => {
       return await getUserData(username.trim());
     },
-    staleTime: 5000,
-    retry: 1,
-    refetchOnReconnect: true,
-    refetchOnMount: true,
+    refetchInterval: 5000,
+  });
+};
+
+export const useGetAllUsers = () => {
+  return useQuery({
+    queryKey: ['user', 'all'],
+    queryFn: async () => {
+      return await getAllUserData();
+    },
+    refetchInterval: 5000,
   });
 };

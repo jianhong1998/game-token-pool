@@ -50,7 +50,10 @@ export function UiLayout({
         >
           {children}
         </Suspense>
-        <Toaster position='bottom-right' />
+        <Toaster
+          position='top-right'
+          toastOptions={{ duration: 3000 }}
+        />
       </div>
       <footer className='footer footer-center p-4 bg-base-300 text-base-content'>
         <aside>

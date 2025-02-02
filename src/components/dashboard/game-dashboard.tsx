@@ -2,11 +2,12 @@
 
 import { FC, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useGetUser } from '../queries/user/user-data-queries';
+import { useGetAllUsers, useGetUser } from '../queries/user/user-data-queries';
 import { ErrorCode } from '@/constants/error';
-import toast from 'react-hot-toast';
-import UserCard from './user-card/user-card';
+import SelfUserCard from './user-card/self-user-card';
 import { ErrorUtil } from '@/util/shared/error.util';
+import { NotificationUtil } from '@/util/client/notification.util';
+import OtherUserList from './user-card/other-user-list';
 
 type GameDashboardProps = {
   username: string;
@@ -16,32 +17,47 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
   const router = useRouter();
 
   const { data: userData, error: getUserError } = useGetUser(username);
+  const { data: allUsersData, error: getAllUsersError } = useGetAllUsers();
 
+  console.log({ allUsersData });
+
+  // Handle get user error
   useEffect(() => {
     if (!getUserError) return;
 
     if (ErrorUtil.isUserNotFoundError(getUserError.message)) {
-      toast.error('User is not found', {
-        position: 'top-right',
-      });
+      NotificationUtil.error('User is not found');
       router.replace('/game');
       return;
     }
 
-    toast.error(ErrorCode.SOMETHING_WENT_WRONG, {
-      position: 'top-right',
-    });
+    NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
     console.log(getUserError.message);
   }, [getUserError, router]);
 
+  // Handle get all users error
+  useEffect(() => {
+    if (!getAllUsersError) return;
+
+    const errorMessage = getAllUsersError.message;
+
+    NotificationUtil.error(errorMessage);
+  }, [getAllUsersError]);
+
+  if (!userData || !allUsersData) {
+    return (
+      <div className='h-100 flex flex-row items-center'>
+        <h1 className='text-center flex-1 font-bold text-xl'>
+          Loading user data...
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <>
-      {!userData && (
-        <div className='h-full'>
-          <h1 className='text-center'>Loading user data...</h1>
-        </div>
-      )}
-      {userData && <UserCard userData={userData} />}
+      <SelfUserCard userData={userData} />
+      <OtherUserList users={allUsersData} />
     </>
   );
 };

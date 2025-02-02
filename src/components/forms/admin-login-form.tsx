@@ -1,8 +1,8 @@
 'use client';
 
 import { adminLogin } from '@/app/admin/actions/admin-login';
+import { NotificationUtil } from '@/util/client/notification.util';
 import { FC, KeyboardEventHandler, useState } from 'react';
-import toast from 'react-hot-toast';
 
 interface Props {
   updateLoginStateFn: (loginState: boolean) => void;
@@ -15,9 +15,9 @@ const AdminLoginForm: FC<Props> = ({ updateLoginStateFn }) => {
     const isSuccess = await adminLogin(password);
 
     if (isSuccess) {
-      toast.success('Login successfully', { position: 'top-right' });
+      NotificationUtil.success('Login successfully');
     } else {
-      toast.error('Wrong password', { position: 'top-right' });
+      NotificationUtil.error('Wrong password');
     }
 
     updateLoginStateFn(isSuccess);

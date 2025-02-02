@@ -2,6 +2,7 @@
 
 import { userLogin, userRegister } from '@/app/actions/user-login';
 import { ErrorCode } from '@/constants/error';
+import { NotificationUtil } from '@/util/client/notification.util';
 import { ErrorUtil } from '@/util/shared/error.util';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -21,7 +22,7 @@ export const useUserLogin = () => {
     },
     onSuccess: (data) => {
       if (data.isLoginSuccess) {
-        toast.success('Login successfully', { position: 'top-right' });
+        NotificationUtil.success('Login successfully');
 
         return;
       }
@@ -29,27 +30,27 @@ export const useUserLogin = () => {
       const { errorMessage } = data;
 
       if (ErrorUtil.isUserNotFoundError(errorMessage)) {
-        toast.error('User not added to pool. Please register first.', {
-          position: 'top-right',
-        });
+        NotificationUtil.error(
+          'User not added to pool. Please register first.'
+        );
 
         return;
       }
 
-      toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
       console.error('Error from user login: ', errorMessage);
     },
     onError: (error) => {
       const errorMessage = error.message;
 
       if (ErrorUtil.isUserNotFoundError(errorMessage)) {
-        toast.error('User not added to pool. Please register first.', {
-          position: 'top-right',
-        });
+        NotificationUtil.error(
+          'User not added to pool. Please register first.'
+        );
         return;
       }
 
-      toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
       console.error(errorMessage);
     },
   });
@@ -63,17 +64,17 @@ export const useUserRegister = () => {
     },
     onSuccess: (data) => {
       if (data.isLoginSuccess) {
-        toast.success('Register successfully', { position: 'top-right' });
+        NotificationUtil.success('Register successfully');
         return;
       }
 
       const { errorMessage } = data;
-      toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
       console.error(errorMessage);
     },
     onError: (error) => {
       const { message: errorMessage } = error;
-      toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
       console.error(errorMessage);
     },
   });

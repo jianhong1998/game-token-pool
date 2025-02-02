@@ -2,8 +2,8 @@
 
 import { getPools, initPool } from '@/app/admin/actions/pool';
 import { ErrorCode } from '@/constants/error';
+import { NotificationUtil } from '@/util/client/notification.util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 
 export const useGetPools = () => {
   return useQuery({
@@ -24,14 +24,12 @@ export const useInitPool = () => {
       return await initPool({ poolName });
     },
     onSuccess: async (data) => {
-      toast.success(`Pool initialization request sent`, {
-        position: 'top-right',
-      });
+      NotificationUtil.success(`Pool initialization request sent`);
 
       await queryClient.invalidateQueries({ queryKey: ['pool', 'all'] });
     },
     onError: (error) => {
-      toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
     },
   });
 };

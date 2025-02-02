@@ -48,3 +48,45 @@ export const getUserData = async (username: string): Promise<IUserData> => {
     },
   };
 };
+
+export const getAllUserData = async (): Promise<IUserData[]> => {
+  const LOG_KEY = '[Get All Users]';
+  const program = ConnectionUtil.getProgram();
+  const signer = ConnectionUtil.getSigner();
+
+  const users = (await program.account.user.all()).filter((user) =>
+    user.account.authority.equals(signer.publicKey)
+  );
+
+  console.log(`${LOG_KEY} Fetched all users.`);
+
+  const result = [] as IUserData[];
+
+  for (const user of users) {
+    const tokenAccountPublicKey = user.account.tokenAccount;
+
+    const tokenAccount = await getAccount(
+      program.provider.connection,
+      tokenAccountPublicKey
+    );
+
+    result.push({
+      user: {
+        name: user.account.name,
+        publicKey: user.publicKey.toBase58(),
+      },
+      token: {
+        accountPublicKey: tokenAccountPublicKey.toBase58(),
+        currentAmount: Number(tokenAccount.amount),
+        totalDepositedAmount: user.account.totalDepositedAmount.toNumber(),
+      },
+    });
+  }
+
+  console.log(`${LOG_KEY} Token accounts for each user are fetched.`);
+  console.log(
+    `${LOG_KEY} Total ${result.length} users are found for the pool.`
+  );
+
+  return result;
+};

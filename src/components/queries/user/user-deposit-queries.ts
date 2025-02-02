@@ -1,8 +1,8 @@
 import { deposit } from '@/app/actions/user-fund';
 import { ErrorCode } from '@/constants/error';
+import { NotificationUtil } from '@/util/client/notification.util';
 import { ErrorUtil } from '@/util/shared/error.util';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 
 export interface IUseDepositParams {
   username: string;
@@ -19,9 +19,9 @@ export const useDeposit = () => {
         await deposit({ cashAmount, username });
       },
       onSuccess: async (_data, { cashAmount, username }) => {
-        toast.success(`Deposited ${cashAmount} to account successfully`, {
-          position: 'top-right',
-        });
+        NotificationUtil.success(
+          `Deposited ${cashAmount} to account successfully`
+        );
         await queryClient.invalidateQueries({
           queryKey: ['user', 'self', { username }],
         });
@@ -30,13 +30,13 @@ export const useDeposit = () => {
         const errorMessage = error.message;
 
         if (ErrorUtil.isUserNotFoundError(errorMessage)) {
-          toast.error('User not added to pool. Please register first.', {
-            position: 'top-right',
-          });
+          NotificationUtil.error(
+            'User not added to pool. Please register first.'
+          );
           return;
         }
 
-        toast.error(ErrorCode.SOMETHING_WENT_WRONG, { position: 'top-right' });
+        NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
         console.error(errorMessage);
       },
     },

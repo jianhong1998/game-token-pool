@@ -10,7 +10,7 @@ interface UserCardProps {
   userData: IUserData;
 }
 
-const UserCard: FC<UserCardProps> = ({ userData }) => {
+const SelfUserCard: FC<UserCardProps> = ({ userData }) => {
   const username = userData.user.name;
 
   const { displayString: balanceCashAmountString } =
@@ -87,4 +87,4 @@ const UserCard: FC<UserCardProps> = ({ userData }) => {
   );
 };
 
-export default UserCard;
+export default SelfUserCard;
