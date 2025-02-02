@@ -83,6 +83,9 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
     <>
       <SelfUserCard userData={userData} />
       <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
+      <div className='mb-3'>
+        <p className='text-center'>Click on user to transfer token</p>
+      </div>
       <OtherUserList
         users={allUsersData.filter(
           (user) => user.user.publicKey !== userData.user.publicKey
