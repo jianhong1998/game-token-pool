@@ -40,7 +40,7 @@ export function UiLayout({
         </div>
       </div>
 
-      <div className='flex-grow mx-4 lg:mx-auto'>
+      <div className='flex-grow mx-4 xl:mx-96'>
         <Suspense
           fallback={
             <div className='text-center my-32'>

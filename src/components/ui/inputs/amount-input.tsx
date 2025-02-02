@@ -58,7 +58,7 @@ const AmountInput: FC<AmountInputProps> = ({
     const newAmount = inputFloat * 10;
 
     /* Case - new amount exceed max number */
-    if (maxNumber && newAmount > maxNumber) {
+    if (typeof maxNumber !== 'undefined' && newAmount > maxNumber) {
       return;
     }
 
