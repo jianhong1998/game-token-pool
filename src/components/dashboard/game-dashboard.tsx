@@ -6,6 +6,7 @@ import { useGetUser } from '../queries/user/user-data-queries';
 import { ErrorCode } from '@/constants/error';
 import toast from 'react-hot-toast';
 import UserCard from './user-card/user-card';
+import { ErrorUtil } from '@/util/shared/error.util';
 
 type GameDashboardProps = {
   username: string;
@@ -19,7 +20,7 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
   useEffect(() => {
     if (!getUserError) return;
 
-    if (getUserError.message === ErrorCode.USER_NOT_EXIST) {
+    if (ErrorUtil.isUserNotFoundError(getUserError.message)) {
       toast.error('User is not found', {
         position: 'top-right',
       });

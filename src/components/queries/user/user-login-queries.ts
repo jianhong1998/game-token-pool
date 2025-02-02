@@ -2,6 +2,7 @@
 
 import { userLogin, userRegister } from '@/app/actions/user-login';
 import { ErrorCode } from '@/constants/error';
+import { ErrorUtil } from '@/util/shared/error.util';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
@@ -27,7 +28,7 @@ export const useUserLogin = () => {
 
       const { errorMessage } = data;
 
-      if (errorMessage === ErrorCode.USER_NOT_EXIST) {
+      if (ErrorUtil.isUserNotFoundError(errorMessage)) {
         toast.error('User not added to pool. Please register first.', {
           position: 'top-right',
         });
@@ -41,7 +42,7 @@ export const useUserLogin = () => {
     onError: (error) => {
       const errorMessage = error.message;
 
-      if (errorMessage === ErrorCode.USER_NOT_EXIST) {
+      if (ErrorUtil.isUserNotFoundError(errorMessage)) {
         toast.error('User not added to pool. Please register first.', {
           position: 'top-right',
         });

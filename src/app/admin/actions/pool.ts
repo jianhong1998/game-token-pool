@@ -62,7 +62,7 @@ export const initPool = async (params: { poolName: string }) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'finalized'
+    'confirmed'
   );
 
   console.log(`${LOG_KEY} Transaction finalized: ${transactionId}`);
