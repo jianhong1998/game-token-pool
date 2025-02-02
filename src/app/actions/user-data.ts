@@ -1,5 +1,6 @@
 'use server';
 
+import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
 import { getAccount } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
@@ -18,12 +19,8 @@ export type IUserData = {
 
 export const getUserData = async (username: string): Promise<IUserData> => {
   const program = ConnectionUtil.getProgram();
-  const wallet = ConnectionUtil.getWallet();
 
-  const [userPublicKey] = PublicKey.findProgramAddressSync(
-    [Buffer.from('user'), Buffer.from(username), wallet.publicKey.toBuffer()],
-    program.programId
-  );
+  const userPublicKey = AccountUtil.getUserPublicKey(username);
 
   const user = await program.account.user.fetch(userPublicKey);
 

@@ -10,6 +10,8 @@ import { NotificationUtil } from '@/util/client/notification.util';
 import OtherUserList from './user-card/other-user-list';
 import TransferPopup from '../forms/transfer-popup/transfer-popup';
 import { useTransfer } from '../queries/user/user-transfer-queries';
+import DepositPopup from '../forms/deposit-popup/deposit-popup';
+import EndGamePopup from '../forms/end-game-popup/end-game-popup';
 
 type GameDashboardProps = {
   username: string;
@@ -22,6 +24,8 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
 
   const [isTransferPopupOpen, setIsTransferPopupOpen] =
     useState<boolean>(false);
+  const [isDepositPopupOpen, setIsDepositPopupOpen] = useState<boolean>(false);
+  const [isEndGamePopupOpen, setIsEndGamePopupOpen] = useState<boolean>(false);
 
   const openTransferPopup = (toUsername: string) => {
     transferTo.current = toUsername;
@@ -31,6 +35,14 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
 
   const closeTransferPopup = () => {
     setIsTransferPopupOpen(false);
+  };
+
+  const toggleDepositPopup = () => {
+    setIsDepositPopupOpen((prev) => !prev);
+  };
+
+  const toggleEndGameConfirmationPopup = () => {
+    setIsEndGamePopupOpen((prev) => !prev);
   };
 
   const { data: userData, error: getUserError } = useGetUser(username);
@@ -81,7 +93,11 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
 
   return (
     <>
-      <SelfUserCard userData={userData} />
+      <SelfUserCard
+        userData={userData}
+        toggleDepositPopup={toggleDepositPopup}
+        openEndGameConfirmationPopup={toggleEndGameConfirmationPopup}
+      />
       <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
       <div className='mb-3'>
         <p className='text-center'>Click on user to transfer token</p>
@@ -99,6 +115,16 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
         isTransfering={isTransferPending}
         maxTransferAmount={userData.token.currentAmount / 100}
         transferFn={transferHandler}
+      />
+      <DepositPopup
+        isOpen={isDepositPopupOpen}
+        closeFn={toggleDepositPopup}
+        username={username}
+      />
+      <EndGamePopup
+        isPopupOpen={isEndGamePopupOpen}
+        togglePopupFn={toggleEndGameConfirmationPopup}
+        username={username}
       />
     </>
   );

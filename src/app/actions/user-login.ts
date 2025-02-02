@@ -1,6 +1,7 @@
 'use server';
 
 import { ErrorCode } from '@/constants/error';
+import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
 import { ErrorUtil } from '@/util/shared/error.util';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -32,13 +33,9 @@ export const userLogin = async (params: {
   username: string;
 }): Promise<UserLoginResponse> => {
   const { username } = params;
-  const wallet = ConnectionUtil.getWallet();
   const program = ConnectionUtil.getProgram();
 
-  const [userPublicKey] = PublicKey.findProgramAddressSync(
-    [Buffer.from('user'), Buffer.from(username), wallet.publicKey.toBuffer()],
-    program.programId
-  );
+  const userPublicKey = AccountUtil.getUserPublicKey(username);
 
   try {
     await program.account.user.fetch(userPublicKey);

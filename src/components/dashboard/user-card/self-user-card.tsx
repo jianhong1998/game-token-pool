@@ -1,16 +1,22 @@
 'use client';
 
 import { IUserData } from '@/app/actions/user-data';
-import DepositPopup from '@/components/forms/deposit-popup/deposit-popup';
+import DangerButton from '@/components/ui/buttons/danger-button';
 import PrimaryButton from '@/components/ui/buttons/primary-button';
 import { NumberUtil } from '@/util/shared/number.util';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 interface UserCardProps {
   userData: IUserData;
+  toggleDepositPopup: () => void;
+  openEndGameConfirmationPopup: () => void;
 }
 
-const SelfUserCard: FC<UserCardProps> = ({ userData }) => {
+const SelfUserCard: FC<UserCardProps> = ({
+  userData,
+  toggleDepositPopup,
+  openEndGameConfirmationPopup,
+}) => {
   const username = userData.user.name;
 
   const { displayString: balanceCashAmountString } =
@@ -21,12 +27,6 @@ const SelfUserCard: FC<UserCardProps> = ({ userData }) => {
     NumberUtil.getDisplayAmount(userData.token.totalDepositedAmount, {
       withComma: true,
     });
-
-  const [isDepositPopupOpen, setIsDepositPopupOpen] = useState<boolean>(false);
-
-  const toggleDepositPopup = () => {
-    setIsDepositPopupOpen((prev) => !prev);
-  };
 
   return (
     <>
@@ -70,21 +70,24 @@ const SelfUserCard: FC<UserCardProps> = ({ userData }) => {
             </table>
           </div>
           <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
-          <div className='box-content size-full'>
+          <div className='flex flex-row gap-3 w-full'>
             <PrimaryButton
               buttonType='outlined'
               onClick={toggleDepositPopup}
+              className='flex-1'
             >
               Deposit
             </PrimaryButton>
+            <DangerButton
+              buttonType='outlined'
+              className='flex-1'
+              onClick={openEndGameConfirmationPopup}
+            >
+              End Game
+            </DangerButton>
           </div>
         </div>
       </div>
-      <DepositPopup
-        isOpen={isDepositPopupOpen}
-        closeFn={toggleDepositPopup}
-        username={username}
-      />
     </>
   );
 };

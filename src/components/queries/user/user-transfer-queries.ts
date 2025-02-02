@@ -1,5 +1,7 @@
 import { transfer } from '@/app/actions/user-fund';
+import { ErrorCode } from '@/constants/error';
 import { NotificationUtil } from '@/util/client/notification.util';
+import { ErrorUtil } from '@/util/shared/error.util';
 import { NumberUtil } from '@/util/shared/number.util';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -36,7 +38,15 @@ export const useTransfer = (fromUsername: string) => {
     onError: (error) => {
       const errorMessage = error.message;
 
-      NotificationUtil.error(errorMessage);
+      if (ErrorUtil.isUserNotFoundError(errorMessage)) {
+        NotificationUtil.error(
+          'User is not added to pool. Please register first.'
+        );
+        return;
+      }
+
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
+      console.error(errorMessage);
     },
   });
 };

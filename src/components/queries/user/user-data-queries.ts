@@ -20,5 +20,6 @@ export const useGetAllUsers = () => {
       return await getAllUserData();
     },
     refetchInterval: 5000,
+    staleTime: 5000,
   });
 };
