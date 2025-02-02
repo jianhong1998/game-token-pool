@@ -42,7 +42,7 @@ pub struct InitPoolTokenAccount<'info> {
   pub pool: Account<'info, Pool>,
 
   #[account(
-    init,
+    init_if_needed,
     payer = signer,
     seeds = [
       b"mint",

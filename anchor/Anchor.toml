@@ -6,10 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-gametokenpool = "3eVNw2R4rSaPew9D5SDJRL1roF4fV4EgJe1W5EMvAGNm"
-
-[programs.devnet]
-gametokenpool = "3eVNw2R4rSaPew9D5SDJRL1roF4fV4EgJe1W5EMvAGNm"
+gametokenpool = "93gxucmYzkMkNqxXBthGiptGLExG9HopFc3v7oQhDrSj"
 
 [registry]
 url = "https://api.apr.dev"

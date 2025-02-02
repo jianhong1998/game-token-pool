@@ -7,7 +7,7 @@ pub mod states;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("3eVNw2R4rSaPew9D5SDJRL1roF4fV4EgJe1W5EMvAGNm");
+declare_id!("93gxucmYzkMkNqxXBthGiptGLExG9HopFc3v7oQhDrSj");
 
 #[program]
 pub mod gametokenpool {
@@ -45,5 +45,9 @@ pub mod gametokenpool {
 
   pub fn user_end_game(context: Context<UserEndGame>, user_name: String) -> Result<()> {
     process_user_end_game(context, user_name)
+  }
+
+  pub fn close_pool(context: Context<ClosePool>) -> Result<()> {
+    process_close_pool(context)
   }
 }

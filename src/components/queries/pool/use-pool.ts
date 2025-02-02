@@ -1,6 +1,6 @@
 'use client';
 
-import { getPools, initPool } from '@/app/admin/actions/pool';
+import { closePool, getPools, initPool } from '@/app/admin/actions/pool';
 import { ErrorCode } from '@/constants/error';
 import { NotificationUtil } from '@/util/client/notification.util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -30,6 +30,25 @@ export const useInitPool = () => {
     },
     onError: (error) => {
       NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
+    },
+  });
+};
+
+export const useClosePool = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['pool', 'close'],
+    mutationFn: async () => {
+      await closePool();
+    },
+    onSuccess: async () => {
+      NotificationUtil.success(`Pool is closed successfully.`);
+      await queryClient.invalidateQueries({ queryKey: ['pool', 'all'] });
+    },
+    onError: (error) => {
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
+      console.error(error.message);
     },
   });
 };

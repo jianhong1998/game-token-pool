@@ -2,13 +2,16 @@
 
 import { FC, useState } from 'react';
 import InitPoolPopup from './init-pool-popup';
-import { useGetPools } from '@/components/queries/pool/use-pool';
+import { useClosePool, useGetPools } from '@/components/queries/pool/use-pool';
+import DangerButton from '@/components/ui/buttons/danger-button';
 
 const InitPoolForm: FC = () => {
   const [isInitPoolPopupOpen, setIsInitPoolPopupOpen] =
     useState<boolean>(false);
 
   const { data: pools } = useGetPools();
+  const { mutateAsync: closePoolFn, isPending: isClosePoolPending } =
+    useClosePool();
 
   const toggleInitPoolPopup = () => {
     setIsInitPoolPopupOpen(!isInitPoolPopupOpen);
@@ -28,7 +31,9 @@ const InitPoolForm: FC = () => {
         isOpen={isInitPoolPopupOpen}
         closePopup={toggleInitPoolPopup}
       />
-      {(!pools || pools.length === 0) && <h1>No pool initialised</h1>}
+      {(!pools || pools.length === 0) && (
+        <h1 className='font-bold text-2xl text-center'>No pool initialised</h1>
+      )}
       {pools && (
         <div className='flex flex-col gap-5 mt-3'>
           {pools.map((pool, index) => {
@@ -38,8 +43,18 @@ const InitPoolForm: FC = () => {
                 className='card max-w-sm rounded overflow-scroll shadow-lg bg-white z-0'
               >
                 <div className='card-body'>
-                  <p>{pool.name}</p>
-                  <p>{pool.publicKey}</p>
+                  <div>
+                    <p>{pool.name}</p>
+                    <p className='overflow-x-scroll'>{pool.publicKey}</p>
+                  </div>
+                  <div className='card-actions'>
+                    <DangerButton
+                      onClick={() => closePoolFn()}
+                      disabled={isClosePoolPending}
+                    >
+                      Close Pool
+                    </DangerButton>
+                  </div>
                 </div>
               </div>
             );

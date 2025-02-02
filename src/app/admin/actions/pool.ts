@@ -67,3 +67,48 @@ export const initPool = async (params: { poolName: string }) => {
 
   console.log(`${LOG_KEY} Transaction finalized: ${transactionId}`);
 };
+
+export const closePool = async () => {
+  const LOG_KEY = '[Close Pool]';
+
+  const program = ConnectionUtil.getProgram();
+  const connection = ConnectionUtil.getConnection();
+  const signer = ConnectionUtil.getSigner();
+
+  const instruction = await program.methods
+    .closePool()
+    .accounts({
+      tokenProgram: TOKEN_PROGRAM_ID,
+      signer: signer.publicKey,
+    })
+    .signers([signer])
+    .instruction();
+
+  const { blockhash, lastValidBlockHeight } =
+    await connection.getLatestBlockhash();
+
+  const message = new TransactionMessage({
+    instructions: [instruction],
+    payerKey: signer.publicKey,
+    recentBlockhash: blockhash,
+  }).compileToV0Message();
+  const transaction = new VersionedTransaction(message);
+  transaction.sign([signer]);
+
+  const transactionId = await connection.sendTransaction(transaction, {
+    skipPreflight: true,
+  });
+
+  console.log(`${LOG_KEY} Close pool transaction is sent: ${transactionId}`);
+
+  await connection.confirmTransaction(
+    {
+      blockhash,
+      lastValidBlockHeight,
+      signature: transactionId,
+    },
+    'confirmed'
+  );
+
+  console.log(`${LOG_KEY} Transaction (${transactionId}) is confirmed.`);
+};

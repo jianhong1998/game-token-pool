@@ -1,4 +1,5 @@
 PROJECT_NAME = "game-token-pool"
+PROJECT_DEPLOY_KEY="~/.config/solana/devnet-id.json"
 
 up/build:
 	@docker compose \
@@ -55,10 +56,15 @@ deploy:
 	@cd ./anchor && \
 		anchor deploy
 
+# deploy/dev: 
+# 	@$(MAKE) build
+# 	@cd ./anchor && \
+# 		anchor deploy --provider.cluster devnet --provider.wallet ~/.config/solana/devnet-id.json
+
 deploy/dev: 
 	@$(MAKE) build
 	@cd ./anchor && \
-		anchor deploy --provider.cluster devnet --provider.wallet ~/.config/solana/devnet-id.json
+		anchor deploy --provider.cluster devnet --provider.wallet ${PROJECT_DEPLOY_KEY}
 
 airdrop/program-owner:
 	@solana airdrop 10 8SFmQipCrfKr9sZQarTD71zxa56z41Qv7LJDwBeEYWQ1
