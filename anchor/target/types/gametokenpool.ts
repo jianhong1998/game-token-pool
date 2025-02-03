@@ -211,6 +211,27 @@ export type Gametokenpool = {
           }
         },
         {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "poolTokenAccount",
           "writable": true,
           "pda": {
