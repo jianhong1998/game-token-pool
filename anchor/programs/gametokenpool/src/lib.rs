@@ -7,7 +7,7 @@ pub mod states;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("93gxucmYzkMkNqxXBthGiptGLExG9HopFc3v7oQhDrSj");
+declare_id!("F6yyNFRtZbmT6pVqjF4FoKRYi6PwegpoEJ9PS5pY4RcS");
 
 #[program]
 pub mod gametokenpool {

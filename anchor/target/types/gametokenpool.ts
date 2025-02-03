@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/gametokenpool.json`.
  */
 export type Gametokenpool = {
-  "address": "93gxucmYzkMkNqxXBthGiptGLExG9HopFc3v7oQhDrSj",
+  "address": "F6yyNFRtZbmT6pVqjF4FoKRYi6PwegpoEJ9PS5pY4RcS",
   "metadata": {
     "name": "gametokenpool",
     "version": "0.1.0",
