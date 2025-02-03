@@ -7,6 +7,7 @@ import {
 import { clusterApiUrl, Connection, Keypair } from '@solana/web3.js';
 import { Gametokenpool } from '../../../anchor/target/types/gametokenpool';
 import { ClusterType } from '@/types/cluster-type.type';
+import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
 
 interface IConnectionMapValue {
   connection: Connection;
@@ -57,16 +58,19 @@ export class ConnectionUtil {
     if (!connectionValue)
       throw new Error(`Invalid cluster type: ${SOLANA_CLUSTER_TYPE}`);
 
-    const { endpoint: url } = connectionValue;
+    const { connection } = connectionValue;
 
-    this.provider = AnchorProvider.local(url);
+    const signerKeypair = ConnectionUtil.getFeePayerKeypair();
+    this.signerKeypair = signerKeypair;
+
+    const wallet = new NodeWallet(signerKeypair);
+
+    this.provider = new AnchorProvider(connection, wallet);
     setProvider(this.provider);
 
     const clusterType = SOLANA_CLUSTER_TYPE as ClusterType;
     const programId = getGametokenpoolProgramId(clusterType);
     this.program = getGametokenpoolProgram(this.provider, programId);
-
-    this.signerKeypair = ConnectionUtil.getFeePayerKeypair();
   }
 
   public static getConnection() {
