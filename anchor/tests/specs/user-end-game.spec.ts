@@ -204,9 +204,12 @@ describe('Test user end game', () => {
       expect(userTokenAccount).toBeUndefined();
     } catch (error) {
       expect(error).toBeDefined();
-      expect((error as { name: string }).name).toBe(
-        'TokenAccountNotFoundError'
-      );
+
+      if (IS_TESTING_ON_CHAIN) {
+        expect((error as Error).name).toBe('TokenAccountNotFoundError');
+      } else {
+        expect((error as Error).name).toBe('Error');
+      }
     }
   }, 30_000);
 });
