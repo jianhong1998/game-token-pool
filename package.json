@@ -10,8 +10,7 @@
     "dev": "next dev",
     "build": "next build && npm run copy:assets",
     "start": "next start",
-    "lint": "next lint",
-    "copy:assets": "mkdir ./.next/assets && cp ./src/config/keypairs/fee-payer.json ./.next/assets/fee-payer.json"
+    "lint": "next lint"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
