@@ -22,73 +22,64 @@ cd <repo-name>
 #### Install Dependencies
 
 ```shell
-pnpm install
+npm ci
 ```
 
-#### Start the web app
-
-```
-pnpm dev
-```
-
-## Apps
-
-### anchor
-
-This is a Solana program written in Rust using the Anchor framework.
-
-#### Commands
-
-You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the command with `pnpm`, eg: `pnpm anchor`.
-
-#### Sync the program id:
-
-Running this command will create a new keypair in the `anchor/target/deploy` directory and save the address to the Anchor config file and update the `declare_id!` macro in the `./src/lib.rs` file of the program.
-
-You will manually need to update the constant in `anchor/lib/counter-exports.ts` to match the new program id.
+#### Start the web app and local test validator (with Make)
 
 ```shell
-pnpm anchor keys sync
+make up/build
 ```
 
-#### Build the program:
+## Commands
+
+### Build
+
+#### Web App
 
 ```shell
-pnpm anchor-build
+npm run build
 ```
 
-#### Start the test validator with the program deployed:
+#### Program
 
 ```shell
-pnpm anchor-localnet
+make build
 ```
 
-#### Run the tests
+### Sync program keys
 
 ```shell
-pnpm anchor-test
+cd anchor
+npm run anchor keys sync
 ```
 
-#### Deploy to Devnet
+### Deploy
+
+#### To local test validator
 
 ```shell
-pnpm anchor deploy --provider.cluster devnet
+# Deploy with preset account (without airdrop to the accounts)
+make deploy
+
+# Deploy with preset account (with airdrop to the accounts)
+make deploy/with-airdrop
 ```
 
-### web
-
-This is a React app that uses the Anchor generated client to interact with the Solana program.
-
-#### Commands
-
-Start the web app
+#### To Devnet
 
 ```shell
-pnpm dev
-```
+cd anchor
 
-Build the web app
+# Build anchor program
+anchor build
 
-```shell
-pnpm build
+# Sync anchor program ID
+anchor keys sync
+
+# Setup solana CLI
+solana config set -ud -k <PATH_TO_KEYPAIR_JSON_FILE>
+
+anchor deploy --provider.cluster devnet --provider.wallet <PATH_TO_KEYPAIR_JSON_FILE>
+
 ```
