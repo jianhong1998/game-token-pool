@@ -2,6 +2,7 @@
 
 import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
+import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { getAccount } from '@solana/spl-token';
 
 export type IUserData = {
@@ -13,6 +14,10 @@ export type IUserData = {
     totalDepositedAmount: number;
     currentAmount: number;
     accountPublicKey: string;
+  };
+  link: {
+    userAccount: string;
+    userTokenAccount: string;
   };
 };
 
@@ -41,6 +46,14 @@ export const getUserData = async (username: string): Promise<IUserData> => {
       totalDepositedAmount: user.totalDepositedAmount.toNumber(),
       currentAmount: Number(tokenAccount.amount),
       accountPublicKey: tokenAccount.address.toBase58(),
+    },
+    link: {
+      userAccount: LinkGeneratorUtil.generateAccountLink(
+        userPublicKey.toBase58()
+      ),
+      userTokenAccount: LinkGeneratorUtil.generateAccountLink(
+        tokenAccount.address.toBase58()
+      ),
     },
   };
 };
@@ -75,6 +88,14 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
         accountPublicKey: tokenAccountPublicKey.toBase58(),
         currentAmount: Number(tokenAccount.amount),
         totalDepositedAmount: user.account.totalDepositedAmount.toNumber(),
+      },
+      link: {
+        userAccount: LinkGeneratorUtil.generateAccountLink(
+          user.publicKey.toBase58()
+        ),
+        userTokenAccount: LinkGeneratorUtil.generateAccountLink(
+          tokenAccount.address.toBase58()
+        ),
       },
     });
   }

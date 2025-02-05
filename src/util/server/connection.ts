@@ -73,7 +73,7 @@ export class ConnectionUtil {
     this.program = getGametokenpoolProgram(this.provider, programId);
   }
 
-  public static getConnection() {
+  public static getConnection(): Connection {
     const self = this.getSelf();
 
     const connection = self.connectionMap.get(SOLANA_CLUSTER_TYPE)?.connection;
@@ -98,8 +98,12 @@ export class ConnectionUtil {
     return provider.wallet;
   }
 
-  public static getSigner() {
+  public static getSigner(): Keypair {
     return this.getSelf().signerKeypair;
+  }
+
+  public static getClusterType(): ClusterType {
+    return SOLANA_CLUSTER_TYPE as ClusterType;
   }
 
   private static getFeePayerKeypair() {
