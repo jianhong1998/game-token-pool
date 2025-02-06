@@ -19,6 +19,7 @@ const AdminEndGamePopup: FC<AdminEndGamePopupProps> = ({
 
   const handleUserEndGame = async () => {
     await endGameFn({ username });
+    togglePopupFn();
   };
 
   if (!isPopupOpen) return <></>;
