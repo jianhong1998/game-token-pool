@@ -4,6 +4,8 @@ import { FC, useState } from 'react';
 import InitPoolPopup from './init-pool-popup';
 import { useClosePool, useGetPools } from '@/components/queries/pool/use-pool';
 import DangerButton from '@/components/ui/buttons/danger-button';
+import Link from 'next/link';
+import PrimaryButton from '@/components/ui/buttons/primary-button';
 
 const InitPoolForm: FC = () => {
   const [isInitPoolPopupOpen, setIsInitPoolPopupOpen] =
@@ -45,9 +47,17 @@ const InitPoolForm: FC = () => {
                 <div className='card-body'>
                   <div>
                     <p>{pool.name}</p>
-                    <p className='overflow-x-scroll'>{pool.publicKey}</p>
                   </div>
-                  <div className='card-actions'>
+                  <div className='card-actions flex justify-start flex-row'>
+                    <Link
+                      className='overflow-x-scroll link link-primary'
+                      target='_blank'
+                      href={pool.link}
+                    >
+                      <PrimaryButton buttonType='outlined'>
+                        View Pool
+                      </PrimaryButton>
+                    </Link>
                     <DangerButton
                       onClick={() => closePoolFn()}
                       disabled={isClosePoolPending}

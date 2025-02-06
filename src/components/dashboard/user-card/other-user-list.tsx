@@ -4,13 +4,10 @@ import OtherUserCard from './other-user-card';
 
 type OtherUserListProps = {
   users: IUserData[];
-  openTransferPopupFn: (toUsername: string) => void;
+  cardOnClickFn: (toUsername: string) => void;
 };
 
-const OtherUserList: FC<OtherUserListProps> = ({
-  users,
-  openTransferPopupFn,
-}) => {
+const OtherUserList: FC<OtherUserListProps> = ({ users, cardOnClickFn }) => {
   return (
     <div className='gap-3 overflow-y-scroll max-h-80 flex flex-col sm:grid sm:grid-cols-2 sm:max-h-72'>
       {users
@@ -22,7 +19,7 @@ const OtherUserList: FC<OtherUserListProps> = ({
           <OtherUserCard
             user={user}
             key={user.user.publicKey}
-            openTransferPopupFn={openTransferPopupFn}
+            onClickFn={cardOnClickFn}
           />
         ))}
     </div>

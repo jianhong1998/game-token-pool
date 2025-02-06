@@ -12,8 +12,12 @@ const GameLoginForm: FC = () => {
 
   const router = useRouter();
 
-  const { mutateAsync: userLoginFn } = useUserLogin();
-  const { mutateAsync: userRegisterFn } = useUserRegister();
+  const { mutateAsync: userLoginFn, isPending: isLoginPending } =
+    useUserLogin();
+  const { mutateAsync: userRegisterFn, isPending: isRegisterPending } =
+    useUserRegister();
+
+  const isProcessing = isLoginPending || isRegisterPending;
 
   const handleLogin = async () => {
     if (username.trim().length === 0) {
@@ -58,14 +62,14 @@ const GameLoginForm: FC = () => {
         <button
           className='btn btn-primary w-full'
           onClick={handleLogin}
-          disabled={username.trim().length === 0}
+          disabled={username.trim().length === 0 || isProcessing}
         >
           Login
         </button>
         <button
           className='btn btn-outline btn-primary w-full'
           onClick={handleRegister}
-          disabled={username.trim().length === 0}
+          disabled={username.trim().length === 0 || isProcessing}
         >
           Register
         </button>

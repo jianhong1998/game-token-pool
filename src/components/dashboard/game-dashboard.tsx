@@ -106,7 +106,7 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
         users={allUsersData.filter(
           (user) => user.user.publicKey !== userData.user.publicKey
         )}
-        openTransferPopupFn={openTransferPopup}
+        cardOnClickFn={openTransferPopup}
       />
       <TransferPopup
         isPopupOpen={isTransferPopupOpen}

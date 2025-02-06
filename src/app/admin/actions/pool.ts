@@ -1,6 +1,7 @@
 'use server';
 
 import { ConnectionUtil } from '@/util/server/connection';
+import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 
@@ -12,6 +13,7 @@ export const getPools = async () => {
   return pools.map((pool) => ({
     publicKey: pool.publicKey.toBase58(),
     name: pool.account.poolName,
+    link: LinkGeneratorUtil.generateAccountLink(pool.publicKey.toBase58()),
   }));
 };
 

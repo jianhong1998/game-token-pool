@@ -22,8 +22,6 @@ export const useUserEndGame = () => {
       NotificationUtil.success(
         `End game request completed. User account for "${username}" is deleted.`
       );
-
-      router.replace('/game');
     },
     onError: (error) => {
       const errorMessage = error.message;
