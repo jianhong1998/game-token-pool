@@ -56,11 +56,6 @@ deploy:
 	@cd ./anchor && \
 		anchor deploy
 
-# deploy/dev: 
-# 	@$(MAKE) build
-# 	@cd ./anchor && \
-# 		anchor deploy --provider.cluster devnet --provider.wallet ~/.config/solana/devnet-id.json
-
 deploy/dev: 
 	@$(MAKE) build
 	@cd ./anchor && \

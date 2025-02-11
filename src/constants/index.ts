@@ -6,3 +6,4 @@ export const {
 } = process.env;
 
 export const MAX_DEPOSIT_AMOUNT = 1_000_000;
+export const MAX_PLAYER_PER_GAME = 20;

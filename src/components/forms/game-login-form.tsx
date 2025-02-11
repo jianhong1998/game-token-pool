@@ -6,6 +6,7 @@ import {
   useUserLogin,
   useUserRegister,
 } from '../queries/user/user-login-queries';
+import { LocalStorageKey } from '@/enums/local-storage-key.enum';
 
 const GameLoginForm: FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -19,6 +20,12 @@ const GameLoginForm: FC = () => {
 
   const isProcessing = isLoginPending || isRegisterPending;
 
+  const processUserLoginData = (username: string, userPublicKey: string) => {
+    localStorage.setItem(LocalStorageKey.USER, username);
+    localStorage.setItem(LocalStorageKey.USER_PUBLIC_KEY, userPublicKey);
+    router.replace(`/${username}`);
+  };
+
   const handleLogin = async () => {
     if (username.trim().length === 0) {
       return;
@@ -27,7 +34,7 @@ const GameLoginForm: FC = () => {
     const result = await userLoginFn(username);
 
     if (result.isLoginSuccess) {
-      router.replace(`/game/${result.username}`);
+      processUserLoginData(result.username, result.publicKey);
     }
   };
 
@@ -35,7 +42,7 @@ const GameLoginForm: FC = () => {
     const result = await userRegisterFn(username);
 
     if (result.isLoginSuccess) {
-      router.replace(`/game/${result.username}`);
+      processUserLoginData(result.username, result.publicKey);
     }
   };
 

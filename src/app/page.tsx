@@ -1,5 +1,8 @@
-import DashboardFeature from '@/components/dashboard/dashboard-feature'
+import GameLoginForm from '@/components/forms/game-login-form';
+import { NextPage } from 'next';
 
-export default function Page() {
-  return <DashboardFeature />
-}
+const GamePage: NextPage = () => {
+  return <GameLoginForm />;
+};
+
+export default GamePage;

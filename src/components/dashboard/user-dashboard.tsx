@@ -12,12 +12,13 @@ import TransferPopup from '../forms/transfer-popup/transfer-popup';
 import { useTransfer } from '../queries/user/user-transfer-queries';
 import DepositPopup from '../forms/deposit-popup/deposit-popup';
 import EndGamePopup from '../forms/end-game-popup/end-game-popup';
+import Divider from '../ui/divider';
 
-type GameDashboardProps = {
+type UserDashboardProps = {
   username: string;
 };
 
-const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
+const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
   const router = useRouter();
   const transferFrom = useRef<string>(username);
   const transferTo = useRef<string>('');
@@ -98,7 +99,7 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
         toggleDepositPopup={toggleDepositPopup}
         openEndGameConfirmationPopup={toggleEndGameConfirmationPopup}
       />
-      <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
+      <Divider />
       <div className='mb-3'>
         <p className='text-center'>Click on user to transfer token</p>
       </div>
@@ -130,4 +131,4 @@ const GameDashboard: FC<GameDashboardProps> = ({ username }) => {
   );
 };
 
-export default GameDashboard;
+export default UserDashboard;

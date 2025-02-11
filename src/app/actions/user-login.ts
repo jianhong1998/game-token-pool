@@ -23,6 +23,7 @@ type userRegisterResponse =
   | {
       isLoginSuccess: true;
       username: string;
+      publicKey: string;
     }
   | {
       isLoginSuccess: false;
@@ -84,9 +85,12 @@ export const userRegister = async (params: {
 
     console.log(`[Add User] ${transactionId}`);
 
+    const userPublicKey = AccountUtil.getUserPublicKey(username);
+
     return {
       isLoginSuccess: true,
       username,
+      publicKey: userPublicKey.toBase58(),
     };
   } catch (error) {
     const errorMessage = (error as Error).message;

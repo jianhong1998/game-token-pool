@@ -3,11 +3,12 @@
 import { getAllUserData, getUserData } from '@/app/actions/user-data';
 import { useQuery } from '@tanstack/react-query';
 
-export const useGetUser = (username: string) => {
+export const useGetUser = (username: string | null) => {
   return useQuery({
+    enabled: Boolean(username),
     queryKey: ['user', 'self', { username }],
     queryFn: async () => {
-      return await getUserData(username.trim());
+      return await getUserData(username?.trim() ?? '');
     },
     refetchInterval: 5000,
   });

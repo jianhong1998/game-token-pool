@@ -4,6 +4,7 @@ import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
 import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { getAccount } from '@solana/spl-token';
+import { getPools } from '../admin/actions/pool';
 
 export type IUserData = {
   user: {
@@ -19,6 +20,10 @@ export type IUserData = {
     userAccount: string;
     userTokenAccount: string;
   };
+  pool: {
+    name: string;
+    publicKey: string;
+  };
 };
 
 export const getUserData = async (username: string): Promise<IUserData> => {
@@ -32,6 +37,8 @@ export const getUserData = async (username: string): Promise<IUserData> => {
     program.provider.connection,
     user.tokenAccount
   );
+
+  const pool = (await getPools())[0];
 
   console.log(
     `[Get User Data] successfully fetch user data (${userPublicKey}) and the token account (${user.tokenAccount})`
@@ -55,6 +62,10 @@ export const getUserData = async (username: string): Promise<IUserData> => {
         tokenAccount.address.toBase58()
       ),
     },
+    pool: {
+      name: pool?.name,
+      publicKey: pool?.publicKey,
+    },
   };
 };
 
@@ -66,6 +77,8 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
   const users = (await program.account.user.all()).filter((user) =>
     user.account.authority.equals(signer.publicKey)
   );
+
+  const pool = (await getPools())[0];
 
   console.log(`${LOG_KEY} Fetched all users.`);
 
@@ -96,6 +109,10 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
         userTokenAccount: LinkGeneratorUtil.generateAccountLink(
           tokenAccount.address.toBase58()
         ),
+      },
+      pool: {
+        name: pool?.name,
+        publicKey: pool?.publicKey,
       },
     });
   }

@@ -50,4 +50,53 @@ pub mod gametokenpool {
   pub fn close_pool(context: Context<ClosePool>) -> Result<()> {
     process_close_pool(context)
   }
+
+  pub fn init_game(context: Context<InitGame>, game_name: String) -> Result<()> {
+    process_init_game(context, game_name)
+  }
+
+  pub fn init_game_token_account(
+    context: Context<InitGameTokenAccount>,
+    _game_name: String,
+  ) -> Result<()> {
+    process_init_game_token_account(context)
+  }
+
+  pub fn user_join_game(
+    context: Context<JoinGame>,
+    _game_name: String,
+    _user_name: String,
+  ) -> Result<()> {
+    process_user_join_game(context)
+  }
+
+  pub fn user_quit_game(
+    context: Context<UserQuitGame>,
+    _game_name: String,
+    _user_name: String,
+  ) -> Result<()> {
+    process_user_quit_game(context)
+  }
+
+  pub fn user_transfer_token_to_game(
+    context: Context<TransferTokenToGame>,
+    _game_name: String,
+    _user_name: String,
+    amount: u64,
+  ) -> Result<()> {
+    process_transfer_token_to_game(context, amount)
+  }
+
+  pub fn take_token_from_game(
+    context: Context<TransferTokenToPlayer>,
+    _game_name: String,
+    _user_name: String,
+    amount: u64,
+  ) -> Result<()> {
+    process_take_token_from_game(context, amount)
+  }
+
+  pub fn delete_game(context: Context<DeleteGame>, _game_name: String) -> Result<()> {
+    process_delete_game(context)
+  }
 }
