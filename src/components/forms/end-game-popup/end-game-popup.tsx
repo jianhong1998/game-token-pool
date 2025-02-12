@@ -1,6 +1,8 @@
+import { useLocalStorage } from '@/components/custom-hooks/use-local-storage';
 import { useUserEndGame } from '@/components/queries/user/user-end-game-queries';
 import DangerButton from '@/components/ui/buttons/danger-button';
 import PrimaryButton from '@/components/ui/buttons/primary-button';
+import { LocalStorageKey } from '@/enums/local-storage-key.enum';
 import { FC } from 'react';
 
 type EndGamePopupProps = {
@@ -17,8 +19,23 @@ const EndGamePopup: FC<EndGamePopupProps> = ({
   const { mutateAsync: endGameFn, isPending: isUserEndGamePending } =
     useUserEndGame();
 
+  const { removeValue: removeUsername } = useLocalStorage(
+    LocalStorageKey.USER,
+    ''
+  );
+  const { removeValue: removeUserPublicKey } = useLocalStorage(
+    LocalStorageKey.USER_PUBLIC_KEY,
+    ''
+  );
+
   const handleUserEndGame = async () => {
-    await endGameFn({ username });
+    try {
+      await endGameFn({ username });
+      removeUsername();
+      removeUserPublicKey();
+    } catch (error) {
+      // Error Handling in useUSerEndGame()
+    }
   };
 
   if (!isPopupOpen) return <></>;

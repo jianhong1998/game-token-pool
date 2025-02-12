@@ -1,11 +1,17 @@
 'use client';
 
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
+import { useLocalStorage } from './use-local-storage';
 
 export const useUsername = () => {
-  return localStorage.getItem(LocalStorageKey.USER);
+  const { value: username } = useLocalStorage(LocalStorageKey.USER, '');
+  return username;
 };
 
 export const useUserPublicKey = () => {
-  return localStorage.getItem(LocalStorageKey.USER_PUBLIC_KEY);
+  const { value: userPublicKey } = useLocalStorage(
+    LocalStorageKey.USER_PUBLIC_KEY,
+    ''
+  );
+  return userPublicKey;
 };

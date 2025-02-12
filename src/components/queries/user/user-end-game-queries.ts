@@ -33,7 +33,7 @@ export const useUserEndGame = () => {
 
       if (ErrorUtil.isUserNotFoundError(errorMessage)) {
         NotificationUtil.error('User is never be added to pool.');
-        router.replace('/game');
+        router.replace('/');
         return;
       }
 

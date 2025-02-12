@@ -7,11 +7,21 @@ import {
   useUserRegister,
 } from '../queries/user/user-login-queries';
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
+import { useLocalStorage } from '../custom-hooks/use-local-storage';
 
 const GameLoginForm: FC = () => {
   const [username, setUsername] = useState<string>('');
 
   const router = useRouter();
+
+  const { setValue: setUsernameInLocalStorage } = useLocalStorage(
+    LocalStorageKey.USER,
+    ''
+  );
+  const { setValue: setUserPublicKeyInLocalStorage } = useLocalStorage(
+    LocalStorageKey.USER_PUBLIC_KEY,
+    ''
+  );
 
   const { mutateAsync: userLoginFn, isPending: isLoginPending } =
     useUserLogin();
@@ -21,8 +31,9 @@ const GameLoginForm: FC = () => {
   const isProcessing = isLoginPending || isRegisterPending;
 
   const processUserLoginData = (username: string, userPublicKey: string) => {
-    localStorage.setItem(LocalStorageKey.USER, username);
-    localStorage.setItem(LocalStorageKey.USER_PUBLIC_KEY, userPublicKey);
+    setUsernameInLocalStorage(username);
+    setUserPublicKeyInLocalStorage(userPublicKey);
+
     router.replace(`/${username}`);
   };
 

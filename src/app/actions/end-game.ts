@@ -1,8 +1,14 @@
 'use server';
 
+import { ErrorCode } from '@/constants/error';
 import { ConnectionUtil } from '@/util/server/connection';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { TransactionMessage, VersionedTransaction } from '@solana/web3.js';
+import {
+  PublicKey,
+  TransactionInstruction,
+  TransactionMessage,
+  VersionedTransaction,
+} from '@solana/web3.js';
 
 export const userEndGame = async (params: { username: string }) => {
   const { username } = params;
@@ -12,7 +18,45 @@ export const userEndGame = async (params: { username: string }) => {
   const program = ConnectionUtil.getProgram();
   const signer = ConnectionUtil.getSigner();
 
-  const instruction = await program.methods
+  const userSeeds = [
+    Buffer.from('user'),
+    Buffer.from(username),
+    signer.publicKey.toBuffer(),
+  ];
+  const [userPublicKey] = PublicKey.findProgramAddressSync(
+    userSeeds,
+    program.programId
+  );
+
+  const allGames = await program.account.game.all();
+
+  const userInvolvedGames = allGames.filter((game) => {
+    const gamePlayerKeys = game.account.players.map((publicKey) =>
+      publicKey.toBase58()
+    );
+
+    return gamePlayerKeys.includes(userPublicKey.toBase58());
+  });
+
+  const instructions = [] as TransactionInstruction[];
+
+  const userQuitGameInstructions = await Promise.all(
+    userInvolvedGames.map((game) =>
+      program.methods
+        .userQuitGame(game.account.gameName, username)
+        .accounts({ tokenProgram: TOKEN_PROGRAM_ID, signer: signer.publicKey })
+        .instruction()
+    )
+  );
+
+  console.log({
+    userInvolvedGames,
+    userQuitGameInstructions,
+  });
+
+  instructions.push(...userQuitGameInstructions);
+
+  const userEndGameInstruction = await program.methods
     .userEndGame(username)
     .accounts({
       tokenProgram: TOKEN_PROGRAM_ID,
@@ -21,11 +65,13 @@ export const userEndGame = async (params: { username: string }) => {
     .signers([signer])
     .instruction();
 
+  instructions.push(userEndGameInstruction);
+
   const { blockhash, lastValidBlockHeight } =
     await connection.getLatestBlockhash();
 
   const transactionMessage = new TransactionMessage({
-    instructions: [instruction],
+    instructions,
     payerKey: signer.publicKey,
     recentBlockhash: blockhash,
   }).compileToV0Message();
@@ -45,7 +91,7 @@ export const userEndGame = async (params: { username: string }) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'finalized'
+    'confirmed'
   );
 
   console.log(`${LOG_KEY} Transaction ${transactionId} is finalized.`);

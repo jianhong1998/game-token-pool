@@ -11,8 +11,8 @@ export class NotificationUtil {
     return toast.success(message, this.toastConfig);
   }
 
-  public static error(message: string) {
-    return toast.error(message, this.toastConfig);
+  public static error(message: string, config: ToastOptions = {}) {
+    return toast.error(message, { ...this.toastConfig, ...config });
   }
 
   public static loading(message: string) {

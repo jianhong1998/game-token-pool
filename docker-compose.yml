@@ -25,5 +25,5 @@ services:
           action: sync
         - path: ./package.json
           action: rebuild
-    volumes:
-      - ./.next:/apps/crud-dapp/.next
+    # volumes:
+    #   - ./.next:/apps/crud-dapp/.next

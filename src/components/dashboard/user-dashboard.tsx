@@ -13,6 +13,8 @@ import { useTransfer } from '../queries/user/user-transfer-queries';
 import DepositPopup from '../forms/deposit-popup/deposit-popup';
 import EndGamePopup from '../forms/end-game-popup/end-game-popup';
 import Divider from '../ui/divider';
+import { useLocalStorage } from '../custom-hooks/use-local-storage';
+import { LocalStorageKey } from '@/enums/local-storage-key.enum';
 
 type UserDashboardProps = {
   username: string;
@@ -27,6 +29,15 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
     useState<boolean>(false);
   const [isDepositPopupOpen, setIsDepositPopupOpen] = useState<boolean>(false);
   const [isEndGamePopupOpen, setIsEndGamePopupOpen] = useState<boolean>(false);
+
+  const { removeValue: removeUsername } = useLocalStorage(
+    LocalStorageKey.USER,
+    ''
+  );
+  const { removeValue: removeUserPublicKey } = useLocalStorage(
+    LocalStorageKey.USER_PUBLIC_KEY,
+    ''
+  );
 
   const openTransferPopup = (toUsername: string) => {
     transferTo.current = toUsername;
@@ -65,13 +76,15 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
 
     if (ErrorUtil.isUserNotFoundError(getUserError.message)) {
       NotificationUtil.error('User is not found');
-      router.replace('/game');
+      removeUsername();
+      removeUserPublicKey();
+      router.replace('/');
       return;
     }
 
     NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
     console.log(getUserError.message);
-  }, [getUserError, router]);
+  }, [getUserError, router, removeUsername, removeUserPublicKey]);
 
   // Handle get all users error
   useEffect(() => {
