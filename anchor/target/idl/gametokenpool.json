@@ -690,6 +690,26 @@
           }
         },
         {
+          "name": "pool_mint",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "game",
           "writable": true,
           "pda": {
@@ -714,36 +734,6 @@
               {
                 "kind": "arg",
                 "path": "game_name"
-              }
-            ]
-          }
-        },
-        {
-          "name": "game_mint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
               }
             ]
           }
@@ -997,7 +987,29 @@
           }
         },
         {
+          "name": "pool_mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "game",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1064,37 +1076,8 @@
           }
         },
         {
-          "name": "game_mint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
-              }
-            ]
-          }
-        },
-        {
           "name": "user",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1598,6 +1581,27 @@
           }
         },
         {
+          "name": "pool_mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "game",
           "writable": true,
           "pda": {
@@ -1622,36 +1626,6 @@
               {
                 "kind": "arg",
                 "path": "game_name"
-              }
-            ]
-          }
-        },
-        {
-          "name": "game_mint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
               }
             ]
           }
@@ -1810,6 +1784,7 @@
         },
         {
           "name": "user",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1834,6 +1809,7 @@
         },
         {
           "name": "user_token_account",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1845,6 +1821,7 @@
         },
         {
           "name": "game",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1873,6 +1850,7 @@
         },
         {
           "name": "game_token_account",
+          "writable": true,
           "pda": {
             "seeds": [
               {

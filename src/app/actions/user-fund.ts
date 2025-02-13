@@ -1,6 +1,7 @@
 'use server';
 
 import { ConnectionUtil } from '@/util/server/connection';
+import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { BN } from 'bn.js';
@@ -106,4 +107,52 @@ export const transfer = async (params: {
   );
 
   console.log(`Transaction (${transactionId}) is confirmed.`);
+};
+
+export const transferToGame = async (params: {
+  gameName: string;
+  username: string;
+  amount: number;
+}) => {
+  const LOG_KEY = '[Transfer To Game]';
+  const { amount, gameName, username } = params;
+  const program = ConnectionUtil.getProgram();
+  const connection = ConnectionUtil.getConnection();
+  const signer = ConnectionUtil.getSigner();
+
+  const transferTokenInstruction = await program.methods
+    .userTransferTokenToGame(gameName, username, new BN(amount))
+    .accounts({ tokenProgram: TOKEN_PROGRAM_ID, signer: signer.publicKey })
+    .signers([signer])
+    .instruction();
+
+  const { blockhash, lastValidBlockHeight } =
+    await connection.getLatestBlockhash();
+
+  const transactionMessage = new TransactionMessage({
+    instructions: [transferTokenInstruction],
+    payerKey: signer.publicKey,
+    recentBlockhash: blockhash,
+  }).compileToV0Message();
+
+  const transaction = new VersionedTransaction(transactionMessage);
+  transaction.sign([signer]);
+
+  console.log(`${LOG_KEY} Transaction is sent.`);
+  const transactionId = await connection.sendTransaction(transaction);
+
+  await connection.confirmTransaction(
+    {
+      blockhash,
+      lastValidBlockHeight,
+      signature: transactionId,
+    },
+    'confirmed'
+  );
+
+  console.log(
+    `${LOG_KEY} Transaction is confirmed: ${LinkGeneratorUtil.generateTransactionLink(
+      transactionId
+    )}`
+  );
 };

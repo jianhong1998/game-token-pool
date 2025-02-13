@@ -696,6 +696,26 @@ export type Gametokenpool = {
           }
         },
         {
+          "name": "poolMint",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "game",
           "writable": true,
           "pda": {
@@ -720,36 +740,6 @@ export type Gametokenpool = {
               {
                 "kind": "arg",
                 "path": "gameName"
-              }
-            ]
-          }
-        },
-        {
-          "name": "gameMint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
               }
             ]
           }
@@ -1003,7 +993,29 @@ export type Gametokenpool = {
           }
         },
         {
+          "name": "poolMint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "game",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1070,37 +1082,8 @@ export type Gametokenpool = {
           }
         },
         {
-          "name": "gameMint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
-              }
-            ]
-          }
-        },
-        {
           "name": "user",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1604,6 +1587,27 @@ export type Gametokenpool = {
           }
         },
         {
+          "name": "poolMint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
           "name": "game",
           "writable": true,
           "pda": {
@@ -1628,36 +1632,6 @@ export type Gametokenpool = {
               {
                 "kind": "arg",
                 "path": "gameName"
-              }
-            ]
-          }
-        },
-        {
-          "name": "gameMint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
               }
             ]
           }
@@ -1816,6 +1790,7 @@ export type Gametokenpool = {
         },
         {
           "name": "user",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1840,6 +1815,7 @@ export type Gametokenpool = {
         },
         {
           "name": "userTokenAccount",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1851,6 +1827,7 @@ export type Gametokenpool = {
         },
         {
           "name": "game",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1879,6 +1856,7 @@ export type Gametokenpool = {
         },
         {
           "name": "gameTokenAccount",
+          "writable": true,
           "pda": {
             "seeds": [
               {

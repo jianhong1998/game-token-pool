@@ -36,6 +36,7 @@ pub struct TransferTokenToGame<'info> {
   pub pool_mint: InterfaceAccount<'info, Mint>,
 
   #[account(
+    mut,
     seeds = [
       b"user",
       user_name.as_bytes().as_ref(),
@@ -46,6 +47,7 @@ pub struct TransferTokenToGame<'info> {
   pub user: Account<'info, User>,
 
   #[account(
+    mut,
     seeds = [
       user.key().as_ref()
     ],
@@ -54,6 +56,7 @@ pub struct TransferTokenToGame<'info> {
   pub user_token_account: InterfaceAccount<'info, TokenAccount>,
 
   #[account(
+    mut,
     seeds = [
       b"game",
       signer.key().as_ref(),
@@ -65,6 +68,7 @@ pub struct TransferTokenToGame<'info> {
   pub game: Account<'info, Game>,
 
   #[account(
+    mut,
     seeds = [
       b"game-token-account",
       signer.key().as_ref(),

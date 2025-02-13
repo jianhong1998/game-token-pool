@@ -11,12 +11,14 @@ interface UserCardProps {
   userData: IUserData;
   toggleDepositPopup: () => void;
   openEndGameConfirmationPopup: () => void;
+  logOutOnClickFn?: () => void;
 }
 
 const SelfUserCard: FC<UserCardProps> = ({
   userData,
   toggleDepositPopup,
   openEndGameConfirmationPopup,
+  logOutOnClickFn,
 }) => {
   const {
     user: { name: username },
@@ -124,6 +126,16 @@ const SelfUserCard: FC<UserCardProps> = ({
               Delete Account
             </DangerButton>
           </div>
+          {Boolean(logOutOnClickFn) && (
+            <div>
+              <DangerButton
+                className='w-full'
+                onClick={logOutOnClickFn}
+              >
+                Logout
+              </DangerButton>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -30,14 +30,12 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
   const [isDepositPopupOpen, setIsDepositPopupOpen] = useState<boolean>(false);
   const [isEndGamePopupOpen, setIsEndGamePopupOpen] = useState<boolean>(false);
 
-  const { removeValue: removeUsername } = useLocalStorage(
-    LocalStorageKey.USER,
-    ''
-  );
-  const { removeValue: removeUserPublicKey } = useLocalStorage(
-    LocalStorageKey.USER_PUBLIC_KEY,
-    ''
-  );
+  const { removeValue: removeUsername, value: usernameInLocalStorage } =
+    useLocalStorage(LocalStorageKey.USER, '');
+  const {
+    removeValue: removeUserPublicKey,
+    value: userPublicKeyInLocalStorage,
+  } = useLocalStorage(LocalStorageKey.USER_PUBLIC_KEY, '');
 
   const openTransferPopup = (toUsername: string) => {
     transferTo.current = toUsername;
@@ -68,6 +66,12 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
       toUsername: transferTo.current,
       cashAmount: transferCashAmount,
     });
+  };
+
+  const handleLogout = () => {
+    removeUsername();
+    removeUserPublicKey();
+    router.replace('/');
   };
 
   // Handle get user error
@@ -111,6 +115,7 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
         userData={userData}
         toggleDepositPopup={toggleDepositPopup}
         openEndGameConfirmationPopup={toggleEndGameConfirmationPopup}
+        logOutOnClickFn={handleLogout}
       />
       <Divider />
       <div className='mb-3'>

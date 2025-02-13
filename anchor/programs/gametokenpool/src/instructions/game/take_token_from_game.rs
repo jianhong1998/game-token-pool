@@ -27,6 +27,17 @@ pub struct TransferTokenToPlayer<'info> {
   pub pool: Account<'info, Pool>,
 
   #[account(
+    mut,
+    seeds = [
+      b"mint",
+      signer.key().as_ref(),
+    ],
+    bump = pool.mint_bump
+  )]
+  pub pool_mint: InterfaceAccount<'info, Mint>,
+
+  #[account(
+    mut,
     seeds = [
       b"game",
       signer.key().as_ref(),
@@ -48,18 +59,18 @@ pub struct TransferTokenToPlayer<'info> {
   )]
   pub game_token_account: InterfaceAccount<'info, TokenAccount>,
 
+  // #[account(
+  //   mut,
+  //   seeds = [
+  //     b"game-mint",
+  //     signer.key().as_ref(),
+  //     game.key().as_ref()
+  //   ],
+  //   bump = game.game_mint_bump
+  // )]
+  // game_mint: InterfaceAccount<'info, Mint>,
   #[account(
     mut,
-    seeds = [
-      b"game-mint",
-      signer.key().as_ref(),
-      game.key().as_ref()
-    ],
-    bump = game.game_mint_bump
-  )]
-  game_mint: InterfaceAccount<'info, Mint>,
-
-  #[account(
     seeds = [
       b"user",
       user_name.as_bytes().as_ref(),
@@ -96,11 +107,11 @@ pub fn process_take_token_from_game(
     context.accounts.user_token_account.key()
   );
 
-  let decimals = context.accounts.game_mint.decimals;
+  let decimals = context.accounts.pool_mint.decimals;
   let cpi_accounts = TransferChecked {
     from: game_token_account.to_account_info(),
     to: context.accounts.user_token_account.to_account_info(),
-    mint: context.accounts.game_mint.to_account_info(),
+    mint: context.accounts.pool_mint.to_account_info(),
     authority: context.accounts.signer.to_account_info(),
   };
   let cpi_program = context.accounts.token_program.to_account_info();

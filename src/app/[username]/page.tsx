@@ -16,22 +16,38 @@ type UserPageProps = {
 const UserPage: NextPage<PageContext<UserPageProps>> = () => {
   const { username } = useParams<UserPageProps>();
   const router = useRouter();
-  const { setValue: setUsernameInLocalStorage, value: usernameInLocalStorage } =
-    useLocalStorage(LocalStorageKey.USER, '');
+  const {
+    setValue: setUsernameInLocalStorage,
+    value: usernameInLocalStorage,
+    removeValue: removeUsernameInLocalStorage,
+  } = useLocalStorage(LocalStorageKey.USER, '');
+  const {
+    value: userPublicKeyInLocalStorage,
+    removeValue: removeUserPublicKeyInLocalStorage,
+  } = useLocalStorage(LocalStorageKey.USER_PUBLIC_KEY, '');
 
   const { isSuccess: isUserEndGameRequestSuccess } = useUserEndGame();
 
   const decodedUsername = decodeURI(username);
-
-  if (usernameInLocalStorage !== decodedUsername) {
-    setUsernameInLocalStorage(decodedUsername);
-  }
 
   useEffect(() => {
     if (isUserEndGameRequestSuccess) {
       router.replace('/');
     }
   }, [isUserEndGameRequestSuccess, router]);
+
+  useEffect(() => {
+    if (
+      !usernameInLocalStorage ||
+      !userPublicKeyInLocalStorage ||
+      usernameInLocalStorage.length === 0 ||
+      userPublicKeyInLocalStorage.length === 0
+    ) {
+      removeUserPublicKeyInLocalStorage();
+      removeUsernameInLocalStorage();
+      router.replace('/');
+    }
+  }, [usernameInLocalStorage, userPublicKeyInLocalStorage, router]);
 
   return <UserDashboard username={decodedUsername} />;
 };

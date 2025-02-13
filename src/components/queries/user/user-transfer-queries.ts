@@ -1,4 +1,4 @@
-import { transfer } from '@/app/actions/user-fund';
+import { transfer, transferToGame } from '@/app/actions/user-fund';
 import { ErrorCode } from '@/constants/error';
 import { NotificationUtil } from '@/util/client/notification.util';
 import { ErrorUtil } from '@/util/shared/error.util';
@@ -47,6 +47,38 @@ export const useTransfer = (fromUsername: string) => {
 
       NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
       console.error(errorMessage);
+    },
+  });
+};
+
+type IUseTransferToGameParams = {
+  gameName: string;
+  username: string;
+  cashAmount: number;
+};
+
+export const useTransferToGame = (poolPublicKey: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, IUseTransferToGameParams>({
+    mutationKey: ['user', 'transfer', 'game', {}],
+    mutationFn: async ({ cashAmount, gameName, username }) => {
+      const tokenAmount = cashAmount * 100;
+      await transferToGame({
+        gameName,
+        username,
+        amount: tokenAmount,
+      });
+    },
+    onSuccess: async (_, { cashAmount, gameName, username }) => {
+      NotificationUtil.success(`Transfered ${cashAmount} to game`);
+
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'self', { username }],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['game', 'one', { poolPublicKey, gameName }],
+      });
     },
   });
 };

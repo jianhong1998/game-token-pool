@@ -29,6 +29,16 @@ pub struct UserQuitGame<'info> {
   #[account(
     mut,
     seeds = [
+      b"mint",
+      signer.key().as_ref(),
+    ],
+    bump = pool.mint_bump
+  )]
+  pub pool_mint: InterfaceAccount<'info, Mint>,
+
+  #[account(
+    mut,
+    seeds = [
       b"game",
       signer.key().as_ref(),
       pool.key().as_ref(),
@@ -38,17 +48,16 @@ pub struct UserQuitGame<'info> {
   )]
   pub game: Account<'info, Game>,
 
-  #[account(
-    mut,
-    seeds = [
-      b"game-mint",
-      signer.key().as_ref(),
-      game.key().as_ref()
-    ],
-    bump
-  )]
-  pub game_mint: InterfaceAccount<'info, Mint>,
-
+  // #[account(
+  //   mut,
+  //   seeds = [
+  //     b"game-mint",
+  //     signer.key().as_ref(),
+  //     game.key().as_ref()
+  //   ],
+  //   bump
+  // )]
+  // pub game_mint: InterfaceAccount<'info, Mint>,
   #[account(
     mut,
     seeds = [
@@ -98,9 +107,9 @@ pub fn process_user_quit_game(context: Context<UserQuitGame>) -> Result<()> {
       from: game_token_account.to_account_info(),
       to: context.accounts.user_token_account.to_account_info(),
       authority: context.accounts.signer.to_account_info(),
-      mint: context.accounts.game_mint.to_account_info(),
+      mint: context.accounts.pool_mint.to_account_info(),
     };
-    let decimals = context.accounts.game_mint.decimals;
+    let decimals = context.accounts.pool_mint.decimals;
 
     let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
