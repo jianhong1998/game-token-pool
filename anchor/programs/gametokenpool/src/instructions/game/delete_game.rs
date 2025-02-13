@@ -47,16 +47,6 @@ pub struct DeleteGame<'info> {
     bump = game.game_token_account_bump
   )]
   pub game_token_account: InterfaceAccount<'info, TokenAccount>,
-  // #[account(
-  //   mut,
-  //   seeds = [
-  //     b"game-mint",
-  //     signer.key().as_ref(),
-  //     game.key().as_ref()
-  //   ],
-  //   bump = game.game_mint_bump
-  // )]
-  // pub game_mint: InterfaceAccount<'info, Mint>,
 }
 
 pub fn process_delete_game(context: Context<DeleteGame>) -> Result<()> {

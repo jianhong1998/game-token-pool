@@ -48,16 +48,6 @@ pub struct UserQuitGame<'info> {
   )]
   pub game: Account<'info, Game>,
 
-  // #[account(
-  //   mut,
-  //   seeds = [
-  //     b"game-mint",
-  //     signer.key().as_ref(),
-  //     game.key().as_ref()
-  //   ],
-  //   bump
-  // )]
-  // pub game_mint: InterfaceAccount<'info, Mint>,
   #[account(
     mut,
     seeds = [
@@ -93,10 +83,6 @@ pub fn process_user_quit_game(context: Context<UserQuitGame>) -> Result<()> {
   let game = &mut context.accounts.game;
   let game_token_account = &context.accounts.game_token_account;
 
-  /*
-    TODO: check if player is the last player in the game.
-    If player is the last player and the game token account is not empty, then the player will receive all the token in game token account.
-  */
   let game_account_balance = context.accounts.game_token_account.amount;
 
   if game_account_balance != 0 {

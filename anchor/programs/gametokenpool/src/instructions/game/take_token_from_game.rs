@@ -59,16 +59,6 @@ pub struct TransferTokenToPlayer<'info> {
   )]
   pub game_token_account: InterfaceAccount<'info, TokenAccount>,
 
-  // #[account(
-  //   mut,
-  //   seeds = [
-  //     b"game-mint",
-  //     signer.key().as_ref(),
-  //     game.key().as_ref()
-  //   ],
-  //   bump = game.game_mint_bump
-  // )]
-  // game_mint: InterfaceAccount<'info, Mint>,
   #[account(
     mut,
     seeds = [

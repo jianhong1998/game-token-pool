@@ -74,20 +74,6 @@ pub struct InitGameTokenAccount<'info> {
   )]
   pub game: Account<'info, Game>,
 
-  // #[account(
-  //   init_if_needed,
-  //   payer = signer,
-  //   seeds = [
-  //     b"game-mint",
-  //     signer.key().as_ref(),
-  //     game.key().as_ref(),
-  //   ],
-  //   mint::authority = signer,
-  //   mint::decimals = 0,
-  //   mint::freeze_authority = game_mint,
-  //   bump
-  // )]
-  // pub game_mint: InterfaceAccount<'info, Mint>,
   #[account(
     init,
     payer = signer,
@@ -118,7 +104,6 @@ pub fn process_init_game_token_account(context: Context<InitGameTokenAccount>) -
   let game = &mut context.accounts.game;
 
   game.game_token_account = context.accounts.game_token_account.key();
-  // game.game_mint_bump = context.bumps.game_mint;
   game.game_token_account_bump = context.bumps.game_token_account;
 
   Ok(())
