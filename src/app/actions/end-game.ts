@@ -1,6 +1,7 @@
 'use server';
 
 import { ErrorCode } from '@/constants/error';
+import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import {
@@ -18,15 +19,7 @@ export const userEndGame = async (params: { username: string }) => {
   const program = ConnectionUtil.getProgram();
   const signer = ConnectionUtil.getSigner();
 
-  const userSeeds = [
-    Buffer.from('user'),
-    Buffer.from(username),
-    signer.publicKey.toBuffer(),
-  ];
-  const [userPublicKey] = PublicKey.findProgramAddressSync(
-    userSeeds,
-    program.programId
-  );
+  const userPublicKey = AccountUtil.getUserPublicKey(username);
 
   const allGames = await program.account.game.all();
 
@@ -48,11 +41,6 @@ export const userEndGame = async (params: { username: string }) => {
         .instruction()
     )
   );
-
-  console.log({
-    userInvolvedGames,
-    userQuitGameInstructions,
-  });
 
   instructions.push(...userQuitGameInstructions);
 

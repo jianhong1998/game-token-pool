@@ -1,12 +1,19 @@
 'use server';
 
+import { getPools } from '@/app/admin/actions/pool';
+import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
+import { getAccount } from '@solana/spl-token';
 
 export interface IGetAllGamesResponse {
   name: string;
   players: string[];
   publicKey: string;
   tokenAccountPublicKey: string;
+}
+
+export interface IGetGameDetailsResponse extends IGetAllGamesResponse {
+  totalToken: number;
 }
 
 export const getAllGames = async (params: {
@@ -29,4 +36,26 @@ export const getAllGames = async (params: {
       publicKey: game.publicKey.toBase58(),
       tokenAccountPublicKey: game.account.gameTokenAccount.toBase58(),
     }));
+};
+
+export const getGameDetails = async (
+  gameName: string,
+  poolPublicKey: string
+): Promise<IGetGameDetailsResponse> => {
+  const program = ConnectionUtil.getProgram();
+  const connection = ConnectionUtil.getConnection();
+
+  const gamePublicKey = AccountUtil.getGamePublicKey(gameName, poolPublicKey);
+
+  const game = await program.account.game.fetch(gamePublicKey);
+
+  const gameTokenAccount = await getAccount(connection, game.gameTokenAccount);
+
+  return {
+    name: game.gameName,
+    players: game.players.map((key) => key.toBase58()),
+    publicKey: gamePublicKey.toBase58(),
+    tokenAccountPublicKey: game.gameTokenAccount.toBase58(),
+    totalToken: Number(gameTokenAccount.amount),
+  };
 };

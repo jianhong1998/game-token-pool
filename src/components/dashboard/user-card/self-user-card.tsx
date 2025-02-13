@@ -3,7 +3,6 @@
 import { IUserData } from '@/app/actions/user-data';
 import DangerButton from '@/components/ui/buttons/danger-button';
 import PrimaryButton from '@/components/ui/buttons/primary-button';
-import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { NumberUtil } from '@/util/shared/number.util';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -122,7 +121,7 @@ const SelfUserCard: FC<UserCardProps> = ({
               className='flex-1'
               onClick={openEndGameConfirmationPopup}
             >
-              End Game
+              Delete Account
             </DangerButton>
           </div>
         </div>

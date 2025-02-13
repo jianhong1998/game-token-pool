@@ -23,7 +23,7 @@ export function UiLayout({
             className='btn btn-ghost normal-case text-xl'
             href='/'
           >
-            Gametokenpool
+            Game Wallet
           </Link>
           <ul className='menu menu-horizontal px-1 space-x-2'>
             {links.map(({ label, path }) => (

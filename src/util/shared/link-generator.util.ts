@@ -9,4 +9,10 @@ export class LinkGeneratorUtil {
 
     return getExplorerLink('address', publicKey, clusterType);
   }
+
+  public static generateTransactionLink(transactionId: string): string {
+    const clusterType = ConnectionUtil.getClusterType();
+
+    return getExplorerLink('transaction', transactionId, clusterType);
+  }
 }

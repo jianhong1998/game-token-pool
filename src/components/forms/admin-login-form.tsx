@@ -36,7 +36,7 @@ const AdminLoginForm: FC<Props> = ({ updateLoginStateFn }) => {
       <div className='flex flex-col items-center justify-center gap-5 mt-16'>
         <h1 className='text-4xl font-bold leading-tight'>Admin Login</h1>
         <input
-          type='text'
+          type='password'
           placeholder='Password'
           className='input input-lg input-bordered'
           onChange={(e) => setPassword(e.target.value)}

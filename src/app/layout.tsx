@@ -10,7 +10,6 @@ export const metadata = {
 const links: { label: string; path: string }[] = [
   { label: 'Admin', path: '/admin' },
   { label: 'Game', path: '/game' },
-  // { label: 'Game Wallet', path: '/game-wallet' },
 ];
 
 export default function RootLayout({

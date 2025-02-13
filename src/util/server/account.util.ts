@@ -15,4 +15,25 @@ export class AccountUtil {
 
     return userPublicKey;
   }
+
+  public static getGamePublicKey(gameName: string, poolKey: string): PublicKey {
+    const program = ConnectionUtil.getProgram();
+    const signer = ConnectionUtil.getSigner();
+
+    const poolPublicKey = new PublicKey(poolKey);
+
+    const seeds = [
+      Buffer.from('game'),
+      signer.publicKey.toBuffer(),
+      poolPublicKey.toBuffer(),
+      Buffer.from(gameName),
+    ];
+
+    const [gamePublicKey] = PublicKey.findProgramAddressSync(
+      seeds,
+      program.programId
+    );
+
+    return gamePublicKey;
+  }
 }
