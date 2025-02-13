@@ -44,7 +44,13 @@ const QuitGamePopup: FC<QuitGamePopupProps> = ({
         queryKey: ['game', 'one', { poolPublicKey, gameName }],
       });
     }
-  }, [isQuitGameSuccess]);
+  }, [
+    isQuitGameSuccess,
+    gameName,
+    poolPublicKey,
+    queryClient,
+    resetQuitGameState,
+  ]);
 
   if (!isPopupOpen) return <></>;
 

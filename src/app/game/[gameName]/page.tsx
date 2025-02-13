@@ -101,7 +101,7 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
     if (!isGamePlayer) {
       router.replace('/game');
     }
-  }, [gameDetail, user]);
+  }, [gameDetail, user, router]);
 
   if (!gameDetail || !user)
     return (

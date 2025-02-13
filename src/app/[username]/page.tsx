@@ -47,7 +47,13 @@ const UserPage: NextPage<PageContext<UserPageProps>> = () => {
       removeUsernameInLocalStorage();
       router.replace('/');
     }
-  }, [usernameInLocalStorage, userPublicKeyInLocalStorage, router]);
+  }, [
+    usernameInLocalStorage,
+    userPublicKeyInLocalStorage,
+    router,
+    removeUserPublicKeyInLocalStorage,
+    removeUsernameInLocalStorage,
+  ]);
 
   return <UserDashboard username={decodedUsername} />;
 };
