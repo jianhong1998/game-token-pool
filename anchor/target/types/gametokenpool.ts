@@ -381,36 +381,6 @@ export type Gametokenpool = {
               }
             ]
           }
-        },
-        {
-          "name": "gameMint",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  103,
-                  97,
-                  109,
-                  101,
-                  45,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "account",
-                "path": "game"
-              }
-            ]
-          }
         }
       ],
       "args": [

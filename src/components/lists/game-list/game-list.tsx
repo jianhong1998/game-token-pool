@@ -2,6 +2,9 @@ import { IGetAllGamesResponse } from '@/app/game/actions/fetch-games';
 import { FC, useMemo } from 'react';
 import GameCard from './game-card';
 import { useJoinGame } from '@/components/queries/game/join-game-query';
+import { useDeleteGame } from '@/components/queries/game/delete-game-query';
+import { useGetPools } from '@/components/queries/pool/use-pool';
+import { useUsername } from '@/components/custom-hooks/use-user';
 
 type GameListProps = {
   gameData: IGetAllGamesResponse[];
@@ -28,7 +31,17 @@ const GameList: FC<GameListProps> = ({ gameData, currentUserPublicKey }) => {
     return { joinedGames, notJoinedGames };
   }, [gameData, currentUserPublicKey]);
 
+  const username = useUsername();
+  const { data: pools } = useGetPools();
+  const poolPublicKey = pools?.map((pool) => pool.publicKey)[0];
+
+  const { mutateAsync: deleteGameFn, isPending: isDeleteGamePending } =
+    useDeleteGame(poolPublicKey ?? '', username);
   const { mutateAsync: joinGameFn, isPending: isJoiningGame } = useJoinGame();
+
+  const handleDeleteGame = async (gameName: string) => {
+    await deleteGameFn({ gameName });
+  };
 
   if (gameData.length === 0) {
     return <p className='text-center text-xl font-bold'>No Game Created</p>;
@@ -43,6 +56,8 @@ const GameList: FC<GameListProps> = ({ gameData, currentUserPublicKey }) => {
           isJoined
           isJoiningGame={isJoiningGame}
           joinGameFn={joinGameFn}
+          deleteGameFn={handleDeleteGame}
+          isDeletingGame={isDeleteGamePending}
         />
       ))}
       {notJoinedGames.map((game) => (
@@ -52,6 +67,8 @@ const GameList: FC<GameListProps> = ({ gameData, currentUserPublicKey }) => {
           isJoined={false}
           isJoiningGame={isJoiningGame}
           joinGameFn={joinGameFn}
+          deleteGameFn={handleDeleteGame}
+          isDeletingGame={isDeleteGamePending}
         />
       ))}
     </div>

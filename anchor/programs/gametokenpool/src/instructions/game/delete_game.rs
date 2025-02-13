@@ -1,7 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{
-  close_account, CloseAccount, Mint, TokenAccount, TokenInterface,
-};
+use anchor_spl::token_interface::{close_account, CloseAccount, TokenAccount, TokenInterface};
 
 use crate::{
   constants::ErrorCode,
@@ -49,17 +47,16 @@ pub struct DeleteGame<'info> {
     bump = game.game_token_account_bump
   )]
   pub game_token_account: InterfaceAccount<'info, TokenAccount>,
-
-  #[account(
-    mut,
-    seeds = [
-      b"game-mint",
-      signer.key().as_ref(),
-      game.key().as_ref()
-    ],
-    bump = game.game_mint_bump
-  )]
-  pub game_mint: InterfaceAccount<'info, Mint>,
+  // #[account(
+  //   mut,
+  //   seeds = [
+  //     b"game-mint",
+  //     signer.key().as_ref(),
+  //     game.key().as_ref()
+  //   ],
+  //   bump = game.game_mint_bump
+  // )]
+  // pub game_mint: InterfaceAccount<'info, Mint>,
 }
 
 pub fn process_delete_game(context: Context<DeleteGame>) -> Result<()> {

@@ -3,6 +3,7 @@
 import { getPools } from '@/app/admin/actions/pool';
 import { AccountUtil } from '@/util/server/account.util';
 import { ConnectionUtil } from '@/util/server/connection';
+import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { getAccount } from '@solana/spl-token';
 
 export interface IGetAllGamesResponse {
@@ -14,6 +15,10 @@ export interface IGetAllGamesResponse {
 
 export interface IGetGameDetailsResponse extends IGetAllGamesResponse {
   totalToken: number;
+  urls: {
+    game: string;
+    gameTokenAccount: string;
+  };
 }
 
 export const getAllGames = async (params: {
@@ -57,5 +62,11 @@ export const getGameDetails = async (
     publicKey: gamePublicKey.toBase58(),
     tokenAccountPublicKey: game.gameTokenAccount.toBase58(),
     totalToken: Number(gameTokenAccount.amount),
+    urls: {
+      game: LinkGeneratorUtil.generateAccountLink(gamePublicKey.toBase58()),
+      gameTokenAccount: LinkGeneratorUtil.generateAccountLink(
+        game.gameTokenAccount.toBase58()
+      ),
+    },
   };
 };
