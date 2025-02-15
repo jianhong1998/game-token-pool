@@ -73,7 +73,7 @@ export const getUserData = async (username: string): Promise<IUserData> => {
     const errorMessage = (error as Error).message.toLowerCase();
 
     if (errorMessage.includes(ErrorCode.USER_NOT_EXIST)) {
-      throw new Error(ErrorCode.USER_ALREADY_JOINED_GAME);
+      throw new Error(ErrorCode.USER_NOT_EXIST);
     }
 
     throw error;
