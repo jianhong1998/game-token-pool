@@ -2,7 +2,9 @@
 
 import { useLocalStorage } from '@/components/custom-hooks/use-local-storage';
 import UserDashboard from '@/components/dashboard/user-dashboard';
+import { useGetUser } from '@/components/queries/user/user-data-queries';
 import { useUserEndGame } from '@/components/queries/user/user-end-game-queries';
+import { ErrorCode } from '@/constants/error';
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
 import { PageContext } from '@/types/page-context.type';
 import { NextPage } from 'next';
@@ -17,7 +19,6 @@ const UserPage: NextPage<PageContext<UserPageProps>> = () => {
   const { username } = useParams<UserPageProps>();
   const router = useRouter();
   const {
-    setValue: setUsernameInLocalStorage,
     value: usernameInLocalStorage,
     removeValue: removeUsernameInLocalStorage,
   } = useLocalStorage(LocalStorageKey.USER, '');
@@ -27,6 +28,7 @@ const UserPage: NextPage<PageContext<UserPageProps>> = () => {
   } = useLocalStorage(LocalStorageKey.USER_PUBLIC_KEY, '');
 
   const { isSuccess: isUserEndGameRequestSuccess } = useUserEndGame();
+  const { error: getUserError } = useGetUser(usernameInLocalStorage);
 
   const decodedUsername = decodeURI(username);
 
@@ -35,6 +37,15 @@ const UserPage: NextPage<PageContext<UserPageProps>> = () => {
       router.replace('/');
     }
   }, [isUserEndGameRequestSuccess, router]);
+
+  useEffect(() => {
+    if (
+      getUserError &&
+      getUserError.message.includes(ErrorCode.USER_NOT_EXIST)
+    ) {
+      router.replace('/');
+    }
+  }, [getUserError, router]);
 
   useEffect(() => {
     if (

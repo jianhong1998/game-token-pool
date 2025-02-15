@@ -5,6 +5,7 @@ import { ConnectionUtil } from '@/util/server/connection';
 import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { getAccount } from '@solana/spl-token';
 import { getPools } from '../admin/actions/pool';
+import { ErrorCode } from '@/constants/error';
 
 export type IUserData = {
   user: {
@@ -31,42 +32,50 @@ export const getUserData = async (username: string): Promise<IUserData> => {
 
   const userPublicKey = AccountUtil.getUserPublicKey(username);
 
-  const user = await program.account.user.fetch(userPublicKey);
+  try {
+    const user = await program.account.user.fetch(userPublicKey);
 
-  const tokenAccount = await getAccount(
-    program.provider.connection,
-    user.tokenAccount
-  );
+    const tokenAccount = await getAccount(
+      program.provider.connection,
+      user.tokenAccount
+    );
 
-  const pool = (await getPools())[0];
+    const pool = (await getPools())[0];
 
-  console.log(
-    `[Get User Data] successfully fetch user data (${userPublicKey}) and the token account (${user.tokenAccount})`
-  );
+    console.log(
+      `[Get User Data] successfully fetch user data (${userPublicKey}) and the token account (${user.tokenAccount})`
+    );
 
-  return {
-    user: {
-      name: user.name,
-      publicKey: userPublicKey.toBase58(),
-    },
-    token: {
-      totalDepositedAmount: user.totalDepositedAmount.toNumber(),
-      currentAmount: Number(tokenAccount.amount),
-      accountPublicKey: tokenAccount.address.toBase58(),
-    },
-    link: {
-      userAccount: LinkGeneratorUtil.generateAccountLink(
-        userPublicKey.toBase58()
-      ),
-      userTokenAccount: LinkGeneratorUtil.generateAccountLink(
-        tokenAccount.address.toBase58()
-      ),
-    },
-    pool: {
-      name: pool?.name,
-      publicKey: pool?.publicKey,
-    },
-  };
+    return {
+      user: {
+        name: user.name,
+        publicKey: userPublicKey.toBase58(),
+      },
+      token: {
+        totalDepositedAmount: user.totalDepositedAmount.toNumber(),
+        currentAmount: Number(tokenAccount.amount),
+        accountPublicKey: tokenAccount.address.toBase58(),
+      },
+      link: {
+        userAccount: LinkGeneratorUtil.generateAccountLink(
+          userPublicKey.toBase58()
+        ),
+        userTokenAccount: LinkGeneratorUtil.generateAccountLink(
+          tokenAccount.address.toBase58()
+        ),
+      },
+      pool: {
+        name: pool?.name,
+        publicKey: pool?.publicKey,
+      },
+    };
+  } catch (error) {
+    if ((error as Error).message.includes(ErrorCode.USER_NOT_EXIST)) {
+      throw new Error(ErrorCode.USER_ALREADY_JOINED_GAME);
+    }
+
+    throw error;
+  }
 };
 
 export const getAllUserData = async (): Promise<IUserData[]> => {
