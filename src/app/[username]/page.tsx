@@ -43,6 +43,8 @@ const UserPage: NextPage<PageContext<UserPageProps>> = () => {
       getUserError &&
       getUserError.message.includes(ErrorCode.USER_NOT_EXIST)
     ) {
+      removeUsernameInLocalStorage();
+      removeUserPublicKeyInLocalStorage();
       router.replace('/');
     }
   }, [getUserError, router]);
