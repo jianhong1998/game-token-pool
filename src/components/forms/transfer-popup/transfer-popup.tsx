@@ -1,6 +1,24 @@
 import PrimaryButton from '@/components/ui/buttons/primary-button';
 import AmountInput from '@/components/ui/inputs/amount-input';
-import { FC, KeyboardEventHandler, useState } from 'react';
+import { NumberUtil } from '@/util/shared/number.util';
+import { FC, KeyboardEventHandler, ReactNode, useState } from 'react';
+
+interface TransferMessageProps {
+  displayedAmount: string;
+  username: string;
+}
+
+const TransferMessage: FC<TransferMessageProps> = ({
+  displayedAmount,
+  username,
+}) => {
+  return (
+    <p className='text-center'>
+      Transfered <span className='font-bold'>{displayedAmount}</span> to{' '}
+      <span className='font-bold'>{username}</span>.
+    </p>
+  );
+};
 
 interface TransferPopupProps {
   isPopupOpen: boolean;
@@ -9,6 +27,7 @@ interface TransferPopupProps {
   maxTransferAmount: number;
   transferFn: (cashAmount: number) => Promise<void>;
   isTransfering: boolean;
+  onSuccess?: (message: string | ReactNode, title?: string) => void;
 }
 
 const TransferPopup: FC<TransferPopupProps> = ({
@@ -18,6 +37,7 @@ const TransferPopup: FC<TransferPopupProps> = ({
   maxTransferAmount,
   transferFn,
   isTransfering,
+  onSuccess,
 }) => {
   const [cashAmount, setCashAmount] = useState<number>(0);
 
@@ -29,6 +49,20 @@ const TransferPopup: FC<TransferPopupProps> = ({
   const handleTansfer = async () => {
     await transferFn(cashAmount);
     handleClosePopup();
+
+    if (onSuccess) {
+      const displayedAmount = NumberUtil.getDisplayAmount(
+        cashAmount * 100
+      ).displayString;
+
+      onSuccess(
+        <TransferMessage
+          displayedAmount={displayedAmount}
+          username={toUsername}
+        />,
+        `Transfer Successfully`
+      );
+    }
   };
 
   const handleKeyUp: KeyboardEventHandler<HTMLInputElement> = (e) => {

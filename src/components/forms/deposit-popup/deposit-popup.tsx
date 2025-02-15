@@ -15,11 +15,7 @@ type DepositPopupProps = {
 const DepositPopup: FC<DepositPopupProps> = ({ isOpen, closeFn, username }) => {
   const [cashAmount, setCashAmount] = useState<number>(0);
 
-  const {
-    mutateAsync: depositFn,
-    isPending: isDepositPending,
-    isSuccess: isDepositSuccess,
-  } = useDeposit();
+  const { mutateAsync: depositFn, isPending: isDepositPending } = useDeposit();
 
   const handleClosePopup = useCallback(() => {
     setCashAmount(0);

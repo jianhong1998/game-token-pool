@@ -103,7 +103,7 @@ export const transfer = async (params: {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'processed'
   );
 
   console.log(`Transaction (${transactionId}) is confirmed.`);
@@ -147,7 +147,7 @@ export const transferToGame = async (params: {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'processed'
   );
 
   console.log(

@@ -8,6 +8,7 @@ import EndGamePopup from '@/components/forms/end-game-popup/end-game-popup';
 import QuitGamePopup from '@/components/forms/quit-game-popup/quit-game-popup';
 import TakeTokenFromGamePopup from '@/components/forms/take-token-from-game-popup/take-token-from-game-popup';
 import TransferToGamePopup from '@/components/forms/transfer-popup/transfer-to-game-popup';
+import { useCommonMessagePopup } from '@/components/popup/message-popup';
 import { useTakeTokenFromGame } from '@/components/queries/game/game-token-query';
 import { useGetGameDetails } from '@/components/queries/game/get-game-queries';
 import { useGetPools } from '@/components/queries/pool/use-pool';
@@ -61,6 +62,11 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
     mutateAsync: takeTokenFromGameFn,
     isPending: isTakeTokenFromGamePending,
   } = useTakeTokenFromGame(poolPublicKey ?? '');
+
+  const {
+    openPopup: openCommonMessagePopup,
+    popupComponent: CommonMessagePopup,
+  } = useCommonMessagePopup();
 
   const handleTransferToGame = async (cashAmount: number) => {
     await transferFn({ cashAmount, gameName: decodedGameName, username });
@@ -163,6 +169,7 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
         isTransfering={isTransferPending}
         maxTransferAmount={user.token.currentAmount / 100}
         transferFn={handleTransferToGame}
+        onSuccess={openCommonMessagePopup}
       />
       <TakeTokenFromGamePopup
         closePopupFn={toggleTakeTokenFromGamePopup}
@@ -174,6 +181,7 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
         isActionProcessing={isTakeTokenFromGamePending}
         processFn={handleTakeTokenFromGame}
       />
+      {CommonMessagePopup}
     </>
   );
 };

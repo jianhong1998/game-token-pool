@@ -15,6 +15,7 @@ import EndGamePopup from '../forms/end-game-popup/end-game-popup';
 import Divider from '../ui/divider';
 import { useLocalStorage } from '../custom-hooks/use-local-storage';
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
+import { useCommonMessagePopup } from '../popup/message-popup';
 
 type UserDashboardProps = {
   username: string;
@@ -30,12 +31,18 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
   const [isDepositPopupOpen, setIsDepositPopupOpen] = useState<boolean>(false);
   const [isEndGamePopupOpen, setIsEndGamePopupOpen] = useState<boolean>(false);
 
-  const { removeValue: removeUsername, value: usernameInLocalStorage } =
-    useLocalStorage(LocalStorageKey.USER, '');
+  const { removeValue: removeUsername } = useLocalStorage(
+    LocalStorageKey.USER,
+    ''
+  );
+  const { removeValue: removeUserPublicKey } = useLocalStorage(
+    LocalStorageKey.USER_PUBLIC_KEY,
+    ''
+  );
   const {
-    removeValue: removeUserPublicKey,
-    value: userPublicKeyInLocalStorage,
-  } = useLocalStorage(LocalStorageKey.USER_PUBLIC_KEY, '');
+    openPopup: openCommonMessagePopup,
+    popupComponent: commonMessagePopupComponent,
+  } = useCommonMessagePopup();
 
   const openTransferPopup = (toUsername: string) => {
     transferTo.current = toUsername;
@@ -134,6 +141,7 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
         isTransfering={isTransferPending}
         maxTransferAmount={userData.token.currentAmount / 100}
         transferFn={transferHandler}
+        onSuccess={openCommonMessagePopup}
       />
       <DepositPopup
         isOpen={isDepositPopupOpen}
@@ -145,6 +153,7 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
         togglePopupFn={toggleEndGameConfirmationPopup}
         username={username}
       />
+      {commonMessagePopupComponent}
     </>
   );
 };
