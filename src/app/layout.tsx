@@ -1,6 +1,7 @@
 import './globals.css';
 import { UiLayout } from '@/components/ui/ui-layout';
 import { ReactQueryProvider } from './react-query-provider';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   title: 'Gametokenpool',
@@ -23,6 +24,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <UiLayout links={links}>{children}</UiLayout>
         </ReactQueryProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
