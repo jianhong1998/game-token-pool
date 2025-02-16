@@ -48,12 +48,8 @@ const DealerDashboard: FC<DealerDashboardProps> = ({ userData }) => {
 
   const { mutateAsync: transferToUserFn, isPending: isTransferToUserPending } =
     useTransfer(username);
-  const {
-    mutateAsync: multiTransferFn,
-    isPending: isMultiTranferPending,
-    isSuccess: isMultiTransferSuccess,
-    reset: resetMultiTransferState,
-  } = useMultiTransfer(username);
+  const { mutateAsync: multiTransferFn, isPending: isMultiTranferPending } =
+    useMultiTransfer(username);
 
   const {
     openPopup: openCommonMessagePopupFn,
@@ -152,6 +148,7 @@ const DealerDashboard: FC<DealerDashboardProps> = ({ userData }) => {
         currentPlayers={currentPlayerNames}
         transferFn={handleMultiTransfer}
         maxAmount={NumberUtil.getCashAmount(userData.token.currentAmount).value}
+        disable={isMultiTranferPending || isTransferToUserPending}
       />
       {commonMessagePopupComponent}
     </>
