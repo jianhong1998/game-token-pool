@@ -8,7 +8,13 @@ export const useGetUser = (username: string | null) => {
     enabled: Boolean(username),
     queryKey: ['user', 'self', { username }],
     queryFn: async () => {
-      return await getUserData(username?.trim() ?? '');
+      const res = await getUserData(username?.trim() ?? '');
+
+      if (!res.isSuccess) {
+        throw res.error;
+      }
+
+      return res.data;
     },
     refetchInterval: 5000,
   });

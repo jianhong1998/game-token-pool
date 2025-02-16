@@ -6,6 +6,7 @@ import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { getAccount } from '@solana/spl-token';
 import { getPools } from '../admin/actions/pool';
 import { ErrorCode } from '@/constants/error';
+import { ICommonResponse } from '@/types/common-response.type';
 
 export type IUserData = {
   user: {
@@ -27,7 +28,9 @@ export type IUserData = {
   };
 };
 
-export const getUserData = async (username: string): Promise<IUserData> => {
+export const getUserData = async (
+  username: string
+): Promise<ICommonResponse<IUserData>> => {
   const program = ConnectionUtil.getProgram();
 
   const userPublicKey = AccountUtil.getUserPublicKey(username);
@@ -46,7 +49,7 @@ export const getUserData = async (username: string): Promise<IUserData> => {
       `[Get User Data] successfully fetch user data (${userPublicKey}) and the token account (${user.tokenAccount})`
     );
 
-    return {
+    const data = {
       user: {
         name: user.name,
         publicKey: userPublicKey.toBase58(),
@@ -69,14 +72,28 @@ export const getUserData = async (username: string): Promise<IUserData> => {
         publicKey: pool?.publicKey,
       },
     };
-  } catch (error) {
-    const errorMessage = (error as Error).message.toLowerCase();
 
-    if (errorMessage.includes(ErrorCode.USER_NOT_EXIST)) {
-      throw new Error(ErrorCode.USER_NOT_EXIST);
+    return {
+      isSuccess: true,
+      data,
+    };
+  } catch (error) {
+    const { message, cause, name, stack } = error as Error;
+    let errorMessage = message;
+
+    if (message.toLocaleLowerCase().includes(ErrorCode.USER_NOT_EXIST)) {
+      errorMessage = ErrorCode.USER_NOT_EXIST;
     }
 
-    throw error;
+    return {
+      isSuccess: false,
+      error: {
+        name,
+        message: errorMessage,
+        cause,
+        stack,
+      },
+    };
   }
 };
 
