@@ -1,4 +1,9 @@
-import { transfer, transferToGame } from '@/app/actions/user-fund';
+import {
+  bulkTransfer,
+  transfer,
+  transferToGame,
+} from '@/app/actions/user-fund';
+import { IMultiTransferData } from '@/components/forms/transfer-popup/multi-transfer-popup';
 import { ErrorCode } from '@/constants/error';
 import { NotificationUtil } from '@/util/client/notification.util';
 import { ErrorUtil } from '@/util/shared/error.util';
@@ -18,7 +23,7 @@ export const useTransfer = (fromUsername: string) => {
       });
     },
     onSuccess: async (_data, { cashAmount, toUsername }) => {
-      const { displayString: displayAmount } = NumberUtil.getDisplayAmount(
+      const { displayString: displayAmount } = NumberUtil.getCashAmount(
         cashAmount * 100,
         {
           withComma: true,
@@ -47,6 +52,33 @@ export const useTransfer = (fromUsername: string) => {
 
       NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
       console.error(errorMessage);
+    },
+  });
+};
+
+export const useMultiTransfer = (fromUsername: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, IMultiTransferData>({
+    mutationKey: ['user', 'transfer', 'multiple', { fromUsername }],
+    mutationFn: async (transferParamArray) => {
+      await bulkTransfer(
+        transferParamArray.map(({ cashAmount, username }) => ({
+          fromUsername,
+          toUsername: username,
+          cashAmount,
+        }))
+      );
+    },
+    onError: (error) => {
+      NotificationUtil.error(ErrorCode.SOMETHING_WENT_WRONG);
+      console.error(error);
+    },
+    onSuccess: async () => {
+      NotificationUtil.success('Successfully transfer to multiple users');
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'all'],
+      });
     },
   });
 };

@@ -47,7 +47,12 @@ const UserPage: NextPage<PageContext<UserPageProps>> = () => {
       removeUserPublicKeyInLocalStorage();
       router.replace('/');
     }
-  }, [getUserError, router]);
+  }, [
+    getUserError,
+    router,
+    removeUsernameInLocalStorage,
+    removeUserPublicKeyInLocalStorage,
+  ]);
 
   useEffect(() => {
     if (

@@ -4,12 +4,12 @@ import { FC } from 'react';
 
 type OtherUserCardProps = {
   user: IUserData;
-  onClickFn: (toUsername: string) => void;
+  onClickFn?: (toUsername: string) => void;
 };
 
 const OtherUserCard: FC<OtherUserCardProps> = ({ user, onClickFn }) => {
   const username = user.user.name;
-  const { displayString: displayAmount } = NumberUtil.getDisplayAmount(
+  const { displayString: displayAmount } = NumberUtil.getCashAmount(
     user.token.currentAmount,
     {
       withComma: true,
@@ -17,7 +17,7 @@ const OtherUserCard: FC<OtherUserCardProps> = ({ user, onClickFn }) => {
   );
 
   const handleOpenTransferPopup = () => {
-    onClickFn(user.user.name);
+    if (onClickFn) onClickFn(user.user.name);
   };
 
   return (

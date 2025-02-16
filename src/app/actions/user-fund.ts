@@ -54,11 +54,13 @@ export const deposit = async (params: {
   console.log(`[Deposit] Transaction is finalised: ${transactionId}`);
 };
 
-export const transfer = async (params: {
+interface ITranferParams {
   fromUsername: string;
   toUsername: string;
   cashAmount: number;
-}) => {
+}
+
+export const transfer = async (params: ITranferParams) => {
   const { cashAmount, fromUsername, toUsername } = params;
   const LOG_KEY = '[Transfer Between User]';
 
@@ -106,7 +108,57 @@ export const transfer = async (params: {
     'processed'
   );
 
-  console.log(`Transaction (${transactionId}) is confirmed.`);
+  console.log(`Transaction (${transactionId}) is processed.`);
+};
+
+export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
+  const LOG_KEY = '[Bulk Transfer to User]';
+
+  const program = ConnectionUtil.getProgram();
+  const connection = ConnectionUtil.getConnection();
+  const signer = ConnectionUtil.getSigner();
+
+  const transferInstructionPromises = transferParamsArray.map(
+    ({ cashAmount, fromUsername, toUsername }) => {
+      return program.methods
+        .transferTokenBetweenUsers(
+          fromUsername,
+          toUsername,
+          new BN(cashAmount * 100)
+        )
+        .accounts({ tokenProgram: TOKEN_PROGRAM_ID, signer: signer.publicKey })
+        .signers([signer])
+        .instruction();
+    }
+  );
+
+  const instructions = await Promise.all(transferInstructionPromises);
+
+  const { blockhash, lastValidBlockHeight } =
+    await connection.getLatestBlockhash();
+
+  const transactionMessage = new TransactionMessage({
+    instructions,
+    payerKey: signer.publicKey,
+    recentBlockhash: blockhash,
+  }).compileToV0Message();
+
+  const transaction = new VersionedTransaction(transactionMessage);
+  transaction.sign([signer]);
+
+  const transactionId = await connection.sendTransaction(transaction);
+  console.log(`${LOG_KEY} Transaction is sent: ${transactionId}`);
+
+  await connection.confirmTransaction(
+    {
+      blockhash,
+      lastValidBlockHeight,
+      signature: transactionId,
+    },
+    'processed'
+  );
+  const url = LinkGeneratorUtil.generateTransactionLink(transactionId);
+  console.log(`${LOG_KEY} Transaction is processed: ${url}`);
 };
 
 export const transferToGame = async (params: {

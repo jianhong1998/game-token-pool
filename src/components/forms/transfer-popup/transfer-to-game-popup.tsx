@@ -50,7 +50,7 @@ const TransferToGamePopup: FC<TransferToGamePopupProps> = ({
     await transferFn(cashAmount);
 
     if (onSuccess) {
-      const displayedAmount = NumberUtil.getDisplayAmount(cashAmount * 100, {
+      const displayedAmount = NumberUtil.getCashAmount(cashAmount * 100, {
         withComma: true,
       }).displayString;
 

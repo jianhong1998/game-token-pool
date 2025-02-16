@@ -51,7 +51,7 @@ const TransferPopup: FC<TransferPopupProps> = ({
     handleClosePopup();
 
     if (onSuccess) {
-      const displayedAmount = NumberUtil.getDisplayAmount(
+      const displayedAmount = NumberUtil.getCashAmount(
         cashAmount * 100
       ).displayString;
 

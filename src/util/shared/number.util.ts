@@ -6,7 +6,7 @@ export class NumberUtil {
    * @param tokenAmount Integer token amount
    * @return currency with 2 decimals. Example: return `2.00` currency for `200` token
    */
-  public static getDisplayAmount(
+  public static getCashAmount(
     tokenAmount: number,
     options?: { withComma?: boolean }
   ): {

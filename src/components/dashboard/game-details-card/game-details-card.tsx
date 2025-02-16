@@ -9,7 +9,7 @@ interface GameDetailCardProps {
 }
 
 const GameDetailCard: FC<GameDetailCardProps> = ({ gameDetails }) => {
-  const { displayString: displayedBalance } = NumberUtil.getDisplayAmount(
+  const { displayString: displayedBalance } = NumberUtil.getCashAmount(
     gameDetails.totalToken
   );
   const {

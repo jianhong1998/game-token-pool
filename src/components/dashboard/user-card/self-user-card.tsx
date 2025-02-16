@@ -3,6 +3,7 @@
 import { IUserData } from '@/app/actions/user-data';
 import DangerButton from '@/components/ui/buttons/danger-button';
 import PrimaryButton from '@/components/ui/buttons/primary-button';
+import Divider from '@/components/ui/divider';
 import { NumberUtil } from '@/util/shared/number.util';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -10,8 +11,10 @@ import { FC } from 'react';
 interface UserCardProps {
   userData: IUserData;
   toggleDepositPopup: () => void;
-  openEndGameConfirmationPopup: () => void;
+  openEndGameConfirmationPopup?: () => void;
   logOutOnClickFn?: () => void;
+  isInDealerMode?: boolean;
+  toggleTransferMultiplePopup?: () => void;
 }
 
 const SelfUserCard: FC<UserCardProps> = ({
@@ -19,25 +22,26 @@ const SelfUserCard: FC<UserCardProps> = ({
   toggleDepositPopup,
   openEndGameConfirmationPopup,
   logOutOnClickFn,
+  isInDealerMode,
+  toggleTransferMultiplePopup,
 }) => {
   const {
     user: { name: username },
-    link: {
-      userAccount: userAccountLink,
-      userTokenAccount: userTokenAccountLink,
-    },
+    link: { userTokenAccount: userTokenAccountLink },
   } = userData;
 
-  const { displayString: balanceCashAmountString } =
-    NumberUtil.getDisplayAmount(userData.token.currentAmount, {
+  const { displayString: balanceCashAmountString } = NumberUtil.getCashAmount(
+    userData.token.currentAmount,
+    {
       withComma: true,
-    });
+    }
+  );
   const { displayString: totalDepositedCashAmountString } =
-    NumberUtil.getDisplayAmount(userData.token.totalDepositedAmount, {
+    NumberUtil.getCashAmount(userData.token.totalDepositedAmount, {
       withComma: true,
     });
 
-  const { displayString: totalProfitString } = NumberUtil.getDisplayAmount(
+  const { displayString: totalProfitString } = NumberUtil.getCashAmount(
     userData.token.currentAmount - userData.token.totalDepositedAmount,
     { withComma: true }
   );
@@ -60,7 +64,7 @@ const SelfUserCard: FC<UserCardProps> = ({
               </tbody>
             </table>
           </div>
-          <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
+          <Divider />
           <div className='w-full'>
             <table className='w-full'>
               <tbody>
@@ -92,15 +96,6 @@ const SelfUserCard: FC<UserCardProps> = ({
           <div className='w-full flex justify-center'>
             <div className='flex-1 text-left'>
               <Link
-                href={userAccountLink}
-                className='link link-primary'
-                target='_blank'
-              >
-                User Account
-              </Link>
-            </div>
-            <div className='flex-1 text-right'>
-              <Link
                 href={userTokenAccountLink}
                 className='link link-primary'
                 target='_blank'
@@ -108,8 +103,18 @@ const SelfUserCard: FC<UserCardProps> = ({
                 Token Account
               </Link>
             </div>
+            {!isInDealerMode && (
+              <div className='flex-1 text-right'>
+                <Link
+                  href={`/${encodeURI(username)}/dealer`}
+                  className='link link-primary'
+                >
+                  Dealer Mode
+                </Link>
+              </div>
+            )}
           </div>
-          <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
+          <Divider />
           <div className='flex flex-row gap-3 w-full'>
             <PrimaryButton
               buttonType='outlined'
@@ -118,13 +123,24 @@ const SelfUserCard: FC<UserCardProps> = ({
             >
               Deposit
             </PrimaryButton>
-            <DangerButton
-              buttonType='outlined'
-              className='flex-1'
-              onClick={openEndGameConfirmationPopup}
-            >
-              Delete Account
-            </DangerButton>
+            {openEndGameConfirmationPopup && (
+              <DangerButton
+                buttonType='outlined'
+                className='flex-1'
+                onClick={openEndGameConfirmationPopup}
+              >
+                Delete Account
+              </DangerButton>
+            )}
+            {toggleTransferMultiplePopup && (
+              <PrimaryButton
+                buttonType='contained'
+                className='flex-1'
+                onClick={toggleTransferMultiplePopup}
+              >
+                Multi-Transfer
+              </PrimaryButton>
+            )}
           </div>
           {Boolean(logOutOnClickFn) && (
             <div>

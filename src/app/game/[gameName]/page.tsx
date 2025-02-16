@@ -176,7 +176,7 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
         isPopupOpen={isTakeTokenFromGamePopupOpen}
         gameName={decodedGameName}
         maxTransferAmount={
-          NumberUtil.getDisplayAmount(gameDetail.totalToken).value
+          NumberUtil.getCashAmount(gameDetail.totalToken).value
         }
         isActionProcessing={isTakeTokenFromGamePending}
         processFn={handleTakeTokenFromGame}

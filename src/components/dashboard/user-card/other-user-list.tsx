@@ -4,7 +4,7 @@ import OtherUserCard from './other-user-card';
 
 type OtherUserListProps = {
   users: IUserData[];
-  cardOnClickFn: (toUsername: string) => void;
+  cardOnClickFn?: (toUsername: string) => void;
 };
 
 const OtherUserList: FC<OtherUserListProps> = ({ users, cardOnClickFn }) => {
