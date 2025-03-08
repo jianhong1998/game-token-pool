@@ -24,7 +24,7 @@ export const deposit = async (params: {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'min'
+    'max'
   );
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
@@ -84,7 +84,7 @@ export const transfer = async (params: ITranferParams) => {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'min'
+    'max'
   );
 
   const addPriorityFeeInx = ComputeBudgetProgram.setComputeUnitPrice({
@@ -143,7 +143,7 @@ export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'min'
+    'max'
   );
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
@@ -206,7 +206,7 @@ export const transferToGame = async (params: {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'min'
+    'max'
   );
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
