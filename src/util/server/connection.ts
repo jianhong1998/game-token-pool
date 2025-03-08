@@ -1,4 +1,8 @@
-import { FEE_PAYER, SOLANA_CLUSTER_TYPE } from '@/constants';
+import {
+  SOLANA_CLUSTER_PROVIDER,
+  FEE_PAYER,
+  SOLANA_CLUSTER_TYPE,
+} from '@/constants';
 import { AnchorProvider, Program, setProvider } from '@coral-xyz/anchor';
 import {
   getGametokenpoolProgram,
@@ -26,22 +30,31 @@ export class ConnectionUtil {
     [
       'devnet',
       {
-        connection: new Connection(clusterApiUrl('devnet'), 'confirmed'),
-        endpoint: clusterApiUrl('devnet'),
+        connection: new Connection(
+          SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('devnet'),
+          'confirmed'
+        ),
+        endpoint: SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('devnet'),
       },
     ],
     [
       'testnet',
       {
-        connection: new Connection(clusterApiUrl('testnet'), 'confirmed'),
-        endpoint: clusterApiUrl('testnet'),
+        connection: new Connection(
+          SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('testnet'),
+          'confirmed'
+        ),
+        endpoint: SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('testnet'),
       },
     ],
     [
       'mainnet-beta',
       {
-        connection: new Connection(clusterApiUrl('mainnet-beta'), 'confirmed'),
-        endpoint: clusterApiUrl('mainnet-beta'),
+        connection: new Connection(
+          SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('mainnet-beta'),
+          'confirmed'
+        ),
+        endpoint: SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('mainnet-beta'),
       },
     ],
   ]);

@@ -3,6 +3,7 @@ export const {
   ADMIN_PASSWORD,
   SOLANA_CLUSTER_TYPE = 'localnet',
   NODE_ENV,
+  SOLANA_CLUSTER_PROVIDER,
 } = process.env;
 
 export const MAX_DEPOSIT_AMOUNT = 1_000_000;
