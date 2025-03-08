@@ -1,9 +1,14 @@
 'use server';
 
 import { ConnectionUtil } from '@/util/server/connection';
+import { PriorityFeeUtil } from '@/util/server/priority-fee.util';
 import { LinkGeneratorUtil } from '@/util/shared/link-generator.util';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { TransactionMessage, VersionedTransaction } from '@solana/web3.js';
+import {
+  ComputeBudgetProgram,
+  TransactionMessage,
+  VersionedTransaction,
+} from '@solana/web3.js';
 import { BN } from 'bn.js';
 
 export const deposit = async (params: {
@@ -16,6 +21,15 @@ export const deposit = async (params: {
   const connection = ConnectionUtil.getConnection();
 
   const tokenAmount = Math.floor(cashAmount * 100);
+
+  const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
+    connection,
+    'min'
+  );
+
+  const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+    microLamports: minFeeInLamport + 1,
+  });
 
   const instruction = await program.methods
     .deposit(username, new BN(tokenAmount))
@@ -30,7 +44,7 @@ export const deposit = async (params: {
     await connection.getLatestBlockhash();
 
   const transactionMessage = new TransactionMessage({
-    instructions: [instruction],
+    instructions: [addPriorityFee, instruction],
     payerKey: signer.publicKey,
     recentBlockhash: blockhash,
   }).compileToV0Message();
@@ -68,6 +82,15 @@ export const transfer = async (params: ITranferParams) => {
   const program = ConnectionUtil.getProgram();
   const signer = ConnectionUtil.getSigner();
 
+  const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
+    connection,
+    'min'
+  );
+
+  const addPriorityFeeInx = ComputeBudgetProgram.setComputeUnitPrice({
+    microLamports: minFeeInLamport + 1,
+  });
+
   const instruction = await program.methods
     .transferTokenBetweenUsers(
       fromUsername,
@@ -85,7 +108,7 @@ export const transfer = async (params: ITranferParams) => {
     await connection.getLatestBlockhash();
 
   const transactionMessage = new TransactionMessage({
-    instructions: [instruction],
+    instructions: [addPriorityFeeInx, instruction],
     payerKey: signer.publicKey,
     recentBlockhash: blockhash,
   }).compileToV0Message();
@@ -118,6 +141,15 @@ export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
   const connection = ConnectionUtil.getConnection();
   const signer = ConnectionUtil.getSigner();
 
+  const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
+    connection,
+    'min'
+  );
+
+  const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+    microLamports: minFeeInLamport + 1,
+  });
+
   const transferInstructionPromises = transferParamsArray.map(
     ({ cashAmount, fromUsername, toUsername }) => {
       return program.methods
@@ -138,7 +170,7 @@ export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
     await connection.getLatestBlockhash();
 
   const transactionMessage = new TransactionMessage({
-    instructions,
+    instructions: [addPriorityFee, ...instructions],
     payerKey: signer.publicKey,
     recentBlockhash: blockhash,
   }).compileToV0Message();
@@ -172,6 +204,15 @@ export const transferToGame = async (params: {
   const connection = ConnectionUtil.getConnection();
   const signer = ConnectionUtil.getSigner();
 
+  const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
+    connection,
+    'min'
+  );
+
+  const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+    microLamports: minFeeInLamport + 1,
+  });
+
   const transferTokenInstruction = await program.methods
     .userTransferTokenToGame(gameName, username, new BN(amount))
     .accounts({ tokenProgram: TOKEN_PROGRAM_ID, signer: signer.publicKey })
@@ -182,7 +223,7 @@ export const transferToGame = async (params: {
     await connection.getLatestBlockhash();
 
   const transactionMessage = new TransactionMessage({
-    instructions: [transferTokenInstruction],
+    instructions: [addPriorityFee, transferTokenInstruction],
     payerKey: signer.publicKey,
     recentBlockhash: blockhash,
   }).compileToV0Message();
