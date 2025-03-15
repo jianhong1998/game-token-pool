@@ -7,6 +7,8 @@ import { getAccount } from '@solana/spl-token';
 import { getPools } from '../admin/actions/pool';
 import { ErrorCode } from '@/constants/error';
 import { ICommonResponse } from '@/types/common-response.type';
+import { GetProgramAccountsFilter, PublicKey } from '@solana/web3.js';
+import bs58 from 'bs58';
 
 export type IUserData = {
   user: {
@@ -151,4 +153,112 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
   );
 
   return result;
+};
+
+type ISearchUserParams = Partial<{
+  name: string;
+  authority: string;
+}>;
+
+const STRING_LENGTH_SIZE = 4;
+const ACCOUNT_METADATA_SPACE = 8;
+const PUBKEY_SIZE = 32;
+
+type IFilter = GetProgramAccountsFilter;
+
+export const getSpecificUserData = async (
+  condition: ISearchUserParams
+): Promise<ICommonResponse<IUserData[]>> => {
+  try {
+    const program = ConnectionUtil.getProgram();
+
+    const filters = [] as Array<IFilter>;
+
+    if (condition.name) {
+      const offset = ACCOUNT_METADATA_SPACE + PUBKEY_SIZE + STRING_LENGTH_SIZE;
+      const bytes = bs58.encode(Buffer.from(condition.name));
+
+      console.log({ bytes, offset, name: condition.name });
+
+      filters.push({
+        memcmp: {
+          bytes,
+          offset,
+        },
+      });
+    }
+
+    if (condition.authority) {
+      const offset = ACCOUNT_METADATA_SPACE;
+      const authority = new PublicKey(condition.authority);
+      const bytes = authority.toBase58();
+
+      console.log({ bytes, offset, authority });
+
+      filters.push({
+        memcmp: {
+          bytes,
+          offset,
+          encoding: 'base58',
+        },
+      });
+    }
+
+    const userAccounts = await program.account.user.all(filters);
+    const pool = (await getPools())[0];
+
+    const results = [] as IUserData[];
+
+    for (const user of userAccounts) {
+      const tokenAccountPublicKey = user.account.tokenAccount;
+
+      const tokenAccount = await getAccount(
+        program.provider.connection,
+        tokenAccountPublicKey
+      );
+
+      results.push({
+        link: {
+          userAccount: LinkGeneratorUtil.generateAccountLink(
+            user.publicKey.toBase58()
+          ),
+          userTokenAccount: LinkGeneratorUtil.generateAccountLink(
+            tokenAccount.address.toBase58()
+          ),
+        },
+        pool: {
+          name: pool.name,
+          publicKey: pool.publicKey,
+        },
+        token: {
+          accountPublicKey: tokenAccountPublicKey.toBase58(),
+          currentAmount: Number(tokenAccount.amount),
+          totalDepositedAmount: user.account.totalDepositedAmount.toNumber(),
+        },
+        user: {
+          name: user.account.name,
+          publicKey: user.publicKey.toBase58(),
+        },
+      });
+    }
+
+    return { isSuccess: true, data: results };
+  } catch (error) {
+    const { message, cause, name, stack } = error as Error;
+    let errorMessage = message;
+
+    if (message.toLocaleLowerCase().includes(ErrorCode.USER_NOT_EXIST)) {
+      errorMessage = ErrorCode.USER_NOT_EXIST;
+    }
+
+    return {
+      isSuccess: false,
+      error: {
+        name,
+        message: errorMessage,
+        cause,
+        stack,
+      },
+    };
+  }
 };
