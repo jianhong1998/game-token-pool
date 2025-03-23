@@ -21,15 +21,16 @@ import { PageContext } from '@/types/page-context.type';
 import { NumberUtil } from '@/util/shared/number.util';
 import { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 
 interface GameDashboardPageProps {
   gameName: string;
 }
 
 const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
-  params: { gameName },
+  params,
 }) => {
+  const { gameName } = use(params);
   const decodedGameName = decodeURI(gameName);
 
   const [isDeleteAccountPopupOpen, setIsDeleteAccountPopupOpen] =

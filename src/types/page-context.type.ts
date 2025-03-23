@@ -1,3 +1,4 @@
-export type PageContext<T> = {
-  params: T;
+export type PageContext<Props = {}, SearchParams = {}> = {
+  params: Promise<Props>;
+  searchParams: Promise<SearchParams>;
 };

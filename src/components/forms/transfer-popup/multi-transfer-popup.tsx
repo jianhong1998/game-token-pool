@@ -33,7 +33,7 @@ const AmountInputWrapper: FC<AmountInputWrapperProps> = ({
 
       return arr;
     });
-  }, [amount]);
+  }, [amount, setMultiTransferData, username]);
 
   return (
     <AmountInput
@@ -131,7 +131,7 @@ const MultiTransferPopup: FC<MultiTransferPopupProps> = ({
     });
 
     setTransferData(newArr);
-  }, [currentPlayers]);
+  }, [currentPlayers, transferData]);
 
   return (
     <CommonPopup isOpen={isOpen}>

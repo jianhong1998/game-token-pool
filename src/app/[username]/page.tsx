@@ -8,15 +8,15 @@ import { ErrorCode } from '@/constants/error';
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
 import { PageContext } from '@/types/page-context.type';
 import { NextPage } from 'next';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { use, useEffect } from 'react';
 
 type UserPageProps = {
   username: string;
 };
 
-const UserPage: NextPage<PageContext<UserPageProps>> = () => {
-  const { username } = useParams<UserPageProps>();
+const UserPage: NextPage<PageContext<UserPageProps>> = ({ params }) => {
+  const { username } = use(params);
   const router = useRouter();
   const {
     value: usernameInLocalStorage,
