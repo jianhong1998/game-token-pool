@@ -124,3 +124,7 @@ The project uses Anchor's testing framework with both off-chain (bankrun) and on
 ## Docker Setup
 
 The project includes Docker configuration for running a complete development environment with local Solana validator. Use `make up/build` to start everything or individual make commands for specific operations.
+
+## Development Best Practices
+
+- Always run `make lint` and `make format` to format code after making code changes
