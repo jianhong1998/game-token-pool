@@ -6,7 +6,7 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (
-    <h1 className='text-2xl font-bold mb-4 text-primary text-center'>
+    <h1 className="text-2xl font-bold mb-4 text-primary text-center">
       {children}
     </h1>
   );

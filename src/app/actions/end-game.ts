@@ -25,7 +25,7 @@ export const userEndGame = async (params: { username: string }) => {
 
   const userInvolvedGames = allGames.filter((game) => {
     const gamePlayerKeys = game.account.players.map((publicKey) =>
-      publicKey.toBase58()
+      publicKey.toBase58(),
     );
 
     return gamePlayerKeys.includes(userPublicKey.toBase58());
@@ -38,8 +38,8 @@ export const userEndGame = async (params: { username: string }) => {
       program.methods
         .userQuitGame(game.account.gameName, username)
         .accounts({ tokenProgram: TOKEN_PROGRAM_ID, signer: signer.publicKey })
-        .instruction()
-    )
+        .instruction(),
+    ),
   );
 
   instructions.push(...userQuitGameInstructions);
@@ -70,7 +70,7 @@ export const userEndGame = async (params: { username: string }) => {
   const transactionId = await connection.sendTransaction(transaction);
 
   console.log(
-    `${LOG_KEY} User (${username}) end game transaction is sent: ${transactionId}`
+    `${LOG_KEY} User (${username}) end game transaction is sent: ${transactionId}`,
   );
 
   await connection.confirmTransaction(
@@ -79,7 +79,7 @@ export const userEndGame = async (params: { username: string }) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'confirmed',
   );
 
   console.log(`${LOG_KEY} Transaction ${transactionId} is finalized.`);

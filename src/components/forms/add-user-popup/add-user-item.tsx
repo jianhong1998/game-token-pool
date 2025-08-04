@@ -12,9 +12,9 @@ const AddUserItem: FC<AddUserItemProps> = ({
   selectUserFn,
 }) => {
   return (
-    <div className='flex flex-row gap-2'>
+    <div className="flex flex-row gap-2">
       <input
-        type='checkbox'
+        type="checkbox"
         className={`input input-sm checkbox-primary ${
           isUserSelected ? 'checked:' : ''
         }`}
@@ -26,7 +26,7 @@ const AddUserItem: FC<AddUserItemProps> = ({
       />
       <label
         htmlFor={`select-${user}`}
-        className='text-wrap text-left text-lg w-full'
+        className="text-wrap text-left text-lg w-full"
       >
         {user}
       </label>

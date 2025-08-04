@@ -12,12 +12,12 @@ const MultiTransferSummaryTable: FC<MultiTransferSummaryTableProps> = ({
   multiTransferData,
 }) => {
   return (
-    <div className='flex flex-col'>
+    <div className="flex flex-col">
       {multiTransferData.map(({ cashAmount, username }, index) => (
         <Fragment key={username}>
-          <div className='flex flex-row gap-3'>
-            <p className='flex-1'>{username}</p>
-            <p className='flex-1'>
+          <div className="flex flex-row gap-3">
+            <p className="flex-1">{username}</p>
+            <p className="flex-1">
               {
                 NumberUtil.getCashAmount(cashAmount * 100, { withComma: true })
                   .displayString

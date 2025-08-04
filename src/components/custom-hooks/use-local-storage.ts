@@ -12,7 +12,7 @@ interface IUseLocalStorageReturn<T> {
 // Generic type for the value stored in localStorage
 export const useLocalStorage = <T>(
   key: LocalStorageKey,
-  initialValue: T
+  initialValue: T,
 ): IUseLocalStorageReturn<T> => {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once

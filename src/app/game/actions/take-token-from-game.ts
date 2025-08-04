@@ -52,7 +52,7 @@ export const takeTokenFromGame = async (params: ITakeTokenFromGameParams) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'confirmed',
   );
   const url = LinkGeneratorUtil.generateTransactionLink(transactionId);
 

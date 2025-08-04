@@ -8,7 +8,7 @@ export class NumberUtil {
    */
   public static getCashAmount(
     tokenAmount: number,
-    options?: { withComma?: boolean }
+    options?: { withComma?: boolean },
   ): {
     value: number;
     displayString: string;

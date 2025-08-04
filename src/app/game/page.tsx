@@ -40,16 +40,13 @@ const GamePage: NextPage = () => {
   }
 
   if (isPendingGetAllGames || isPendingGetUserData) {
-    return <p className='text-xl font-bold text-center'>Loading Data...</p>;
+    return <p className="text-xl font-bold text-center">Loading Data...</p>;
   }
 
   return (
     <>
-      <div className='w-full mb-3'>
-        <PrimaryButton
-          className='w-full'
-          onClick={toggleCreateGamePopup}
-        >
+      <div className="w-full mb-3">
+        <PrimaryButton className="w-full" onClick={toggleCreateGamePopup}>
           Create Game
         </PrimaryButton>
       </div>

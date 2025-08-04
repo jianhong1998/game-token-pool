@@ -32,7 +32,7 @@ describe.skip('Test init()', () => {
   beforeAll(async () => {
     const feePayer = await AccountUtil.getAccount(TEST_FEE_PAYER_ID_FILE_PATH);
     const programOwner = await AccountUtil.getAccount(
-      TEST_PROGRAM_OWNER_ID_FILE_PATH
+      TEST_PROGRAM_OWNER_ID_FILE_PATH,
     );
 
     const programUtil = new ProgramUtil<Gametokenpool>(
@@ -50,7 +50,7 @@ describe.skip('Test init()', () => {
         addedPrograms: [],
         anchorRootPath: '.',
         isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
+      }),
     );
 
     const program = await programUtil.getProgram();
@@ -91,7 +91,7 @@ describe.skip('Test init()', () => {
 
     const [poolPublicKey] = PublicKey.findProgramAddressSync(
       [Buffer.from('pool'), testData.keypairs.feePayer.publicKey.toBuffer()],
-      testData.program.programId
+      testData.program.programId,
     );
 
     console.log({

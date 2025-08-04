@@ -21,11 +21,11 @@ const EndGamePopup: FC<EndGamePopupProps> = ({
 
   const { removeValue: removeUsername } = useLocalStorage(
     LocalStorageKey.USER,
-    ''
+    '',
   );
   const { removeValue: removeUserPublicKey } = useLocalStorage(
     LocalStorageKey.USER_PUBLIC_KEY,
-    ''
+    '',
   );
 
   const handleUserEndGame = async () => {
@@ -41,10 +41,10 @@ const EndGamePopup: FC<EndGamePopupProps> = ({
   if (!isPopupOpen) return <></>;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-      <div className='bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col'>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col">
         <div>
-          <h2 className='text-2xl font-bold mb-4 text-error text-center'>
+          <h2 className="text-2xl font-bold mb-4 text-error text-center">
             Are you sure
           </h2>
           <p>
@@ -52,18 +52,18 @@ const EndGamePopup: FC<EndGamePopupProps> = ({
             not able to be recovered.
           </p>
         </div>
-        <div className='flex flex-row gap-3 w-full justify-between'>
+        <div className="flex flex-row gap-3 w-full justify-between">
           <DangerButton
-            buttonType='contained'
-            className='flex-1'
+            buttonType="contained"
+            className="flex-1"
             disabled={isUserEndGamePending}
             onClick={handleUserEndGame}
           >
             End Game
           </DangerButton>
           <PrimaryButton
-            buttonType='outlined'
-            className='flex-1'
+            buttonType="outlined"
+            className="flex-1"
             onClick={togglePopupFn}
             disabled={isUserEndGamePending}
           >

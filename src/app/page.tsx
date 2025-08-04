@@ -10,7 +10,7 @@ const GamePage: NextPage = () => {
   const { value: username } = useLocalStorage(LocalStorageKey.USER, '');
   const { value: userPublicKey } = useLocalStorage(
     LocalStorageKey.USER_PUBLIC_KEY,
-    ''
+    '',
   );
 
   const router = useRouter();

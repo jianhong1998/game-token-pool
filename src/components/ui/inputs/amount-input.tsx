@@ -77,9 +77,9 @@ const AmountInput: FC<AmountInputProps> = ({
 
   return (
     <input
-      type='number'
-      className='input w-full input-bordered rounded-md input-primary bg-white text-black'
-      placeholder='Pool Name'
+      type="number"
+      className="input w-full input-bordered rounded-md input-primary bg-white text-black"
+      placeholder="Pool Name"
       value={amount.toFixed(2)}
       disabled={disabled}
       onChange={handleAmountChange}

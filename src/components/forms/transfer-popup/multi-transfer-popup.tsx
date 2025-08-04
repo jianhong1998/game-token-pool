@@ -21,7 +21,7 @@ const AmountInputWrapper: FC<AmountInputWrapperProps> = ({
 }) => {
   const [amount, setAmount] = useState<number>(
     multiTransferData.find((data) => data.username === username)?.cashAmount ??
-      0
+      0,
   );
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const MultiTransferPopup: FC<MultiTransferPopupProps> = ({
     currentPlayers.map((playerName) => ({
       username: playerName,
       cashAmount: 0,
-    }))
+    })),
   );
 
   const handleTransfer = async () => {
@@ -114,7 +114,7 @@ const MultiTransferPopup: FC<MultiTransferPopupProps> = ({
         currentPlayers.map((playerName) => ({
           username: playerName,
           cashAmount: 0,
-        }))
+        })),
       );
       closePopupFn();
     } catch (_error) {}
@@ -122,7 +122,7 @@ const MultiTransferPopup: FC<MultiTransferPopupProps> = ({
 
   useEffect(() => {
     const map = new Map<string, number>(
-      transferData.map(({ username, cashAmount }) => [username, cashAmount])
+      transferData.map(({ username, cashAmount }) => [username, cashAmount]),
     );
 
     const newArr: IMultiTransferData = currentPlayers.map((playerName) => {
@@ -148,18 +148,18 @@ const MultiTransferPopup: FC<MultiTransferPopupProps> = ({
         maxAmount={maxAmount}
       />
 
-      <div className='flex flex-row gap-3'>
+      <div className="flex flex-row gap-3">
         <PrimaryButton
-          buttonType='contained'
-          className='flex-1'
+          buttonType="contained"
+          className="flex-1"
           onClick={handleTransfer}
         >
           Transfer
         </PrimaryButton>
         <PrimaryButton
-          buttonType='outlined'
+          buttonType="outlined"
           onClick={closePopupFn}
-          className='flex-1'
+          className="flex-1"
         >
           Close
         </PrimaryButton>

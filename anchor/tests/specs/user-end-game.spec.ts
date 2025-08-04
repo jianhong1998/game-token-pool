@@ -37,7 +37,7 @@ describe('Test user end game', () => {
   beforeAll(async () => {
     const feePayer = await AccountUtil.getAccount(TEST_FEE_PAYER_ID_FILE_PATH);
     const programOwner = await AccountUtil.getAccount(
-      TEST_PROGRAM_OWNER_ID_FILE_PATH
+      TEST_PROGRAM_OWNER_ID_FILE_PATH,
     );
     const signers = [feePayer];
 
@@ -56,14 +56,14 @@ describe('Test user end game', () => {
         addedPrograms: [],
         anchorRootPath: '.',
         isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
+      }),
     );
 
     const program = await programUtil.getProgram();
 
     const [poolPublicKey] = PublicKey.findProgramAddressSync(
       [Buffer.from('pool'), feePayer.publicKey.toBuffer()],
-      program.programId
+      program.programId,
     );
 
     try {
@@ -78,7 +78,7 @@ describe('Test user end game', () => {
           program.provider.connection,
           feePayer.publicKey,
           10,
-          5
+          5,
         );
       }
 
@@ -98,7 +98,7 @@ describe('Test user end game', () => {
     const userAccountPublicKey = findUserPublicKey(
       TEST_USER_NAME,
       feePayer.publicKey,
-      program.programId
+      program.programId,
     );
 
     try {
@@ -106,7 +106,7 @@ describe('Test user end game', () => {
       console.log(`[Before All] User is initialised already`);
     } catch (error) {
       console.log(
-        `[Before All] User (${userAccountPublicKey}) is not initialised yet`
+        `[Before All] User (${userAccountPublicKey}) is not initialised yet`,
       );
       const transactionId = await addUser({
         program,
@@ -115,7 +115,7 @@ describe('Test user end game', () => {
         userName: TEST_USER_NAME,
       });
       console.log(
-        `[Before All] User is created successfully: ${transactionId}`
+        `[Before All] User is created successfully: ${transactionId}`,
       );
     }
 
@@ -129,7 +129,7 @@ describe('Test user end game', () => {
     ];
     const [poolTokenAccountPublicKey] = PublicKey.findProgramAddressSync(
       seeds,
-      program.programId
+      program.programId,
     );
 
     testData = {
@@ -163,7 +163,7 @@ describe('Test user end game', () => {
 
     const { amount: initPoolTokenAccountAmount } = await getAccount(
       program.provider.connection,
-      testData.publicKeys.poolTokenAccount
+      testData.publicKeys.poolTokenAccount,
     );
 
     const transactionId = await endGame({
@@ -177,13 +177,13 @@ describe('Test user end game', () => {
     // Check token is transfered over to pool token account
     const { amount: postPoolTokenAccountAmount } = await getAccount(
       program.provider.connection,
-      testData.publicKeys.poolTokenAccount
+      testData.publicKeys.poolTokenAccount,
     );
     const amountDiff = Number(
-      postPoolTokenAccountAmount - initPoolTokenAccountAmount
+      postPoolTokenAccountAmount - initPoolTokenAccountAmount,
     );
     expect(Number(postPoolTokenAccountAmount)).toBeGreaterThan(
-      Number(initPoolTokenAccountAmount)
+      Number(initPoolTokenAccountAmount),
     );
     expect(amountDiff).toBe(TEST_INITIAL_AMOUNT);
 
@@ -199,7 +199,7 @@ describe('Test user end game', () => {
     try {
       const userTokenAccount = await getAccount(
         program.provider.connection,
-        testData.publicKeys.userTokenAccount
+        testData.publicKeys.userTokenAccount,
       );
       expect(userTokenAccount).toBeUndefined();
     } catch (error) {

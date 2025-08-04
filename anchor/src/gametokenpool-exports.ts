@@ -13,14 +13,14 @@ export const GAMETOKENPOOL_PROGRAM_ID = new PublicKey(GametokenpoolIDL.address);
 // This is a helper function to get the Gametokenpool Anchor program.
 export function getGametokenpoolProgram(
   provider: AnchorProvider,
-  address?: PublicKey
+  address?: PublicKey,
 ) {
   return new Program(
     {
       ...GametokenpoolIDL,
       address: address ? address.toBase58() : GametokenpoolIDL.address,
     } as Gametokenpool,
-    provider
+    provider,
   );
 }
 

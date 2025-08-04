@@ -8,7 +8,7 @@ export class AccountUtil {
 
   public static createAddedAccount(
     address: PublicKey,
-    partialInfo: Partial<AccountInfoBytes>
+    partialInfo: Partial<AccountInfoBytes>,
   ): AddedAccount {
     return {
       address,

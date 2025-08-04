@@ -24,7 +24,7 @@ export const deposit = async (params: {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'max'
+    'max',
   );
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
@@ -62,7 +62,7 @@ export const deposit = async (params: {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'confirmed',
   );
 
   console.log(`[Deposit] Transaction is finalised: ${transactionId}`);
@@ -84,7 +84,7 @@ export const transfer = async (params: ITranferParams) => {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'max'
+    'max',
   );
 
   const addPriorityFeeInx = ComputeBudgetProgram.setComputeUnitPrice({
@@ -95,7 +95,7 @@ export const transfer = async (params: ITranferParams) => {
     .transferTokenBetweenUsers(
       fromUsername,
       toUsername,
-      new BN(cashAmount * 100)
+      new BN(cashAmount * 100),
     )
     .accounts({
       tokenProgram: TOKEN_PROGRAM_ID,
@@ -119,7 +119,7 @@ export const transfer = async (params: ITranferParams) => {
   const transactionId = await connection.sendTransaction(transaction);
 
   console.log(
-    `${LOG_KEY} Transaction for token transfering from "${fromUsername}" to "${toUsername}" is sent: ${transactionId}`
+    `${LOG_KEY} Transaction for token transfering from "${fromUsername}" to "${toUsername}" is sent: ${transactionId}`,
   );
 
   await connection.confirmTransaction(
@@ -128,7 +128,7 @@ export const transfer = async (params: ITranferParams) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'processed'
+    'processed',
   );
 
   console.log(`Transaction (${transactionId}) is processed.`);
@@ -143,7 +143,7 @@ export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'max'
+    'max',
   );
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
@@ -156,12 +156,12 @@ export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
         .transferTokenBetweenUsers(
           fromUsername,
           toUsername,
-          new BN(cashAmount * 100)
+          new BN(cashAmount * 100),
         )
         .accounts({ tokenProgram: TOKEN_PROGRAM_ID, signer: signer.publicKey })
         .signers([signer])
         .instruction();
-    }
+    },
   );
 
   const instructions = await Promise.all(transferInstructionPromises);
@@ -187,7 +187,7 @@ export const bulkTransfer = async (transferParamsArray: ITranferParams[]) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'processed'
+    'processed',
   );
   const url = LinkGeneratorUtil.generateTransactionLink(transactionId);
   console.log(`${LOG_KEY} Transaction is processed: ${url}`);
@@ -206,7 +206,7 @@ export const transferToGame = async (params: {
 
   const minFeeInLamport = await PriorityFeeUtil.getPriorityFee(
     connection,
-    'max'
+    'max',
   );
 
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
@@ -240,12 +240,12 @@ export const transferToGame = async (params: {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'processed'
+    'processed',
   );
 
   console.log(
     `${LOG_KEY} Transaction is confirmed: ${LinkGeneratorUtil.generateTransactionLink(
-      transactionId
-    )}`
+      transactionId,
+    )}`,
   );
 };

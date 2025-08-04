@@ -38,7 +38,7 @@ export const addUser = async (params: {
 export const findUserPublicKey = (
   userName: string,
   signerPublicKey: PublicKey,
-  programId: PublicKey
+  programId: PublicKey,
 ): PublicKey => {
   const seeds = [
     Buffer.from('user'),
@@ -47,7 +47,7 @@ export const findUserPublicKey = (
   ];
   const [userAccountPublicKey] = PublicKey.findProgramAddressSync(
     seeds,
-    programId
+    programId,
   );
 
   return userAccountPublicKey;

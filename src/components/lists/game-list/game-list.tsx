@@ -18,7 +18,7 @@ const GameList: FC<GameListProps> = ({ gameData, currentUserPublicKey }) => {
 
     gameData.forEach((game) => {
       const isUserJoined = game.players.some(
-        (playerKey) => playerKey === currentUserPublicKey
+        (playerKey) => playerKey === currentUserPublicKey,
       );
 
       if (isUserJoined) {
@@ -44,11 +44,11 @@ const GameList: FC<GameListProps> = ({ gameData, currentUserPublicKey }) => {
   };
 
   if (gameData.length === 0) {
-    return <p className='text-center text-xl font-bold'>No Game Created</p>;
+    return <p className="text-center text-xl font-bold">No Game Created</p>;
   }
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className="flex flex-col gap-3">
       {joinedGames.map((game) => (
         <GameCard
           key={game.publicKey}

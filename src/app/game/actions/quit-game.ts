@@ -39,7 +39,7 @@ export const userQuitGame = async (params: IUserQuitGameParams) => {
   const transactionId = await connection.sendTransaction(transaction);
 
   console.log(
-    `${LOG_KEY} Sent transaction for user quit game (${transactionId})`
+    `${LOG_KEY} Sent transaction for user quit game (${transactionId})`,
   );
 
   await connection.confirmTransaction(
@@ -48,7 +48,7 @@ export const userQuitGame = async (params: IUserQuitGameParams) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'finalized'
+    'finalized',
   );
   const url = LinkGeneratorUtil.generateTransactionLink(transactionId);
 

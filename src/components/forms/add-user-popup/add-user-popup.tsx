@@ -44,7 +44,7 @@ const AddUserPopup: FC<AddUserPopupProps> = ({
 
     setSelectedUsers((prev) => {
       const newArr = prev.filter(
-        (selectedUsername) => selectedUsername !== username
+        (selectedUsername) => selectedUsername !== username,
       );
 
       return newArr;
@@ -64,7 +64,7 @@ const AddUserPopup: FC<AddUserPopupProps> = ({
     <CommonPopup isOpen={isOpen}>
       <Header>Add Users</Header>
 
-      <div className='overflow-y-scroll'>
+      <div className="overflow-y-scroll">
         <AddUserForm
           users={usernames}
           selectUserFn={handleSelectUserChange}
@@ -75,18 +75,18 @@ const AddUserPopup: FC<AddUserPopupProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className='flex flex-row gap-3 w-full justify-between'>
+      <div className="flex flex-row gap-3 w-full justify-between">
         <PrimaryButton
-          buttonType='contained'
-          className='flex-1'
+          buttonType="contained"
+          className="flex-1"
           onClick={handleSubmit}
         >
           Add Users
         </PrimaryButton>
         <PrimaryButton
-          buttonType='outlined'
+          buttonType="outlined"
           onClick={handleClosePopup}
-          className='flex-1'
+          className="flex-1"
         >
           Close
         </PrimaryButton>

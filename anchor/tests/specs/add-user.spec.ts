@@ -31,7 +31,7 @@ describe.skip('Test add user', () => {
   beforeAll(async () => {
     const feePayer = await AccountUtil.getAccount(TEST_FEE_PAYER_ID_FILE_PATH);
     const programOwner = await AccountUtil.getAccount(
-      TEST_PROGRAM_OWNER_ID_FILE_PATH
+      TEST_PROGRAM_OWNER_ID_FILE_PATH,
     );
 
     const programUtil = new ProgramUtil<Gametokenpool>(
@@ -49,14 +49,14 @@ describe.skip('Test add user', () => {
         addedPrograms: [],
         anchorRootPath: '.',
         isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
+      }),
     );
 
     const program = await programUtil.getProgram();
 
     const [poolPublicKey] = PublicKey.findProgramAddressSync(
       [Buffer.from('pool'), feePayer.publicKey.toBuffer()],
-      program.programId
+      program.programId,
     );
 
     try {
@@ -71,7 +71,7 @@ describe.skip('Test add user', () => {
           program.provider.connection,
           feePayer.publicKey,
           10,
-          5
+          5,
         );
       }
 
@@ -121,7 +121,7 @@ describe.skip('Test add user', () => {
     const userAccountPublicKey = findUserPublicKey(
       testUserName,
       testData.keypairs.feePayer.publicKey,
-      testData.program.programId
+      testData.program.programId,
     );
 
     const userTokenAccountPublicKey = (
@@ -134,14 +134,13 @@ describe.skip('Test add user', () => {
       userTokenAccountPublicKey: userTokenAccountPublicKey.toBase58(),
     });
 
-    const userAccount = await testData.program.account.user.fetch(
-      userAccountPublicKey
-    );
+    const userAccount =
+      await testData.program.account.user.fetch(userAccountPublicKey);
 
     console.log({ userAccount });
 
     expect(userAccount.authority.toBase58()).toBe(
-      testData.keypairs.feePayer.publicKey.toBase58()
+      testData.keypairs.feePayer.publicKey.toBase58(),
     );
     expect(userAccount.name).toBe(testUserName);
     expect(userAccount.totalDepositedAmount.eq(new BN(1000))).toBeTruthy();

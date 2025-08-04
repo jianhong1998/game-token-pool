@@ -26,7 +26,7 @@ const AdminPage: NextPage = () => {
 
       {pools && pools.length > 0 && (
         <>
-          <hr className='border-t border-2 border-gray-200 w-full mx-auto my-4' />
+          <hr className="border-t border-2 border-gray-200 w-full mx-auto my-4" />
           <AdminUserDashboard />
         </>
       )}

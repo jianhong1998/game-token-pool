@@ -33,20 +33,17 @@ const AdminLoginForm: FC<Props> = ({ updateLoginStateFn }) => {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center gap-5 mt-16'>
-        <h1 className='text-4xl font-bold leading-tight'>Admin Login</h1>
+      <div className="flex flex-col items-center justify-center gap-5 mt-16">
+        <h1 className="text-4xl font-bold leading-tight">Admin Login</h1>
         <input
-          type='password'
-          placeholder='Password'
-          className='input input-lg input-bordered'
+          type="password"
+          placeholder="Password"
+          className="input input-lg input-bordered"
           onChange={(e) => setPassword(e.target.value)}
           onKeyUp={handleKey}
           value={password}
         />
-        <button
-          className='btn btn-outline btn-primary'
-          onClick={handleLogin}
-        >
+        <button className="btn btn-outline btn-primary" onClick={handleLogin}>
           Login
         </button>
       </div>

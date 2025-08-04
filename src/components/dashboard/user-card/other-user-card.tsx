@@ -13,7 +13,7 @@ const OtherUserCard: FC<OtherUserCardProps> = ({ user, onClickFn }) => {
     user.token.currentAmount,
     {
       withComma: true,
-    }
+    },
   );
 
   const handleOpenTransferPopup = () => {
@@ -22,14 +22,14 @@ const OtherUserCard: FC<OtherUserCardProps> = ({ user, onClickFn }) => {
 
   return (
     <div
-      className='card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl min-h-max cursor-pointer'
+      className="card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl min-h-max cursor-pointer"
       onClick={handleOpenTransferPopup}
     >
-      <div className='card-body flex flex-row justify-between gap-3'>
-        <h1 className='text-xl font-bold leading-tight flex-1 text-wrap'>
+      <div className="card-body flex flex-row justify-between gap-3">
+        <h1 className="text-xl font-bold leading-tight flex-1 text-wrap">
           {username}
         </h1>
-        <h1 className='text-xl font-bold leading-tight flex-1 text-right font-mono'>
+        <h1 className="text-xl font-bold leading-tight flex-1 text-right font-mono">
           {displayAmount}
         </h1>
       </div>

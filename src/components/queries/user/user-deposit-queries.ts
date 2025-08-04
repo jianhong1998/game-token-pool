@@ -20,7 +20,7 @@ export const useDeposit = () => {
       },
       onSuccess: async (_data, { cashAmount, username }) => {
         NotificationUtil.success(
-          `Deposited ${cashAmount} to account successfully`
+          `Deposited ${cashAmount} to account successfully`,
         );
         await queryClient.invalidateQueries({
           queryKey: ['user', 'self', { username }],
@@ -31,7 +31,7 @@ export const useDeposit = () => {
 
         if (ErrorUtil.isUserNotFoundError(errorMessage)) {
           NotificationUtil.error(
-            'User not added to pool. Please register first.'
+            'User not added to pool. Please register first.',
           );
           return;
         }
@@ -40,6 +40,6 @@ export const useDeposit = () => {
         console.error(errorMessage);
       },
     },
-    queryClient
+    queryClient,
   );
 };

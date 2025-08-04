@@ -5,7 +5,7 @@ export class PriorityFeeUtil {
 
   public static async getPriorityFee(
     connection: Connection,
-    priorityLevel: 'min' | 'max' | 'avg'
+    priorityLevel: 'min' | 'max' | 'avg',
   ): Promise<number> {
     const recentPriorityFees = (
       await connection.getRecentPrioritizationFees()

@@ -37,7 +37,7 @@ export const useGetAllUsers = () => {
 };
 
 export const useGetSpecificUser = (
-  params: Partial<{ username: string; authority: PublicKey }>
+  params: Partial<{ username: string; authority: PublicKey }>,
 ) => {
   let key = '';
   const { authority, username } = params;

@@ -37,7 +37,7 @@ describe.skip('Test transfering token between users', () => {
   beforeAll(async () => {
     const feePayer = await AccountUtil.getAccount(TEST_FEE_PAYER_ID_FILE_PATH);
     const programOwner = await AccountUtil.getAccount(
-      TEST_PROGRAM_OWNER_ID_FILE_PATH
+      TEST_PROGRAM_OWNER_ID_FILE_PATH,
     );
 
     const programUtil = new ProgramUtil<Gametokenpool>(
@@ -55,14 +55,14 @@ describe.skip('Test transfering token between users', () => {
         addedPrograms: [],
         anchorRootPath: '.',
         isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
+      }),
     );
 
     const program = await programUtil.getProgram();
 
     const [poolPublicKey] = PublicKey.findProgramAddressSync(
       [Buffer.from('pool'), feePayer.publicKey.toBuffer()],
-      program.programId
+      program.programId,
     );
 
     const signers = [feePayer];
@@ -83,7 +83,7 @@ describe.skip('Test transfering token between users', () => {
           program.provider.connection,
           feePayer.publicKey,
           10,
-          5
+          5,
         );
       }
 
@@ -107,12 +107,12 @@ describe.skip('Test transfering token between users', () => {
     const userAccountPublicKey1 = findUserPublicKey(
       TEST_USER_NAME_1,
       signers[0].publicKey,
-      program.programId
+      program.programId,
     );
     const userAccountPublicKey2 = findUserPublicKey(
       TEST_USER_NAME_2,
       signers[0].publicKey,
-      program.programId
+      program.programId,
     );
 
     try {
@@ -120,7 +120,7 @@ describe.skip('Test transfering token between users', () => {
       console.log(`[Before All] User 1 is initialised already`);
     } catch (error) {
       console.log(
-        `[Before All] User 1 (${userAccountPublicKey1}) is not initialised yet`
+        `[Before All] User 1 (${userAccountPublicKey1}) is not initialised yet`,
       );
       const transactionId = await addUser({
         program,
@@ -129,7 +129,7 @@ describe.skip('Test transfering token between users', () => {
         userName: TEST_USER_NAME_1,
       });
       console.log(
-        `[Before All] User 1 is created successfully: ${transactionId}`
+        `[Before All] User 1 is created successfully: ${transactionId}`,
       );
     }
 
@@ -138,7 +138,7 @@ describe.skip('Test transfering token between users', () => {
       console.log(`[Before All] User 2 is initialised already`);
     } catch (error) {
       console.log(
-        `[Before All] User 2 (${userAccountPublicKey2}) is not initialised yet`
+        `[Before All] User 2 (${userAccountPublicKey2}) is not initialised yet`,
       );
       const transactionId = await addUser({
         program,
@@ -147,7 +147,7 @@ describe.skip('Test transfering token between users', () => {
         userName: TEST_USER_NAME_2,
       });
       console.log(
-        `[Before All] User 2 is created successfully: ${transactionId}`
+        `[Before All] User 2 is created successfully: ${transactionId}`,
       );
     }
 
@@ -221,7 +221,7 @@ describe.skip('Test transfering token between users', () => {
       .transferTokenBetweenUsers(
         TEST_USER_NAME_1,
         TEST_USER_NAME_2,
-        new BN(testTransferAmount)
+        new BN(testTransferAmount),
       )
       .accounts({
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -231,7 +231,7 @@ describe.skip('Test transfering token between users', () => {
       .rpc();
 
     console.log(
-      `Transaction for amount transfer is completed: ${transactionId}`
+      `Transaction for amount transfer is completed: ${transactionId}`,
     );
 
     const user1PostAmount = (

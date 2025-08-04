@@ -11,7 +11,7 @@ export const useUsername = () => {
 export const useUserPublicKey = () => {
   const { value: userPublicKey } = useLocalStorage(
     LocalStorageKey.USER_PUBLIC_KEY,
-    ''
+    '',
   );
   return userPublicKey;
 };

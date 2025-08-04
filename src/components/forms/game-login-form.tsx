@@ -16,11 +16,11 @@ const GameLoginForm: FC = () => {
 
   const { setValue: setUsernameInLocalStorage } = useLocalStorage(
     LocalStorageKey.USER,
-    ''
+    '',
   );
   const { setValue: setUserPublicKeyInLocalStorage } = useLocalStorage(
     LocalStorageKey.USER_PUBLIC_KEY,
-    ''
+    '',
   );
 
   const { mutateAsync: userLoginFn, isPending: isLoginPending } =
@@ -67,25 +67,25 @@ const GameLoginForm: FC = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center gap-5 mt-16 px-5'>
-        <h1 className='text-4xl font-bold leading-tight'>User Login</h1>
+      <div className="flex flex-col items-center justify-center gap-5 mt-16 px-5">
+        <h1 className="text-4xl font-bold leading-tight">User Login</h1>
         <input
-          type='text'
-          placeholder='User Name'
-          className='input input-lg input-bordered w-full'
+          type="text"
+          placeholder="User Name"
+          className="input input-lg input-bordered w-full"
           onChange={(e) => setUsername(e.target.value)}
           onKeyUp={handleKey}
           value={username}
         />
         <button
-          className='btn btn-primary w-full'
+          className="btn btn-primary w-full"
           onClick={handleLogin}
           disabled={username.trim().length === 0 || isProcessing}
         >
           Login
         </button>
         <button
-          className='btn btn-outline btn-primary w-full'
+          className="btn btn-outline btn-primary w-full"
           onClick={handleRegister}
           disabled={username.trim().length === 0 || isProcessing}
         >

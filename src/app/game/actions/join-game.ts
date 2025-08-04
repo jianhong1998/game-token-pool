@@ -42,7 +42,7 @@ export const joinGame = async (params: {
     });
 
     console.log(
-      `[Join Game] User join game transaction confirmed: ${transactionId}`
+      `[Join Game] User join game transaction confirmed: ${transactionId}`,
     );
   } catch (error) {
     const message = (error as Error).message;

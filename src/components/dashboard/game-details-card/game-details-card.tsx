@@ -10,29 +10,29 @@ interface GameDetailCardProps {
 
 const GameDetailCard: FC<GameDetailCardProps> = ({ gameDetails }) => {
   const { displayString: displayedBalance } = NumberUtil.getCashAmount(
-    gameDetails.totalToken
+    gameDetails.totalToken,
   );
   const {
     urls: { gameTokenAccount: gameTokenAccountExplorerUrl },
   } = gameDetails;
 
   return (
-    <div className='card bg-white z-0 rounded-3xl mx-auto'>
-      <div className='card-body'>
-        <div className='flex flex-row justify-between'>
-          <h1 className='text-lg font-bold'>{gameDetails.name}</h1>
+    <div className="card bg-white z-0 rounded-3xl mx-auto">
+      <div className="card-body">
+        <div className="flex flex-row justify-between">
+          <h1 className="text-lg font-bold">{gameDetails.name}</h1>
           <Link
             href={gameTokenAccountExplorerUrl}
-            className='link link-primary'
-            target='_blank'
+            className="link link-primary"
+            target="_blank"
           >
             View Game Token Account
           </Link>
         </div>
         <Divider />
-        <div className='flex flex-row'>
+        <div className="flex flex-row">
           <p>Game Balance</p>
-          <p className='text-right font-mono'>{displayedBalance}</p>
+          <p className="text-right font-mono">{displayedBalance}</p>
         </div>
       </div>
     </div>

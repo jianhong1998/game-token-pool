@@ -31,7 +31,7 @@ export const useUserLogin = () => {
 
       if (ErrorUtil.isUserNotFoundError(errorMessage)) {
         NotificationUtil.error(
-          'User not added to pool. Please register first.'
+          'User not added to pool. Please register first.',
         );
 
         return;
@@ -45,7 +45,7 @@ export const useUserLogin = () => {
 
       if (ErrorUtil.isUserNotFoundError(errorMessage)) {
         NotificationUtil.error(
-          'User not added to pool. Please register first.'
+          'User not added to pool. Please register first.',
         );
         return;
       }

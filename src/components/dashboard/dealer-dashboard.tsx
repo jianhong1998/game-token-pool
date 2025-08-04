@@ -89,7 +89,7 @@ const DealerDashboard: FC<DealerDashboardProps> = ({ userData }) => {
     await multiTransferFn(multiTransferData);
     openCommonMessagePopupFn(
       <MultiTransferSummaryTable multiTransferData={multiTransferData} />,
-      'Successfully Transfer to Multi-Users'
+      'Successfully Transfer to Multi-Users',
     );
   };
 
@@ -102,15 +102,12 @@ const DealerDashboard: FC<DealerDashboardProps> = ({ userData }) => {
         toggleTransferMultiplePopup={toggleTransferMultiplePopup}
       />
       <Divider />
-      <div className='flex flex-row mb-3'>
-        <PrimaryButton
-          className='flex-1'
-          onClick={toggleAddUserPopup}
-        >
+      <div className="flex flex-row mb-3">
+        <PrimaryButton className="flex-1" onClick={toggleAddUserPopup}>
           Add User
         </PrimaryButton>
       </div>
-      <div className='flex flex-col gap-2'>
+      <div className="flex flex-col gap-2">
         <OtherUserList
           users={currentPlayerDataArray}
           cardOnClickFn={handleOpenTransferPopup}

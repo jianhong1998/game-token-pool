@@ -29,12 +29,12 @@ const AdminUserDashboard: FC = () => {
   }
 
   if (isFetchingUsers) {
-    return <h1 className='font-bold text-2xl text-center'>Loading Users...</h1>;
+    return <h1 className="font-bold text-2xl text-center">Loading Users...</h1>;
   }
 
   if (!users) {
     return (
-      <h1 className='font-bold text-2xl text-center text-error'>
+      <h1 className="font-bold text-2xl text-center text-error">
         Failed to fetch users! Please refresh the page!
       </h1>
     );
@@ -42,7 +42,7 @@ const AdminUserDashboard: FC = () => {
 
   if (users.length === 0) {
     return (
-      <h1 className='font-bold text-2xl text-center'>
+      <h1 className="font-bold text-2xl text-center">
         No user account for the pool
       </h1>
     );
@@ -50,10 +50,7 @@ const AdminUserDashboard: FC = () => {
 
   return (
     <>
-      <OtherUserList
-        cardOnClickFn={openUserEndGamePopup}
-        users={users}
-      />
+      <OtherUserList cardOnClickFn={openUserEndGamePopup} users={users} />
       <AdminEndGamePopup
         togglePopupFn={closeUserEndGamePopup}
         isPopupOpen={isRemoveUserPopupOpen}

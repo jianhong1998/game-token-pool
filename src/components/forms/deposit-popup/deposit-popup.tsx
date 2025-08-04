@@ -44,10 +44,10 @@ const DepositPopup: FC<DepositPopupProps> = ({ isOpen, closeFn, username }) => {
   if (!isOpen) return <></>;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-      <div className='bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col'>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col">
         <div>
-          <h2 className='text-2xl font-bold mb-4 text-primary text-center'>
+          <h2 className="text-2xl font-bold mb-4 text-primary text-center">
             Deposit to {username}
           </h2>
           <AmountInput
@@ -58,18 +58,18 @@ const DepositPopup: FC<DepositPopupProps> = ({ isOpen, closeFn, username }) => {
             disabled={isDepositPending}
           />
         </div>
-        <div className='flex flex-row gap-3 w-full justify-between'>
+        <div className="flex flex-row gap-3 w-full justify-between">
           <PrimaryButton
-            buttonType='contained'
-            className='flex-1'
+            buttonType="contained"
+            className="flex-1"
             disabled={cashAmount <= 0 || isDepositPending}
             onClick={handleDeposit}
           >
             Deposit
           </PrimaryButton>
           <PrimaryButton
-            buttonType='outlined'
-            className='flex-1'
+            buttonType="outlined"
+            className="flex-1"
             onClick={handleClosePopup}
             disabled={isDepositPending}
           >

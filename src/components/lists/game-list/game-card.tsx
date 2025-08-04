@@ -55,18 +55,18 @@ const GameCard: FC<GameCardProps> = ({
   const isFreezingActions = isJoiningGame || isDeletingGame;
 
   return (
-    <div className='card bg-white'>
-      <div className='card-body flex flex-row'>
-        <div className='flex-1 my-auto'>
-          <p className='text-wrap text-lg font-bold'>{game.name}</p>
+    <div className="card bg-white">
+      <div className="card-body flex flex-row">
+        <div className="flex-1 my-auto">
+          <p className="text-wrap text-lg font-bold">{game.name}</p>
           <p>
             Player: {game.players.length} / {MAX_PLAYER_PER_GAME}
           </p>
         </div>
-        <div className='flex flex-col flex-1 gap-3'>
+        <div className="flex flex-col flex-1 gap-3">
           {isJoined && (
             <PrimaryButton
-              className='w-full'
+              className="w-full"
               onClick={handleContinue}
               disabled={isFreezingActions}
             >
@@ -75,8 +75,8 @@ const GameCard: FC<GameCardProps> = ({
           )}
           {!isJoined && (
             <PrimaryButton
-              buttonType='outlined'
-              className='w-full'
+              buttonType="outlined"
+              className="w-full"
               onClick={handleJoin}
               disabled={isFreezingActions}
             >
@@ -84,8 +84,8 @@ const GameCard: FC<GameCardProps> = ({
             </PrimaryButton>
           )}
           <DangerButton
-            className='w-full'
-            buttonType='outlined'
+            className="w-full"
+            buttonType="outlined"
             onClick={handleDelete}
             disabled={isFreezingActions || game.players.length > 0}
           >

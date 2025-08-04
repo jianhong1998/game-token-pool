@@ -19,11 +19,11 @@ const DealerPage: NextPage = () => {
 
   const { removeValue: removeUsername } = useLocalStorage(
     LocalStorageKey.USER,
-    ''
+    '',
   );
   const { removeValue: removePublicKey } = useLocalStorage(
     LocalStorageKey.USER_PUBLIC_KEY,
-    ''
+    '',
   );
 
   const { data: userData, error: getUserError } = useGetUser(username);
@@ -53,7 +53,7 @@ const DealerPage: NextPage = () => {
 
   if (!userData) {
     return (
-      <h1 className='text-wrap font-bold text-xl text-center'>
+      <h1 className="text-wrap font-bold text-xl text-center">
         Loading user data...
       </h1>
     );

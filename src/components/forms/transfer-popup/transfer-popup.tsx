@@ -13,9 +13,9 @@ const TransferMessage: FC<TransferMessageProps> = ({
   username,
 }) => {
   return (
-    <p className='text-center'>
-      Transfered <span className='font-bold'>{displayedAmount}</span> to{' '}
-      <span className='font-bold'>{username}</span>.
+    <p className="text-center">
+      Transfered <span className="font-bold">{displayedAmount}</span> to{' '}
+      <span className="font-bold">{username}</span>.
     </p>
   );
 };
@@ -52,7 +52,7 @@ const TransferPopup: FC<TransferPopupProps> = ({
 
     if (onSuccess) {
       const displayedAmount = NumberUtil.getCashAmount(
-        cashAmount * 100
+        cashAmount * 100,
       ).displayString;
 
       onSuccess(
@@ -60,7 +60,7 @@ const TransferPopup: FC<TransferPopupProps> = ({
           displayedAmount={displayedAmount}
           username={toUsername}
         />,
-        `Transfer Successfully`
+        `Transfer Successfully`,
       );
     }
   };
@@ -77,10 +77,10 @@ const TransferPopup: FC<TransferPopupProps> = ({
   if (!isPopupOpen) return <></>;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-      <div className='bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col'>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col">
         <div>
-          <h2 className='text-2xl font-bold mb-4 text-primary text-center'>
+          <h2 className="text-2xl font-bold mb-4 text-primary text-center">
             Transfer to {toUsername}
           </h2>
           <AmountInput
@@ -91,18 +91,18 @@ const TransferPopup: FC<TransferPopupProps> = ({
             disabled={isTransfering}
           />
         </div>
-        <div className='flex flex-row gap-3 w-full justify-between'>
+        <div className="flex flex-row gap-3 w-full justify-between">
           <PrimaryButton
-            buttonType='contained'
-            className='flex-1'
+            buttonType="contained"
+            className="flex-1"
             disabled={isTransfering || cashAmount === 0}
             onClick={handleTansfer}
           >
             Transfer
           </PrimaryButton>
           <PrimaryButton
-            buttonType='outlined'
-            className='flex-1'
+            buttonType="outlined"
+            className="flex-1"
             onClick={handleClosePopup}
             disabled={isTransfering}
           >

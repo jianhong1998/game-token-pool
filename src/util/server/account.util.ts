@@ -10,7 +10,7 @@ export class AccountUtil {
 
     const [userPublicKey] = PublicKey.findProgramAddressSync(
       [Buffer.from('user'), Buffer.from(username), signer.publicKey.toBuffer()],
-      program.programId
+      program.programId,
     );
 
     return userPublicKey;
@@ -31,7 +31,7 @@ export class AccountUtil {
 
     const [gamePublicKey] = PublicKey.findProgramAddressSync(
       seeds,
-      program.programId
+      program.programId,
     );
 
     return gamePublicKey;

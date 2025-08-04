@@ -22,10 +22,7 @@ const InitPoolForm: FC = () => {
   return (
     <>
       <div>
-        <button
-          className='btn btn-primary'
-          onClick={toggleInitPoolPopup}
-        >
+        <button className="btn btn-primary" onClick={toggleInitPoolPopup}>
           Create Pool
         </button>
       </div>
@@ -34,27 +31,27 @@ const InitPoolForm: FC = () => {
         closePopup={toggleInitPoolPopup}
       />
       {(!pools || pools.length === 0) && (
-        <h1 className='font-bold text-2xl text-center'>No pool initialised</h1>
+        <h1 className="font-bold text-2xl text-center">No pool initialised</h1>
       )}
       {pools && (
-        <div className='flex flex-col gap-5 mt-3'>
+        <div className="flex flex-col gap-5 mt-3">
           {pools.map((pool, index) => {
             return (
               <div
                 key={index}
-                className='card max-w-sm rounded overflow-scroll shadow-lg bg-white z-0'
+                className="card max-w-sm rounded overflow-scroll shadow-lg bg-white z-0"
               >
-                <div className='card-body'>
+                <div className="card-body">
                   <div>
                     <p>{pool.name}</p>
                   </div>
-                  <div className='card-actions flex justify-start flex-row'>
+                  <div className="card-actions flex justify-start flex-row">
                     <Link
-                      className='overflow-x-scroll link link-primary'
-                      target='_blank'
+                      className="overflow-x-scroll link link-primary"
+                      target="_blank"
                       href={pool.link}
                     >
-                      <PrimaryButton buttonType='outlined'>
+                      <PrimaryButton buttonType="outlined">
                         View Pool
                       </PrimaryButton>
                     </Link>

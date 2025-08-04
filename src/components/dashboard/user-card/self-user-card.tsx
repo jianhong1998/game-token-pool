@@ -34,7 +34,7 @@ const SelfUserCard: FC<UserCardProps> = ({
     userData.token.currentAmount,
     {
       withComma: true,
-    }
+    },
   );
   const { displayString: totalDepositedCashAmountString } =
     NumberUtil.getCashAmount(userData.token.totalDepositedAmount, {
@@ -43,20 +43,20 @@ const SelfUserCard: FC<UserCardProps> = ({
 
   const { displayString: totalProfitString } = NumberUtil.getCashAmount(
     userData.token.currentAmount - userData.token.totalDepositedAmount,
-    { withComma: true }
+    { withComma: true },
   );
 
   return (
     <>
-      <div className='card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl mx-auto'>
-        <div className='card-body'>
-          <div className='w-full'>
-            <table className='w-full'>
+      <div className="card max-w-sm overflow-scroll shadow-lg bg-white z-0 rounded-3xl mx-auto">
+        <div className="card-body">
+          <div className="w-full">
+            <table className="w-full">
               <tbody>
                 <tr>
                   <td>Current User</td>
                   <td>
-                    <h1 className='text-xl font-bold leading-tight text-right'>
+                    <h1 className="text-xl font-bold leading-tight text-right">
                       {username}
                     </h1>
                   </td>
@@ -65,13 +65,13 @@ const SelfUserCard: FC<UserCardProps> = ({
             </table>
           </div>
           <Divider />
-          <div className='w-full'>
-            <table className='w-full'>
+          <div className="w-full">
+            <table className="w-full">
               <tbody>
                 <tr>
                   <td>Balance</td>
                   <td>
-                    <p className='text-right font-mono'>
+                    <p className="text-right font-mono">
                       {balanceCashAmountString}
                     </p>
                   </td>
@@ -79,7 +79,7 @@ const SelfUserCard: FC<UserCardProps> = ({
                 <tr>
                   <td>Total Deposited</td>
                   <td>
-                    <p className='text-right font-mono'>
+                    <p className="text-right font-mono">
                       {totalDepositedCashAmountString}
                     </p>
                   </td>
@@ -87,27 +87,27 @@ const SelfUserCard: FC<UserCardProps> = ({
                 <tr>
                   <td>Net Profit</td>
                   <td>
-                    <p className='text-right font-mono'>{totalProfitString}</p>
+                    <p className="text-right font-mono">{totalProfitString}</p>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div className='w-full flex justify-center'>
-            <div className='flex-1 text-left'>
+          <div className="w-full flex justify-center">
+            <div className="flex-1 text-left">
               <Link
                 href={userTokenAccountLink}
-                className='link link-primary'
-                target='_blank'
+                className="link link-primary"
+                target="_blank"
               >
                 Token Account
               </Link>
             </div>
             {!isInDealerMode && (
-              <div className='flex-1 text-right'>
+              <div className="flex-1 text-right">
                 <Link
                   href={`/${encodeURI(username)}/dealer`}
-                  className='link link-primary'
+                  className="link link-primary"
                 >
                   Dealer Mode
                 </Link>
@@ -115,18 +115,18 @@ const SelfUserCard: FC<UserCardProps> = ({
             )}
           </div>
           <Divider />
-          <div className='flex flex-row gap-3 w-full'>
+          <div className="flex flex-row gap-3 w-full">
             <PrimaryButton
-              buttonType='outlined'
+              buttonType="outlined"
               onClick={toggleDepositPopup}
-              className='flex-1'
+              className="flex-1"
             >
               Deposit
             </PrimaryButton>
             {openEndGameConfirmationPopup && (
               <DangerButton
-                buttonType='outlined'
-                className='flex-1'
+                buttonType="outlined"
+                className="flex-1"
                 onClick={openEndGameConfirmationPopup}
               >
                 Delete Account
@@ -134,8 +134,8 @@ const SelfUserCard: FC<UserCardProps> = ({
             )}
             {toggleTransferMultiplePopup && (
               <PrimaryButton
-                buttonType='contained'
-                className='flex-1'
+                buttonType="contained"
+                className="flex-1"
                 onClick={toggleTransferMultiplePopup}
               >
                 Multi-Transfer
@@ -144,10 +144,7 @@ const SelfUserCard: FC<UserCardProps> = ({
           </div>
           {Boolean(logOutOnClickFn) && (
             <div>
-              <DangerButton
-                className='w-full'
-                onClick={logOutOnClickFn}
-              >
+              <DangerButton className="w-full" onClick={logOutOnClickFn}>
                 Logout
               </DangerButton>
             </div>

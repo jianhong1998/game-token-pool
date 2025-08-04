@@ -9,11 +9,11 @@ type OtherUserListProps = {
 
 const OtherUserList: FC<OtherUserListProps> = ({ users, cardOnClickFn }) => {
   return (
-    <div className='gap-3 overflow-y-scroll max-h-80 flex flex-col sm:grid sm:grid-cols-2 sm:max-h-72'>
+    <div className="gap-3 overflow-y-scroll max-h-80 flex flex-col sm:grid sm:grid-cols-2 sm:max-h-72">
       {users
         .sort(
           (user1, user2) =>
-            user2.token.currentAmount - user1.token.currentAmount
+            user2.token.currentAmount - user1.token.currentAmount,
         )
         .map((user) => (
           <OtherUserCard

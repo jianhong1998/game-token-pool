@@ -31,7 +31,7 @@ export type IUserData = {
 };
 
 export const getUserData = async (
-  username: string
+  username: string,
 ): Promise<ICommonResponse<IUserData>> => {
   const program = ConnectionUtil.getProgram();
 
@@ -42,13 +42,13 @@ export const getUserData = async (
 
     const tokenAccount = await getAccount(
       program.provider.connection,
-      user.tokenAccount
+      user.tokenAccount,
     );
 
     const pool = (await getPools())[0];
 
     console.log(
-      `[Get User Data] successfully fetch user data (${userPublicKey}) and the token account (${user.tokenAccount})`
+      `[Get User Data] successfully fetch user data (${userPublicKey}) and the token account (${user.tokenAccount})`,
     );
 
     const data = {
@@ -63,10 +63,10 @@ export const getUserData = async (
       },
       link: {
         userAccount: LinkGeneratorUtil.generateAccountLink(
-          userPublicKey.toBase58()
+          userPublicKey.toBase58(),
         ),
         userTokenAccount: LinkGeneratorUtil.generateAccountLink(
-          tokenAccount.address.toBase58()
+          tokenAccount.address.toBase58(),
         ),
       },
       pool: {
@@ -105,7 +105,7 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
   const signer = ConnectionUtil.getSigner();
 
   const users = (await program.account.user.all()).filter((user) =>
-    user.account.authority.equals(signer.publicKey)
+    user.account.authority.equals(signer.publicKey),
   );
 
   const pool = (await getPools())[0];
@@ -119,7 +119,7 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
 
     const tokenAccount = await getAccount(
       program.provider.connection,
-      tokenAccountPublicKey
+      tokenAccountPublicKey,
     );
 
     result.push({
@@ -134,10 +134,10 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
       },
       link: {
         userAccount: LinkGeneratorUtil.generateAccountLink(
-          user.publicKey.toBase58()
+          user.publicKey.toBase58(),
         ),
         userTokenAccount: LinkGeneratorUtil.generateAccountLink(
-          tokenAccount.address.toBase58()
+          tokenAccount.address.toBase58(),
         ),
       },
       pool: {
@@ -149,7 +149,7 @@ export const getAllUserData = async (): Promise<IUserData[]> => {
 
   console.log(`${LOG_KEY} Token accounts for each user are fetched.`);
   console.log(
-    `${LOG_KEY} Total ${result.length} users are found for the pool.`
+    `${LOG_KEY} Total ${result.length} users are found for the pool.`,
   );
 
   return result;
@@ -167,7 +167,7 @@ const PUBKEY_SIZE = 32;
 type IFilter = GetProgramAccountsFilter;
 
 export const getSpecificUserData = async (
-  condition: ISearchUserParams
+  condition: ISearchUserParams,
 ): Promise<ICommonResponse<IUserData[]>> => {
   try {
     const program = ConnectionUtil.getProgram();
@@ -214,16 +214,16 @@ export const getSpecificUserData = async (
 
       const tokenAccount = await getAccount(
         program.provider.connection,
-        tokenAccountPublicKey
+        tokenAccountPublicKey,
       );
 
       results.push({
         link: {
           userAccount: LinkGeneratorUtil.generateAccountLink(
-            user.publicKey.toBase58()
+            user.publicKey.toBase58(),
           ),
           userTokenAccount: LinkGeneratorUtil.generateAccountLink(
-            tokenAccount.address.toBase58()
+            tokenAccount.address.toBase58(),
           ),
         },
         pool: {

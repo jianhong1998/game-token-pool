@@ -32,7 +32,7 @@ export class ConnectionUtil {
       {
         connection: new Connection(
           SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('devnet'),
-          'confirmed'
+          'confirmed',
         ),
         endpoint: SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('devnet'),
       },
@@ -42,7 +42,7 @@ export class ConnectionUtil {
       {
         connection: new Connection(
           SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('testnet'),
-          'confirmed'
+          'confirmed',
         ),
         endpoint: SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('testnet'),
       },
@@ -52,7 +52,7 @@ export class ConnectionUtil {
       {
         connection: new Connection(
           SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('mainnet-beta'),
-          'confirmed'
+          'confirmed',
         ),
         endpoint: SOLANA_CLUSTER_PROVIDER ?? clusterApiUrl('mainnet-beta'),
       },

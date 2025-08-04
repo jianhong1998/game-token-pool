@@ -102,7 +102,7 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
 
     const userPublicKey = user.user.publicKey;
     const isGamePlayer = gameDetail.players.some(
-      (key) => key === userPublicKey
+      (key) => key === userPublicKey,
     );
 
     if (!isGamePlayer) {
@@ -112,30 +112,24 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
 
   if (!gameDetail || !user)
     return (
-      <p className='text-2xl text-center font-bold'>Loading game data...</p>
+      <p className="text-2xl text-center font-bold">Loading game data...</p>
     );
 
   return (
     <>
       <div>
         <GameDetailCard gameDetails={gameDetail} />
-        <div className='flex flex-col mt-3 gap-3'>
-          <PrimaryButton
-            className='flex-1'
-            onClick={toggleTransferToGamePopup}
-          >
+        <div className="flex flex-col mt-3 gap-3">
+          <PrimaryButton className="flex-1" onClick={toggleTransferToGamePopup}>
             Transfer To Game
           </PrimaryButton>
           <PrimaryButton
-            buttonType='outlined'
+            buttonType="outlined"
             onClick={toggleTakeTokenFromGamePopup}
           >
             Take Token From Game
           </PrimaryButton>
-          <DangerButton
-            className='flex-1'
-            onClick={toggleQuitGamePopup}
-          >
+          <DangerButton className="flex-1" onClick={toggleQuitGamePopup}>
             Quit Game
           </DangerButton>
         </div>

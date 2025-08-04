@@ -27,11 +27,11 @@ export const useTransfer = (fromUsername: string) => {
         cashAmount * 100,
         {
           withComma: true,
-        }
+        },
       );
 
       NotificationUtil.success(
-        `Transfer ${displayAmount} to "${toUsername}" successfully.`
+        `Transfer ${displayAmount} to "${toUsername}" successfully.`,
       );
       await queryClient.invalidateQueries({
         queryKey: ['user', 'all'],
@@ -45,7 +45,7 @@ export const useTransfer = (fromUsername: string) => {
 
       if (ErrorUtil.isUserNotFoundError(errorMessage)) {
         NotificationUtil.error(
-          'User is not added to pool. Please register first.'
+          'User is not added to pool. Please register first.',
         );
         return;
       }
@@ -67,7 +67,7 @@ export const useMultiTransfer = (fromUsername: string) => {
           fromUsername,
           toUsername: username,
           cashAmount,
-        }))
+        })),
       );
     },
     onError: (error) => {

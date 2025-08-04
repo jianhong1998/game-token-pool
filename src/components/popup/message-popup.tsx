@@ -77,21 +77,21 @@ const CommonMessagePopup: FC<MessagePopupProps> = ({
   if (!isPopupOpen) return <></>;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-      <div className='bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col'>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full gap-6 flex flex-col">
         <div>
           {title && title.length > 0 && (
-            <h2 className='text-2xl font-bold mb-4 text-primary text-center'>
+            <h2 className="text-2xl font-bold mb-4 text-primary text-center">
               {title}
             </h2>
           )}
           {messageRecord.node ?? <p>{messageRecord.message}</p>}
         </div>
-        <div className='flex flex-row justify-center'>
+        <div className="flex flex-row justify-center">
           <PrimaryButton
-            buttonType='outlined'
+            buttonType="outlined"
             onClick={closePopupFn}
-            className='px-5'
+            className="px-5"
           >
             Ok
           </PrimaryButton>

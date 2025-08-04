@@ -33,11 +33,11 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
 
   const { removeValue: removeUsername } = useLocalStorage(
     LocalStorageKey.USER,
-    ''
+    '',
   );
   const { removeValue: removeUserPublicKey } = useLocalStorage(
     LocalStorageKey.USER_PUBLIC_KEY,
-    ''
+    '',
   );
   const {
     openPopup: openCommonMessagePopup,
@@ -65,7 +65,7 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
   const { data: userData, error: getUserError } = useGetUser(username);
   const { data: allUsersData, error: getAllUsersError } = useGetAllUsers();
   const { mutateAsync: transferFn, isPending: isTransferPending } = useTransfer(
-    transferFrom.current
+    transferFrom.current,
   );
 
   const transferHandler = async (transferCashAmount: number) => {
@@ -108,8 +108,8 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
 
   if (!userData || !allUsersData) {
     return (
-      <div className='h-100 flex flex-row items-center'>
-        <h1 className='text-center flex-1 font-bold text-xl'>
+      <div className="h-100 flex flex-row items-center">
+        <h1 className="text-center flex-1 font-bold text-xl">
           Loading user data...
         </h1>
       </div>
@@ -125,12 +125,12 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
         logOutOnClickFn={handleLogout}
       />
       <Divider />
-      <div className='mb-3'>
-        <p className='text-center'>Click on user to transfer token</p>
+      <div className="mb-3">
+        <p className="text-center">Click on user to transfer token</p>
       </div>
       <OtherUserList
         users={allUsersData.filter(
-          (user) => user.user.publicKey !== userData.user.publicKey
+          (user) => user.user.publicKey !== userData.user.publicKey,
         )}
         cardOnClickFn={openTransferPopup}
       />

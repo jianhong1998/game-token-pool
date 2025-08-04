@@ -71,3 +71,9 @@ deploy/with-airdrop:
 	@$(MAKE) airdrop/program-owner && \
 		$(MAKE) airdrop/fee-payer && \
 		$(MAKE) deploy
+
+lint:
+	@npm run lint
+
+format:
+	@npm run format

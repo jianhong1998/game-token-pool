@@ -31,9 +31,9 @@ const TextInput: FC<TextInputProps> = ({
 
   return (
     <input
-      type='text'
-      className='input w-full input-bordered rounded-md input-primary bg-white text-black'
-      placeholder='Game Name'
+      type="text"
+      className="input w-full input-bordered rounded-md input-primary bg-white text-black"
+      placeholder="Game Name"
       value={value}
       disabled={disabled}
       onChange={handleOnChange}

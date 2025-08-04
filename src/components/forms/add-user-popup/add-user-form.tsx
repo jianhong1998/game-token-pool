@@ -23,16 +23,16 @@ const AddUserForm: FC<AddUserFormProps> = ({
 
   return (
     <>
-      <div className='mb-1'>
+      <div className="mb-1">
         <PrimaryButton
           onClick={handleSelectAllFn}
-          className='w-full'
-          buttonType='outlined'
+          className="w-full"
+          buttonType="outlined"
         >
           Select All
         </PrimaryButton>
       </div>
-      <div className='flex flex-col gap-2'>
+      <div className="flex flex-col gap-2">
         {availableUsers.sort().map((user) => {
           const isUserSelected = selectedUserSet.has(user);
 

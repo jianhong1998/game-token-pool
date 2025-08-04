@@ -36,7 +36,7 @@ export const getAllGames = async (params: {
     .map((game) => ({
       name: game.account.gameName,
       players: game.account.players.map((playerPubKey) =>
-        playerPubKey.toBase58()
+        playerPubKey.toBase58(),
       ),
       publicKey: game.publicKey.toBase58(),
       tokenAccountPublicKey: game.account.gameTokenAccount.toBase58(),
@@ -45,7 +45,7 @@ export const getAllGames = async (params: {
 
 export const getGameDetails = async (
   gameName: string,
-  poolPublicKey: string
+  poolPublicKey: string,
 ): Promise<IGetGameDetailsResponse> => {
   const program = ConnectionUtil.getProgram();
   const connection = ConnectionUtil.getConnection();
@@ -65,7 +65,7 @@ export const getGameDetails = async (
     urls: {
       game: LinkGeneratorUtil.generateAccountLink(gamePublicKey.toBase58()),
       gameTokenAccount: LinkGeneratorUtil.generateAccountLink(
-        game.gameTokenAccount.toBase58()
+        game.gameTokenAccount.toBase58(),
       ),
     },
   };

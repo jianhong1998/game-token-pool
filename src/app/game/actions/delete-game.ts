@@ -37,7 +37,7 @@ export const deleteGame = async (gameName: string) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'confirmed',
   );
   const url = LinkGeneratorUtil.generateTransactionLink(transactionId);
   console.log(`${LOG_KEY} Transaction confirmed: ${url}`);

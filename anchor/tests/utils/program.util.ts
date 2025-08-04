@@ -61,12 +61,12 @@ export class ProgramUtil<T extends anchor.Idl> {
     this.context = await startAnchor(
       this.anchorRootPath,
       this.addedPrograms,
-      this.addedAccounts
+      this.addedAccounts,
     );
     this.bankrunProvider = new BankrunProvider(this.context);
     this.program = new anchor.Program<T>(
       IDL as unknown as T,
-      this.bankrunProvider
+      this.bankrunProvider,
     );
   }
 
@@ -92,7 +92,7 @@ export class ProgramUtil<T extends anchor.Idl> {
   }
 
   public static generateConstructorParams(
-    params: IGenerateProgramUtilConstructorParams
+    params: IGenerateProgramUtilConstructorParams,
   ): IProgramUtilConstructorParams {
     const { addedAccounts, addedPrograms, anchorRootPath, isTestingOnChain } =
       params;

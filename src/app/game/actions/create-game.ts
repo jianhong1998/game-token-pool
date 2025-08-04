@@ -51,6 +51,6 @@ export const createGame = async (params: { gameName: string }) => {
       lastValidBlockHeight,
       signature: transactionId,
     },
-    'confirmed'
+    'confirmed',
   );
 };

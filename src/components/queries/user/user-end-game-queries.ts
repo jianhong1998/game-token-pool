@@ -16,7 +16,7 @@ export const useUserEndGame = () => {
     },
     onMutate: () => {
       NotificationUtil.loading(
-        `Proceeding end game request. Do NOT leave this page or close the window before it is successful.`
+        `Proceeding end game request. Do NOT leave this page or close the window before it is successful.`,
       );
     },
     onSuccess: async (_data, { username }) => {
@@ -25,7 +25,7 @@ export const useUserEndGame = () => {
       });
 
       NotificationUtil.success(
-        `End game request completed. User account for "${username}" is deleted.`
+        `End game request completed. User account for "${username}" is deleted.`,
       );
     },
     onError: (error) => {
