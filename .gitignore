@@ -43,3 +43,5 @@ anchor/target/*
 !anchor/target/idl
 !anchor/target/types
 .env
+
+*.local.*
