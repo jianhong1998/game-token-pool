@@ -4,6 +4,15 @@ export const {
   SOLANA_CLUSTER_TYPE = 'localnet',
   NODE_ENV,
   SOLANA_CLUSTER_PROVIDER,
+  MAGICBLOCK_API_KEY,
+  MAGICBLOCK_ROLLUP_ENDPOINT = 'https://rollup.magicblock.gg',
+  MAGICBLOCK_ROUTER_ENDPOINT = 'https://router.magicblock.gg',
+  ROLLUP_AUTO_PROVISION = 'true',
+  ROLLUP_MAX_INSTANCES = '10',
+  ROLLUP_SESSION_TIMEOUT = '3600',
+  TARGET_LATENCY_MS = '50',
+  MAX_CONCURRENT_USERS = '1000',
+  MONITORING_ENABLED = 'true',
 } = process.env;
 
 export const MAX_DEPOSIT_AMOUNT = 1_000_000;
