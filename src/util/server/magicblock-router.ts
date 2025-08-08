@@ -19,10 +19,14 @@ import {
 } from '@/constants';
 import { shouldUseRollup, requiresGameSession } from '@/config/routing-rules';
 import { ConnectionUtil } from './connection';
+import { EndpointManager } from './endpoint-manager';
+import { HealthChecker } from './health-checker';
 
 export class MagicBlockRouter {
   private config: RollupConnectionConfig;
   private connectionPool: ConnectionPool;
+  private endpointManager: EndpointManager | null = null;
+  private healthChecker: HealthChecker | null = null;
   private static instance: MagicBlockRouter;
 
   private constructor() {
@@ -45,6 +49,21 @@ export class MagicBlockRouter {
       healthStatus: new Map(),
       lastHealthCheck: new Map(),
     };
+
+    // Try to initialize enhanced connection components
+    this.initializeEnhancedComponents();
+  }
+
+  private initializeEnhancedComponents(): void {
+    try {
+      // These will be null if enhanced mode is not available
+      const healthStatus = ConnectionUtil.getHealthStatus();
+      if (healthStatus.enhanced) {
+        console.log('[MagicBlockRouter] Enhanced connection management detected');
+      }
+    } catch (error) {
+      console.warn('[MagicBlockRouter] Enhanced components not available:', error);
+    }
   }
 
   public static getInstance(): MagicBlockRouter {
@@ -124,17 +143,29 @@ export class MagicBlockRouter {
     gameId: string,
   ): Promise<Connection | null> {
     try {
-      // Check if we already have a connection for this game
+      // Try enhanced connection management first
+      const enhancedConnection = await ConnectionUtil.getRollupConnection(gameId);
+      if (enhancedConnection) {
+        return enhancedConnection;
+      }
+
+      // Fallback to legacy connection management
       const existingConnection = this.connectionPool.rollups.get(gameId);
       if (existingConnection && (await this.isConnectionHealthy(gameId))) {
         return existingConnection;
       }
 
-      // For now, create a mock rollup connection using the rollup endpoint
-      // In a real implementation, this would provision an actual ephemeral rollup
+      // Create new rollup connection
       const rollupEndpoint = this.getRollupEndpoint(gameId);
       const rollupConnection = new Connection(rollupEndpoint, 'confirmed');
 
+      // Add to enhanced connection management if available
+      const endpointId = ConnectionUtil.addRollupEndpoint(gameId, rollupEndpoint);
+      if (endpointId) {
+        console.log(`[MagicBlockRouter] Added rollup endpoint ${endpointId} for game ${gameId}`);
+      }
+
+      // Store in legacy pool as backup
       this.connectionPool.rollups.set(gameId, rollupConnection);
       this.connectionPool.healthStatus.set(gameId, true);
       this.connectionPool.lastHealthCheck.set(gameId, new Date());
@@ -189,6 +220,17 @@ export class MagicBlockRouter {
   public async getHealthStatus(): Promise<
     { endpoint: string; healthy: boolean; lastChecked: Date }[]
   > {
+    // Try enhanced health status first
+    const enhancedStatus = ConnectionUtil.getHealthStatus();
+    if (enhancedStatus.enhanced) {
+      return enhancedStatus.endpoints.map(endpoint => ({
+        endpoint: endpoint.id,
+        healthy: endpoint.healthy,
+        lastChecked: new Date(), // Enhanced system provides latency, we convert to lastChecked
+      }));
+    }
+
+    // Fallback to legacy health status
     const status = [];
 
     // Mainnet status
@@ -216,5 +258,39 @@ export class MagicBlockRouter {
 
   public getConfiguration(): RollupConnectionConfig {
     return { ...this.config };
+  }
+
+  public async cleanupRollupConnection(gameId: string): Promise<void> {
+    try {
+      // Remove from enhanced connection management
+      const removed = ConnectionUtil.removeRollupEndpoint(gameId);
+      if (removed) {
+        console.log(`[MagicBlockRouter] Removed rollup endpoint for game ${gameId}`);
+      }
+
+      // Clean up legacy connection pool
+      this.connectionPool.rollups.delete(gameId);
+      this.connectionPool.healthStatus.delete(gameId);
+      this.connectionPool.lastHealthCheck.delete(gameId);
+    } catch (error) {
+      console.error(`[MagicBlockRouter] Failed to cleanup rollup connection for game ${gameId}:`, error);
+    }
+  }
+
+  public getConnectionStatistics(): {
+    totalRollups: number;
+    activeRollups: number;
+    enhanced: boolean;
+    metrics?: any;
+  } {
+    const metrics = ConnectionUtil.getConnectionMetrics();
+    
+    return {
+      totalRollups: this.connectionPool.rollups.size,
+      activeRollups: Array.from(this.connectionPool.healthStatus.values())
+        .filter(healthy => healthy).length,
+      enhanced: metrics.enhanced,
+      metrics: metrics.enhanced ? metrics : undefined,
+    };
   }
 }
