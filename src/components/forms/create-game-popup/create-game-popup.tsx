@@ -4,7 +4,7 @@ import PrimaryButton from '@/components/ui/buttons/primary-button';
 import TextInput from '@/components/ui/inputs/text-input';
 import { NotificationUtil } from '@/util/client/notification.util';
 import { useRouter } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 interface CreateGamePopupProps {
   closePopupFn: () => void;
@@ -35,12 +35,14 @@ const CreateGamePopup: FC<CreateGamePopupProps> = ({
     handleClosePopup();
   };
 
-  if (!username) {
-    NotificationUtil.error('Please login first');
-    router.replace('/');
+  useEffect(() => {
+    if (!username) {
+      NotificationUtil.error('Please login first');
+      router.replace('/');
+    }
+  }, [username, router]);
 
-    return;
-  }
+  if (!username) return null;
 
   if (!isPopupOpen) return <></>;
 
