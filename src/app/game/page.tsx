@@ -12,22 +12,11 @@ import PrimaryButton from '@/components/ui/buttons/primary-button';
 import Divider from '@/components/ui/divider';
 import { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useSyncExternalStore } from 'react';
-
-const emptySubscribe = () => () => {};
+import { useEffect, useState } from 'react';
 
 const GamePage: NextPage = () => {
   const [isCreateGamePopupOpen, setIsCreateGamePopupOpen] =
     useState<boolean>(false);
-  // Server and the client's first (hydration) render must agree, so this
-  // starts `false` on both and only flips to `true` on the client's next
-  // render after hydration completes (getServerSnapshot vs. getSnapshot
-  // diverge) — without ever calling setState from an effect.
-  const hasMounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
 
   const username = useUsername();
   const userPublicKey = useUserPublicKey();
@@ -54,7 +43,7 @@ const GamePage: NextPage = () => {
     }
   }, [isLoggedOut, router]);
 
-  if (hasMounted && isLoggedOut) return null;
+  if (isLoggedOut) return null;
 
   if (isPendingGetAllGames || isPendingGetUserData) {
     return <p className='text-xl font-bold text-center'>Loading Data...</p>;
