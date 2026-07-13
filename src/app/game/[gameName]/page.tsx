@@ -43,7 +43,7 @@ const GameDashboardPage: NextPage<PageContext<GameDashboardPageProps>> = ({
   const [isTakeTokenFromGamePopupOpen, setIsTakeTokenFromGamePopupOpen] =
     useState<boolean>(false);
 
-  const username = useUsername();
+  const { username } = useUsername();
 
   const router = useRouter();
 

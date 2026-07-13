@@ -38,6 +38,8 @@ tmp
 
 dist
 solana-ledger
+.worktrees
+.playwright-mcp
 .anchor
 anchor/target/*
 !anchor/target/idl

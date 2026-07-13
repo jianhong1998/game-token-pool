@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useLocalStorage } from '@/components/custom-hooks/use-local-storage';
 import GameLoginForm from '@/components/forms/game-login-form';
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
@@ -15,9 +16,15 @@ const GamePage: NextPage = () => {
 
   const router = useRouter();
 
-  if (username.length > 0 && userPublicKey.length > 0) {
-    router.replace(`/${encodeURI(username)}`);
-  }
+  const isLoggedIn = username.length > 0 && userPublicKey.length > 0;
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace(`/${encodeURI(username)}`);
+    }
+  }, [isLoggedIn, username, router]);
+
+  if (isLoggedIn) return null;
 
   return <GameLoginForm />;
 };

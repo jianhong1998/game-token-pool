@@ -1,0 +1,5 @@
+{
+  "rounds_completed": 5,
+  "last_outcome": "pass",
+  "notes": "Round 5 passed, including 3x repeated hard-navigation stress on /<username> (the dual-isReady-instance file) and 2x on /<username>/dealer. No flakiness observed. CreateGamePopup confirmed no longer fires spurious logout. Iteration 3's VERIFY complete. Proceeding to review round 3."
+}

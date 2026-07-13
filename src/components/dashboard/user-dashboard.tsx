@@ -64,7 +64,11 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
 
   const { data: userData, error: getUserError } = useGetUser(username);
   const { data: allUsersData, error: getAllUsersError } = useGetAllUsers();
+  // transferFrom is initialized once from the `username` prop and never
+  // reassigned; it is a ref (not state) specifically so setting it doesn't
+  // trigger a re-render.
   const { mutateAsync: transferFn, isPending: isTransferPending } = useTransfer(
+    // eslint-disable-next-line react-hooks/refs -- see comment above
     transferFrom.current
   );
 
@@ -137,6 +141,11 @@ const UserDashboard: FC<UserDashboardProps> = ({ username }) => {
       <TransferPopup
         isPopupOpen={isTransferPopupOpen}
         closePopupFn={closeTransferPopup}
+        // transferTo is set synchronously by openTransferPopup() right
+        // before the state update that opens this popup, so by the time this
+        // renders it already holds the intended value; using a ref (not
+        // state) here avoids an extra render on every click.
+        // eslint-disable-next-line react-hooks/refs
         toUsername={transferTo.current}
         isTransfering={isTransferPending}
         maxTransferAmount={userData.token.currentAmount / 100}

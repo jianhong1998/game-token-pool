@@ -31,7 +31,7 @@ const GameList: FC<GameListProps> = ({ gameData, currentUserPublicKey }) => {
     return { joinedGames, notJoinedGames };
   }, [gameData, currentUserPublicKey]);
 
-  const username = useUsername();
+  const { username } = useUsername();
   const { data: pools } = useGetPools();
   const poolPublicKey = pools?.map((pool) => pool.publicKey)[0];
 

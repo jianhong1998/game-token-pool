@@ -21,10 +21,12 @@ const UserPage: NextPage<PageContext<UserPageProps>> = ({ params }) => {
   const {
     value: usernameInLocalStorage,
     removeValue: removeUsernameInLocalStorage,
+    isReady: isUsernameStorageReady,
   } = useLocalStorage(LocalStorageKey.USER, '');
   const {
     value: userPublicKeyInLocalStorage,
     removeValue: removeUserPublicKeyInLocalStorage,
+    isReady: isUserPublicKeyStorageReady,
   } = useLocalStorage(LocalStorageKey.USER_PUBLIC_KEY, '');
 
   const { isSuccess: isUserEndGameRequestSuccess } = useUserEndGame();
@@ -56,16 +58,20 @@ const UserPage: NextPage<PageContext<UserPageProps>> = ({ params }) => {
 
   useEffect(() => {
     if (
-      !usernameInLocalStorage ||
-      !userPublicKeyInLocalStorage ||
-      usernameInLocalStorage.length === 0 ||
-      userPublicKeyInLocalStorage.length === 0
+      isUsernameStorageReady &&
+      isUserPublicKeyStorageReady &&
+      (!usernameInLocalStorage ||
+        !userPublicKeyInLocalStorage ||
+        usernameInLocalStorage.length === 0 ||
+        userPublicKeyInLocalStorage.length === 0)
     ) {
       removeUserPublicKeyInLocalStorage();
       removeUsernameInLocalStorage();
       router.replace('/');
     }
   }, [
+    isUsernameStorageReady,
+    isUserPublicKeyStorageReady,
     usernameInLocalStorage,
     userPublicKeyInLocalStorage,
     router,

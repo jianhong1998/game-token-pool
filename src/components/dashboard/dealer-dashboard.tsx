@@ -37,7 +37,7 @@ const DealerDashboard: FC<DealerDashboardProps> = ({ userData }) => {
   const [currentPlayerNames, setCurrentPlayerNames] = useState<string[]>([]);
   const [toUsername, setToUsername] = useState<string>('');
 
-  const username = useUsername();
+  const { username } = useUsername();
   const { data: users } = useGetAllUsers();
 
   const currentPlayerDataArray = useMemo(() => {

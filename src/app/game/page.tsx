@@ -12,14 +12,14 @@ import PrimaryButton from '@/components/ui/buttons/primary-button';
 import Divider from '@/components/ui/divider';
 import { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const GamePage: NextPage = () => {
   const [isCreateGamePopupOpen, setIsCreateGamePopupOpen] =
     useState<boolean>(false);
 
-  const username = useUsername();
-  const userPublicKey = useUserPublicKey();
+  const { username, isReady: isUsernameReady } = useUsername();
+  const { userPublicKey, isReady: isUserPublicKeyReady } = useUserPublicKey();
 
   const router = useRouter();
 
@@ -35,9 +35,16 @@ const GamePage: NextPage = () => {
     setIsCreateGamePopupOpen((prev) => !prev);
   };
 
-  if (!userPublicKey || !username) {
-    router.replace('/');
-  }
+  const isLoggedOut = !userPublicKey || !username;
+  const isReady = isUsernameReady && isUserPublicKeyReady;
+
+  useEffect(() => {
+    if (isReady && isLoggedOut) {
+      router.replace('/');
+    }
+  }, [isReady, isLoggedOut, router]);
+
+  if (isLoggedOut) return null;
 
   if (isPendingGetAllGames || isPendingGetUserData) {
     return <p className='text-xl font-bold text-center'>Loading Data...</p>;

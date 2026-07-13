@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 
 const DealerPage: NextPage = () => {
   const { username: encodedUsername } = useParams();
-  const username = useUsername();
+  const { username, isReady } = useUsername();
 
   const router = useRouter();
 
@@ -30,6 +30,7 @@ const DealerPage: NextPage = () => {
 
   useEffect(() => {
     if (
+      isReady &&
       typeof encodedUsername === 'string' &&
       username !== decodeURI(encodedUsername)
     ) {
@@ -37,7 +38,14 @@ const DealerPage: NextPage = () => {
       removeUsername();
       router.replace('/');
     }
-  }, [encodedUsername, username, removePublicKey, removeUsername, router]);
+  }, [
+    isReady,
+    encodedUsername,
+    username,
+    removePublicKey,
+    removeUsername,
+    router,
+  ]);
 
   useEffect(() => {
     if (!getUserError) return;
