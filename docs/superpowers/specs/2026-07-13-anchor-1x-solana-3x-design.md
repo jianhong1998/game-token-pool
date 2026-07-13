@@ -1,7 +1,7 @@
 # Anchor 1.x + Solana 3.x Migration — Design Spec
 
 **Date:** 2026-07-13
-**Status:** Awaiting review
+**Status:** Approved
 **Decision record:** [`docs/modernization/decisions.md`](../../modernization/decisions.md)
 **Implementation plan:** [`../plans/2026-07-13-anchor-1x-solana-3x.md`](../plans/2026-07-13-anchor-1x-solana-3x.md)
 **Depends on:** [Web spec](./2026-07-13-web-next16-react19-design.md) must ship first.

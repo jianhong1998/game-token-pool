@@ -1,7 +1,7 @@
 # Web Modernization: Next 16 + React 19 — Design Spec
 
 **Date:** 2026-07-13
-**Status:** Awaiting review
+**Status:** Approved
 **Decision record:** [`docs/modernization/decisions.md`](../../modernization/decisions.md)
 **Implementation plan:** [`../plans/2026-07-13-web-next16-react19.md`](../plans/2026-07-13-web-next16-react19.md)
 
@@ -10,8 +10,8 @@
 ## Problem
 
 The project has been unmaintained since March 2025. `npm audit` reports 28
-vulnerabilities. The user's stated motivation is specific: *"currently NextJS
-version is not supported and full of vulnerabilities."*
+vulnerabilities. The user's stated motivation is specific: _"currently NextJS
+version is not supported and full of vulnerabilities."_
 
 That framing is correct, and it is the only part of the audit that matters.
 Next.js is the sole internet-facing component. It runs the server actions and it
@@ -22,7 +22,7 @@ repository that can actually cost money.
 Two secondary problems compound it:
 
 1. **CI cannot catch regressions.** `.github/workflows/test-web.yml` runs
-   `npm run build` and nothing else — no typecheck, no lint. This is *how* the
+   `npm run build` and nothing else — no typecheck, no lint. This is _how_ the
    codebase drifted for 16 months without anyone noticing.
 2. **ESLint 8 is a hard blocker.** Next 16 requires `eslint-config-next@16`,
    which peer-requires ESLint ≥9. The repo uses ESLint 8 with a legacy
@@ -39,14 +39,14 @@ Two secondary problems compound it:
 
 Explicitly out of scope. Each was considered and rejected:
 
-| Excluded | Why |
-|---|---|
-| The custodial no-wallet auth model | Decision Q1 — keep it. Replacing it is a product change, not modernization. |
+| Excluded                              | Why                                                                                                                                           |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| The custodial no-wallet auth model    | Decision Q1 — keep it. Replacing it is a product change, not modernization.                                                                   |
 | Anchor / Solana / any on-chain change | Coupled but separable. This spec is the security fix; Anchor is a separate spec. Touching both makes a build failure impossible to attribute. |
-| Tailwind 4 / daisyUI 5 | Decision Q6 — deferred. No vulnerabilities; purely cosmetic; no UI tests to catch a regression. |
-| TypeScript 6/7 | `typescript@latest` is 7.0.2 (the native Go port), weeks old, unvalidated against `eslint-config-next@16`. Stay on 5.9.3. |
-| Reaching `npm audit` zero | **Impossible.** See "Accepted Residual Risk" below. |
-| Adding a web test suite | Real gap, but scope creep here. Recorded as a follow-up. |
+| Tailwind 4 / daisyUI 5                | Decision Q6 — deferred. No vulnerabilities; purely cosmetic; no UI tests to catch a regression.                                               |
+| TypeScript 6/7                        | `typescript@latest` is 7.0.2 (the native Go port), weeks old, unvalidated against `eslint-config-next@16`. Stay on 5.9.3.                     |
+| Reaching `npm audit` zero             | **Impossible.** See "Accepted Residual Risk" below.                                                                                           |
+| Adding a web test suite               | Real gap, but scope creep here. Recorded as a follow-up.                                                                                      |
 
 ## Requirements
 
@@ -83,7 +83,7 @@ Three sequential increments, each independently shippable and each leaving
    ESLint ≥9) and replaces `next lint`, which Next 16 removes, with a direct
    `eslint` call.
 2. **React 19, still on Next 15.** Next 15 fully supports React 19, so the React
-   major lands *in isolation* — any breakage is unambiguously React's, not
+   major lands _in isolation_ — any breakage is unambiguously React's, not
    Next's.
 3. **Next 16.** The step that actually closes the CVEs, on top of a codebase
    already proven on React 19.
@@ -100,7 +100,7 @@ React 19 is stricter about render-phase side effects. Three exist today, and all
 three are **genuine bugs already** — React 19 merely makes them visible:
 
 - `src/app/react-query-provider.tsx:8` — `useState(new QueryClient())` passes
-  the *eager* argument, constructing a fresh `QueryClient` on **every render**
+  the _eager_ argument, constructing a fresh `QueryClient` on **every render**
   and discarding it. `setDefaultOptions` is also called during render.
 - `src/app/page.tsx:19` — `router.replace()` called during the render phase.
 - `src/app/game/page.tsx:39` — same.
@@ -155,12 +155,12 @@ Against a local validator, every flow must pass:
 
 ## Risks
 
-| Risk | Likelihood | Mitigation |
-|---|---|---|
-| React 19 type breakage across components | Medium | Isolated to increment 2; fix types properly — `any`/`@ts-expect-error` are forbidden |
-| No web tests to catch a regression | **High** | Mandatory manual E2E checklist; app is functionally unchanged so a diff in behaviour is a bug |
-| Next 16 codemod over-reaches (touches React/ESLint) | Medium | Decline its React/ESLint offers — those versions are already correct |
-| ERESOLVE on the ESLint bump | High if done naively | Two-stage bump, specified above |
+| Risk                                                | Likelihood           | Mitigation                                                                                    |
+| --------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------- |
+| React 19 type breakage across components            | Medium               | Isolated to increment 2; fix types properly — `any`/`@ts-expect-error` are forbidden          |
+| No web tests to catch a regression                  | **High**             | Mandatory manual E2E checklist; app is functionally unchanged so a diff in behaviour is a bug |
+| Next 16 codemod over-reaches (touches React/ESLint) | Medium               | Decline its React/ESLint offers — those versions are already correct                          |
+| ERESOLVE on the ESLint bump                         | High if done naively | Two-stage bump, specified above                                                               |
 
 ## Follow-ups (not in this spec)
 
