@@ -24,7 +24,7 @@ const GameCard: FC<GameCardProps> = ({
   deleteGameFn,
   isDeletingGame,
 }) => {
-  const username = useUsername();
+  const { username } = useUsername();
   const router = useRouter();
 
   const redirectToGame = (gameName: string) => {

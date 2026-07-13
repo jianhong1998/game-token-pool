@@ -15,7 +15,7 @@ const CreateGamePopup: FC<CreateGamePopupProps> = ({
   closePopupFn,
   isPopupOpen,
 }) => {
-  const username = useUsername();
+  const { username, isReady } = useUsername();
   const [gameName, setGameName] = useState<string>('');
 
   const router = useRouter();
@@ -36,11 +36,11 @@ const CreateGamePopup: FC<CreateGamePopupProps> = ({
   };
 
   useEffect(() => {
-    if (!username) {
+    if (isReady && !username) {
       NotificationUtil.error('Please login first');
       router.replace('/');
     }
-  }, [username, router]);
+  }, [isReady, username, router]);
 
   if (!username) return null;
 

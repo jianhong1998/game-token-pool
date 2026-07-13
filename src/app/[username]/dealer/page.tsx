@@ -9,14 +9,13 @@ import { LocalStorageKey } from '@/enums/local-storage-key.enum';
 import { NotificationUtil } from '@/util/client/notification.util';
 import { NextPage } from 'next';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const DealerPage: NextPage = () => {
   const { username: encodedUsername } = useParams();
-  const username = useUsername();
+  const { username, isReady } = useUsername();
 
   const router = useRouter();
-  const [hasMounted, setHasMounted] = useState(false);
 
   const { removeValue: removeUsername } = useLocalStorage(
     LocalStorageKey.USER,
@@ -30,18 +29,8 @@ const DealerPage: NextPage = () => {
   const { data: userData, error: getUserError } = useGetUser(username);
 
   useEffect(() => {
-    // Intentionally forces a second commit after this mount commit's
-    // effects (including useUsername's internal useSyncExternalStore
-    // resync) have fully flushed, so the destructive logout check below
-    // only ever evaluates the real, resynced localStorage value instead of
-    // the stale pre-resync value present on the very first render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
     if (
-      hasMounted &&
+      isReady &&
       typeof encodedUsername === 'string' &&
       username !== decodeURI(encodedUsername)
     ) {
@@ -50,7 +39,7 @@ const DealerPage: NextPage = () => {
       router.replace('/');
     }
   }, [
-    hasMounted,
+    isReady,
     encodedUsername,
     username,
     removePublicKey,

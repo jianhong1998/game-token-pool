@@ -1,12 +1,19 @@
 'use client';
 
 import { LocalStorageKey } from '@/enums/local-storage-key.enum';
-import { useCallback, useRef, useSyncExternalStore } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 
 interface IUseLocalStorageReturn<T> {
   value: T;
   setValue: (value: T) => void;
   removeValue: () => void;
+  isReady: boolean;
 }
 
 interface ICacheEntry<T> {
@@ -83,6 +90,16 @@ export const useLocalStorage = <T>(
     getServerSnapshot
   );
 
+  // Intentionally declared after the useSyncExternalStore call above so
+  // React flushes useSyncExternalStore's own internal resync-consistency-
+  // check effect first within this hook instance's effect list, before this
+  // toggle effect, in the same passive-effects flush.
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsReady(true);
+  }, []);
+
   const setValue = (value: T) => {
     try {
       // Allow value to be a function so we have same API as useState
@@ -109,5 +126,5 @@ export const useLocalStorage = <T>(
     onStoreChangeRef.current?.();
   };
 
-  return { value: storedValue, setValue, removeValue };
+  return { value: storedValue, setValue, removeValue, isReady };
 };

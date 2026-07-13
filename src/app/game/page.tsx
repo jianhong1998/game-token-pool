@@ -18,11 +18,10 @@ const GamePage: NextPage = () => {
   const [isCreateGamePopupOpen, setIsCreateGamePopupOpen] =
     useState<boolean>(false);
 
-  const username = useUsername();
-  const userPublicKey = useUserPublicKey();
+  const { username, isReady: isUsernameReady } = useUsername();
+  const { userPublicKey, isReady: isUserPublicKeyReady } = useUserPublicKey();
 
   const router = useRouter();
-  const [hasMounted, setHasMounted] = useState(false);
 
   const { data: userData, isPending: isPendingGetUserData } =
     useGetUser(username);
@@ -37,23 +36,13 @@ const GamePage: NextPage = () => {
   };
 
   const isLoggedOut = !userPublicKey || !username;
+  const isReady = isUsernameReady && isUserPublicKeyReady;
 
   useEffect(() => {
-    // Intentionally forces a second commit after this mount commit's
-    // effects (including useUsername/useUserPublicKey's internal
-    // useSyncExternalStore resync) have fully flushed, so the logged-out
-    // redirect check below only ever evaluates the real, resynced
-    // localStorage value instead of the stale pre-resync value present on
-    // the very first render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (hasMounted && isLoggedOut) {
+    if (isReady && isLoggedOut) {
       router.replace('/');
     }
-  }, [hasMounted, isLoggedOut, router]);
+  }, [isReady, isLoggedOut, router]);
 
   if (isLoggedOut) return null;
 
