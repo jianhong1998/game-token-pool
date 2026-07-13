@@ -121,17 +121,29 @@ const MultiTransferPopup: FC<MultiTransferPopupProps> = ({
   };
 
   useEffect(() => {
-    const map = new Map<string, number>(
-      transferData.map(({ username, cashAmount }) => [username, cashAmount])
-    );
+    // Re-sync transferData's player list with currentPlayers (e.g. a player
+    // joins/leaves) while preserving already-entered cashAmount values.
+    // Reads previous state via the setState updater form rather than the
+    // `transferData` closure so the effect depends only on `currentPlayers`
+    // — depending on `transferData` here previously caused the effect to
+    // re-trigger itself every time it ran (it always produces a new array
+    // reference), an unbounded effect/render loop.
+    // Syncing local editable form state (per-player cashAmount) to an
+    // external prop (currentPlayers) that can change independently (players
+    // joining a game); there is no non-effect way to preserve in-progress
+    // user input across that prop change.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTransferData((prev) => {
+      const map = new Map<string, number>(
+        prev.map(({ username, cashAmount }) => [username, cashAmount])
+      );
 
-    const newArr: IMultiTransferData = currentPlayers.map((playerName) => {
-      const cashAmount = map.get(playerName) ?? 0;
-      return { cashAmount, username: playerName };
+      return currentPlayers.map((playerName) => {
+        const cashAmount = map.get(playerName) ?? 0;
+        return { cashAmount, username: playerName };
+      });
     });
-
-    setTransferData(newArr);
-  }, [currentPlayers, transferData]);
+  }, [currentPlayers]);
 
   return (
     <CommonPopup isOpen={isOpen}>

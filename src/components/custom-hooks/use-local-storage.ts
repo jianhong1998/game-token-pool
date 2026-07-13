@@ -57,10 +57,17 @@ export const useLocalStorage = <T>(
     }
   };
 
-  // Handle hydration mismatch by ensuring the hook only runs on the client side
+  // Handle hydration mismatch by ensuring the hook only runs on the client side.
+  // The lazy useState initializer above already reads localStorage, but it
+  // runs during the hydration render too, where its result must match the
+  // server-rendered markup (which always sees `window === undefined`). This
+  // effect performs the "real" client-only read after hydration completes.
   useEffect(() => {
     const item = window?.localStorage.getItem(key);
     if (item) {
+      // Syncing from an external system (localStorage) after mount, which is
+      // exactly this effect's purpose; see comment above.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStoredValue(JSON.parse(item));
     }
   }, [key]);
