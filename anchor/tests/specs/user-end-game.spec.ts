@@ -1,11 +1,10 @@
-import { Program } from '@coral-xyz/anchor';
+import { Program } from '@anchor-lang/core';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Gametokenpool } from '../../target/types/gametokenpool';
 import { airdropIfRequired } from '@solana-developers/helpers';
 import {
   TEST_FEE_PAYER_ID_FILE_PATH,
   TEST_PROGRAM_OWNER_ID_FILE_PATH,
-  IS_TESTING_ON_CHAIN,
 } from '../constants';
 import { createPool, createPoolTokenAccount } from '../test-functions/init';
 import { AccountUtil } from '../utils/account.util';
@@ -41,23 +40,7 @@ describe('Test user end game', () => {
     );
     const signers = [feePayer];
 
-    const programUtil = new ProgramUtil<Gametokenpool>(
-      ProgramUtil.generateConstructorParams({
-        addedAccounts: [
-          AccountUtil.createAddedAccount(feePayer.publicKey, {
-            lamports: 10 * LAMPORTS_PER_SOL,
-            executable: false,
-          }),
-          AccountUtil.createAddedAccount(programOwner.publicKey, {
-            lamports: 10 * LAMPORTS_PER_SOL,
-            executable: false,
-          }),
-        ],
-        addedPrograms: [],
-        anchorRootPath: '.',
-        isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
-    );
+    const programUtil = new ProgramUtil<Gametokenpool>();
 
     const program = await programUtil.getProgram();
 
@@ -72,15 +55,19 @@ describe('Test user end game', () => {
       console.log(`[Before All] Pool is already initialized`);
     } catch (error) {
       console.log(`[Before All] Pool is not yet initialized`);
-      if (IS_TESTING_ON_CHAIN) {
-        console.log('Check account balance and require airdrop if needed');
-        await airdropIfRequired(
-          program.provider.connection,
-          feePayer.publicKey,
-          10,
-          5
-        );
-      }
+      console.log('Check account balance and require airdrop if needed');
+      await airdropIfRequired(
+        program.provider.connection,
+        feePayer.publicKey,
+        10 * LAMPORTS_PER_SOL,
+        5 * LAMPORTS_PER_SOL
+      );
+      await airdropIfRequired(
+        program.provider.connection,
+        programOwner.publicKey,
+        10 * LAMPORTS_PER_SOL,
+        5 * LAMPORTS_PER_SOL
+      );
 
       await createPool({
         program,
@@ -204,12 +191,7 @@ describe('Test user end game', () => {
       expect(userTokenAccount).toBeUndefined();
     } catch (error) {
       expect(error).toBeDefined();
-
-      if (IS_TESTING_ON_CHAIN) {
-        expect((error as Error).name).toBe('TokenAccountNotFoundError');
-      } else {
-        expect((error as Error).name).toBe('Error');
-      }
+      expect((error as Error).name).toBe('TokenAccountNotFoundError');
     }
   }, 30_000);
 });

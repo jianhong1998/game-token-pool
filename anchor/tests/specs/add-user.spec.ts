@@ -1,8 +1,7 @@
-import { Program } from '@coral-xyz/anchor';
+import { Program } from '@anchor-lang/core';
 import { Gametokenpool } from '../../target/types/gametokenpool';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import {
-  IS_TESTING_ON_CHAIN,
   TEST_FEE_PAYER_ID_FILE_PATH,
   TEST_PROGRAM_OWNER_ID_FILE_PATH,
 } from '../constants';
@@ -24,7 +23,7 @@ interface ITestData {
   };
 }
 
-describe.skip('Test add user', () => {
+describe('Test add user', () => {
   let testData: ITestData;
   const POOL_NAME = 'test pool';
 
@@ -34,23 +33,7 @@ describe.skip('Test add user', () => {
       TEST_PROGRAM_OWNER_ID_FILE_PATH
     );
 
-    const programUtil = new ProgramUtil<Gametokenpool>(
-      ProgramUtil.generateConstructorParams({
-        addedAccounts: [
-          AccountUtil.createAddedAccount(feePayer.publicKey, {
-            lamports: 10 * LAMPORTS_PER_SOL,
-            executable: false,
-          }),
-          AccountUtil.createAddedAccount(programOwner.publicKey, {
-            lamports: 10 * LAMPORTS_PER_SOL,
-            executable: false,
-          }),
-        ],
-        addedPrograms: [],
-        anchorRootPath: '.',
-        isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
-    );
+    const programUtil = new ProgramUtil<Gametokenpool>();
 
     const program = await programUtil.getProgram();
 
@@ -65,15 +48,24 @@ describe.skip('Test add user', () => {
       console.log(`[Before All] Pool is already initialized`);
     } catch (error) {
       console.log(`[Before All] Pool is not yet initialized`);
-      if (IS_TESTING_ON_CHAIN) {
-        console.log('Check account balance and require airdrop if needed');
-        await airdropIfRequired(
-          program.provider.connection,
-          feePayer.publicKey,
-          10,
-          5
-        );
-      }
+      console.log('Check account balance and require airdrop if needed');
+      // Both the fee payer (the "signer" business account) and the
+      // provider/program-owner wallet (which Anchor's MethodsBuilder uses as
+      // the transaction fee payer by default) need SOL on a fresh surfpool
+      // instance -- surfpool only auto-funds enough to cover program deploy,
+      // not ongoing test-transaction fees.
+      await airdropIfRequired(
+        program.provider.connection,
+        feePayer.publicKey,
+        10 * LAMPORTS_PER_SOL,
+        5 * LAMPORTS_PER_SOL
+      );
+      await airdropIfRequired(
+        program.provider.connection,
+        programOwner.publicKey,
+        10 * LAMPORTS_PER_SOL,
+        5 * LAMPORTS_PER_SOL
+      );
 
       await createPool({
         program,
@@ -145,5 +137,30 @@ describe.skip('Test add user', () => {
     );
     expect(userAccount.name).toBe(testUserName);
     expect(userAccount.totalDepositedAmount.eq(new BN(1000))).toBeTruthy();
+  }, 30000);
+
+  it('should create a user whose name fills the full 32-char max_len', async () => {
+    // User::INIT_SPACE with max_len(32) = 32(authority)+36(name:4+32)+8+1+32+1 = 110.
+    // Without the discriminator fix: alloc=110, actual write=8(discriminator)+110(data)=118 > 110 -> overflow.
+    // With the fix: alloc=118 (110+8), write=118 -> fits exactly. 32 chars is also the real
+    // ceiling: Solana caps each PDA seed at 32 bytes, and the user PDA seeds directly on the
+    // raw username bytes, so no username over 32 chars can exist at all regardless of this bug.
+    const longUsername = 'a'.repeat(32);
+
+    await addUser({
+      program: testData.program,
+      depositAmount: 0,
+      userName: longUsername,
+      signers: [testData.keypairs.feePayer],
+    });
+
+    const userPublicKey = findUserPublicKey(
+      longUsername,
+      testData.keypairs.feePayer.publicKey,
+      testData.program.programId
+    );
+    const user = await testData.program.account.user.fetch(userPublicKey);
+
+    expect(user.name).toEqual(longUsername);
   }, 30000);
 });

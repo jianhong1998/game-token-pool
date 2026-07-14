@@ -1,4 +1,4 @@
-import { Program } from '@coral-xyz/anchor';
+import { Program } from '@anchor-lang/core';
 import { Keypair } from '@solana/web3.js';
 import { Gametokenpool } from '../../target/types/gametokenpool';
 import { BN } from 'bn.js';

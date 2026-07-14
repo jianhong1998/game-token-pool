@@ -13,14 +13,19 @@ cluster = "Localnet"
 wallet = "./tests/fixtures/keys/program-owner.json"
 
 [scripts]
-test = "../node_modules/.bin/jest --preset ts-jest"
+test = "../node_modules/.bin/jest --preset ts-jest --runInBand --testTimeout=90000"
 
 [test]
 startup_wait = 5000
 shutdown_wait = 2000
 upgradeable = false
 
-[test.validator]
-bind_address = "127.0.0.1"
-ledger = ".anchor/test-ledger"
-rpc_port = 8899
+[surfpool]
+# anchor test's default (--legacy-anchor-compatibility) spawns surfpool with
+# --block-production-mode transaction, which only produces a block when a
+# transaction is submitted. Airdrop confirmation waits for "finalized"
+# commitment (~32 confirmations), which never arrives without continuous
+# block production, hanging past Jest's hook timeout. "clock" matches
+# surfpool's own standalone CLI default and produces blocks continuously.
+block_production_mode = "clock"
+slot_time = 50
