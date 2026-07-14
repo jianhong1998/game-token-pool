@@ -13,7 +13,7 @@ cluster = "Localnet"
 wallet = "./tests/fixtures/keys/program-owner.json"
 
 [scripts]
-test = "../node_modules/.bin/jest --preset ts-jest --runInBand --testTimeout=90000"
+test = "../node_modules/.bin/jest --runInBand --testTimeout=90000"
 
 [test]
 startup_wait = 5000
