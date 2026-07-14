@@ -1,23 +1,26 @@
 services:
-  solana-test-validator:
-    image: robojosef/solana-test-validator
-    # command: solana-test-validator --bpf-program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s /lib/program-fixture/metadata_program.so
-    command: solana-test-validator
+  # Image is `surfpool/surfpool`, NOT `txtx/surfpool` (the latter does not
+  # exist on Docker Hub -- verified via `docker pull`). The entrypoint
+  # already execs the `surfpool` binary, so `command:` must be the
+  # subcommand/args only ("surfpool start ..." fails with "unrecognized
+  # subcommand 'surfpool'" -- verified). `--host 0.0.0.0` is required: the
+  # binary's default bind host is 127.0.0.1, which the `client` container
+  # cannot reach over the compose network.
+  surfpool:
+    image: surfpool/surfpool:latest
+    command: start --no-tui --port 8899 --host 0.0.0.0
     ports:
       - '8899:8899'
       - '8900:8900'
-    volumes:
-      - ./solana-ledger:/test-ledger
-      - ./anchor/tests/fixtures:/lib/program-fixture
-    environment:
-      - RUST_LOG=solana=info
-    network_mode: host
   client:
     ports:
       - '3000:3000'
     build:
       dockerfile: Dockerfile.client
-    network_mode: host
+    depends_on:
+      - surfpool
+    environment:
+      - SOLANA_CLUSTER_PROVIDER=http://surfpool:8899
     develop:
       watch:
         - path: ./src

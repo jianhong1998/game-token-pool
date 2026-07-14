@@ -54,8 +54,11 @@ export class ConnectionUtil {
     [
       'localnet',
       {
-        connection: new Connection('http://localhost:8899', 'confirmed'),
-        endpoint: 'http://localhost:8899',
+        connection: new Connection(
+          SOLANA_CLUSTER_PROVIDER ?? 'http://localhost:8899',
+          'confirmed'
+        ),
+        endpoint: SOLANA_CLUSTER_PROVIDER ?? 'http://localhost:8899',
       },
     ],
     [

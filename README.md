@@ -4,11 +4,13 @@
 
 ### Prerequisites
 
-- Node v18.18.0 or higher
-
-- Rust v1.77.2 or higher
-- Anchor CLI 0.30.1 or higher
-- Solana CLI 1.18.17 or higher
+- Node v22 or higher
+- Rust v1.85 or higher (in practice, building anchor-cli 1.1.2 itself via
+  `avm` needs rustc >= 1.89 -- the 1.85 floor is Anchor's own stated minimum,
+  not what this repo's toolchain was actually verified against)
+- Anchor CLI 1.1.2
+- Solana CLI 3.1.10
+- surfpool (replaces `solana-test-validator`)
 
 ### Installation
 
@@ -25,11 +27,17 @@ cd <repo-name>
 npm ci
 ```
 
-#### Start the web app and local test validator (with Make)
+#### Start the web app and local surfpool validator (with Make)
 
 ```shell
 make up/build
 ```
+
+This starts two compose services: `surfpool` (the local Solana validator,
+`surfpool/surfpool:latest`) and `client` (the Next.js app). The client
+reaches the validator at `http://surfpool:8899` via
+`SOLANA_CLUSTER_PROVIDER`, not `localhost` -- compose no longer uses
+`network_mode: host` (which did not behave correctly on macOS).
 
 ## Commands
 
@@ -56,7 +64,7 @@ npm run anchor keys sync
 
 ### Deploy
 
-#### To local test validator
+#### To local surfpool validator
 
 ```shell
 # Deploy with preset account (without airdrop to the accounts)
