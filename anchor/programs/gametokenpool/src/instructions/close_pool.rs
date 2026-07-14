@@ -49,14 +49,14 @@ pub fn process_close_pool(context: Context<ClosePool>) -> Result<()> {
   let signer = &context.accounts.signer;
   let account = &context.accounts.pool_token_account;
   let mint = &context.accounts.mint;
-  let cpi_program = context.accounts.token_program.to_account_info();
+  let cpi_program = context.accounts.token_program.key();
 
   let burn_token_cpi_accounts = Burn {
     from: account.to_account_info(),
     authority: signer.to_account_info(),
     mint: mint.to_account_info(),
   };
-  let burn_token_cpi_context = CpiContext::new(cpi_program.clone(), burn_token_cpi_accounts);
+  let burn_token_cpi_context = CpiContext::new(cpi_program, burn_token_cpi_accounts);
 
   burn(burn_token_cpi_context, account.amount)?;
 
@@ -66,7 +66,7 @@ pub fn process_close_pool(context: Context<ClosePool>) -> Result<()> {
     destination: signer.to_account_info(),
   };
 
-  let close_account_cpi_context = CpiContext::new(cpi_program.clone(), close_account_cpi_accounts);
+  let close_account_cpi_context = CpiContext::new(cpi_program, close_account_cpi_accounts);
 
   close_account(close_account_cpi_context)?;
 

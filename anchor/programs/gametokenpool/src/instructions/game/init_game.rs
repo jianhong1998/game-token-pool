@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
+use crate::constants::SPACE_DISCRIMINATOR;
 use crate::states::{Game, Pool};
 
 #[derive(Accounts)]
@@ -23,7 +24,7 @@ pub struct InitGame<'info> {
   #[account(
     init,
     payer = signer,
-    space = Game::INIT_SPACE,
+    space = SPACE_DISCRIMINATOR + Game::INIT_SPACE,
     seeds = [
       b"game",
       signer.key().as_ref(),

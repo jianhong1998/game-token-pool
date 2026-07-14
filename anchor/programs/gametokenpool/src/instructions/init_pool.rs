@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
-use crate::{constants::SPACE_DISCRIMENTAL, states::Pool};
+use crate::{constants::SPACE_DISCRIMINATOR, states::Pool};
 
 #[derive(Accounts)]
 pub struct InitPool<'info> {
@@ -13,7 +13,7 @@ pub struct InitPool<'info> {
   #[account(
     init,
     payer = signer,
-    space = SPACE_DISCRIMENTAL + Pool::INIT_SPACE,
+    space = SPACE_DISCRIMINATOR + Pool::INIT_SPACE,
     seeds = [
       b"pool",
       signer.key().as_ref()
