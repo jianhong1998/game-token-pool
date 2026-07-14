@@ -1,0 +1,16 @@
+{
+  "task_id": "task-6-migrate-the-web-client-to-anchor-langcore",
+  "plan": "docs/superpowers/plans/2026-07-13-anchor-1x-solana-3x.md",
+  "spec": "docs/superpowers/specs/2026-07-13-anchor-1x-solana-3x-design.md",
+  "status": "completed",
+  "attempt": 1,
+  "worktree": ".worktrees/task-6-migrate-the-web-client-to-anchor-langcore",
+  "completed_steps": [
+    "Repointed anchor/src/gametokenpool-exports.ts import to @anchor-lang/core",
+    "Repointed src/util/server/connection.ts imports to @anchor-lang/core",
+    "NodeWallet not publicly exported by @anchor-lang/core; defined local adapter class in connection.ts",
+    "Added explicit Program<Gametokenpool> generic in gametokenpool-exports.ts (constructor idl param is now `any`, so generic inference from the idl arg no longer works)",
+    "npm uninstall @coral-xyz/anchor; confirmed zero remaining references via grep",
+    "npm run typecheck && npm run lint && npm run build all pass"
+  ]
+}

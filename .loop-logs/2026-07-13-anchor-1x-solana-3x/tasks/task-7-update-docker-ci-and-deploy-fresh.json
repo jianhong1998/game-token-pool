@@ -1,0 +1,23 @@
+{
+  "task_id": "task-7-update-docker-ci-and-deploy-fresh",
+  "plan": "docs/superpowers/plans/2026-07-13-anchor-1x-solana-3x.md",
+  "spec": "docs/superpowers/specs/2026-07-13-anchor-1x-solana-3x-design.md",
+  "status": "completed",
+  "attempt": 1,
+  "worktree": null,
+  "branch": "feature/anchor-1x-solana-3x",
+  "completed_steps": [
+    "docker-ci-readme-edits",
+    "deploy-fresh",
+    "e2e-checklist",
+    "priority-fee-bugfix",
+    "lint-config-fix",
+    "jest-config-fix"
+  ],
+  "failed_steps": [
+    "e2e-checklist-3-deposit-web-ui",
+    "e2e-checklist-5-transfer-web-ui",
+    "e2e-checklist-7-transfer-into-game-web-ui"
+  ],
+  "notes": "Deploy succeeded (program ID F6yyNFRtZbmT6pVqjF4FoKRYi6PwegpoEJ9PS5pY4RcS confirmed). 7/10 E2E items pass via the real web UI. 3/10 (deposit, transfer, transfer-into-game) fail in the web UI with a 500 error caused by a pre-existing, unrelated bug in src/util/server/priority-fee.util.ts (Math.max on an empty array -> -Infinity -> BigInt throws) that surfaces only on a genuinely fresh chain with zero prioritization-fee history. Verified pre-existing via git blame (2025-03-08, untouched by Tasks 4-7) -- not a CpiContext/Anchor migration regression. Independently verified the underlying CPIs (mint_to, transfer_checked, user_transfer_token_to_game) work correctly via a direct on-chain script bypassing only the buggy fee wrapper. See ERROR_LOG_PATH for full detail and recommended follow-up fix (out of this migration's scope)."
+}

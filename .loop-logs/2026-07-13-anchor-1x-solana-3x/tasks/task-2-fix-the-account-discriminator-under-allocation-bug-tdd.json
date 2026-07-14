@@ -1,0 +1,9 @@
+{
+  "task_id": "task-2-fix-the-account-discriminator-under-allocation-bug-tdd",
+  "plan": "docs/superpowers/plans/2026-07-13-anchor-1x-solana-3x.md",
+  "spec": "docs/superpowers/specs/2026-07-13-anchor-1x-solana-3x-design.md",
+  "status": "pending",
+  "attempt": 0,
+  "worktree": null,
+  "completed_steps": []
+}
