@@ -3,19 +3,50 @@ import {
   FEE_PAYER,
   SOLANA_CLUSTER_TYPE,
 } from '@/constants';
-import { AnchorProvider, Program, setProvider } from '@coral-xyz/anchor';
+import { AnchorProvider, Program, setProvider } from '@anchor-lang/core';
 import {
   getGametokenpoolProgram,
   getGametokenpoolProgramId,
 } from '@project/anchor';
-import { clusterApiUrl, Connection, Keypair } from '@solana/web3.js';
+import {
+  clusterApiUrl,
+  Connection,
+  Keypair,
+  Transaction,
+  VersionedTransaction,
+} from '@solana/web3.js';
 import { Gametokenpool } from '../../../anchor/target/types/gametokenpool';
 import { ClusterType } from '@/types/cluster-type.type';
-import NodeWallet from '@coral-xyz/anchor/dist/cjs/nodewallet';
 
 interface IConnectionMapValue {
   connection: Connection;
   endpoint: string;
+}
+
+// `@anchor-lang/core` does not publicly export `NodeWallet` (it is declared
+// locally in the package but not re-exported). Reaching into a deep CJS path
+// is what broke on the previous Anchor version, so we define the trivial
+// adapter here instead of hunting for another internal path.
+class NodeWallet {
+  constructor(readonly payer: Keypair) {}
+
+  get publicKey() {
+    return this.payer.publicKey;
+  }
+
+  async signTransaction<T extends Transaction | VersionedTransaction>(
+    tx: T
+  ): Promise<T> {
+    if (tx instanceof VersionedTransaction) tx.sign([this.payer]);
+    else tx.partialSign(this.payer);
+    return tx;
+  }
+
+  async signAllTransactions<T extends Transaction | VersionedTransaction>(
+    txs: T[]
+  ): Promise<T[]> {
+    return Promise.all(txs.map((tx) => this.signTransaction(tx)));
+  }
 }
 
 export class ConnectionUtil {

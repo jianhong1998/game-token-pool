@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@anchor-lang/core": "^1.1.2",
-    "@coral-xyz/anchor": "^0.30.1",
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.4.12",
     "@solana/web3.js": "^1.98.0",
