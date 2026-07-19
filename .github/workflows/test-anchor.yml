@@ -44,6 +44,15 @@ jobs:
           avm install 1.1.2
           avm use 1.1.2
 
+      # Anchor 1.x's `anchor test` spawns `surfpool` directly (see the
+      # [surfpool] block in anchor/Anchor.toml) instead of
+      # solana-test-validator. The install script drops the binary in
+      # ~/.local/bin, which isn't on PATH for later steps by default.
+      - name: Install surfpool 1.5.0
+        run: |
+          VERSION=v1.5.0 bash -c "$(curl -sL https://run.surfpool.run/)"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Set solana target cluster to local
         run: solana config set --url http://localhost:8899 -k ./anchor/tests/fixtures/keys/program-owner.json
 
