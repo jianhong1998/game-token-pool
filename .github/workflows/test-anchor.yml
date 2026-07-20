@@ -53,6 +53,9 @@ jobs:
           VERSION=v1.5.0 bash -c "$(curl -sL https://run.surfpool.run/)"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Generate default Solana keypair for surfpool's deploy runbook
+        run: solana-keygen new --no-bip39-passphrase --force -o ~/.config/solana/id.json
+
       - name: Set solana target cluster to local
         run: solana config set --url http://localhost:8899 -k ./anchor/tests/fixtures/keys/program-owner.json
 
