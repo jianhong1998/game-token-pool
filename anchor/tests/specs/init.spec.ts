@@ -1,13 +1,7 @@
-import * as anchor from '@coral-xyz/anchor';
-import {
-  Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-} from '@solana/web3.js';
+import * as anchor from '@anchor-lang/core';
+import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import { Gametokenpool } from '../../target/types/gametokenpool';
 import {
-  IS_TESTING_ON_CHAIN,
   TEST_FEE_PAYER_ID_FILE_PATH,
   TEST_PROGRAM_OWNER_ID_FILE_PATH,
 } from '../constants';
@@ -35,23 +29,7 @@ describe.skip('Test init()', () => {
       TEST_PROGRAM_OWNER_ID_FILE_PATH
     );
 
-    const programUtil = new ProgramUtil<Gametokenpool>(
-      ProgramUtil.generateConstructorParams({
-        addedAccounts: [
-          AccountUtil.createAddedAccount(feePayer.publicKey, {
-            lamports: 10 * LAMPORTS_PER_SOL,
-            executable: false,
-          }),
-          AccountUtil.createAddedAccount(programOwner.publicKey, {
-            lamports: 10 * LAMPORTS_PER_SOL,
-            executable: false,
-          }),
-        ],
-        addedPrograms: [],
-        anchorRootPath: '.',
-        isTestingOnChain: IS_TESTING_ON_CHAIN,
-      })
-    );
+    const programUtil = new ProgramUtil<Gametokenpool>();
 
     const program = await programUtil.getProgram();
     const connection = (await programUtil.getProvider()).connection;

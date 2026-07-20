@@ -1,4 +1,4 @@
-import { Program } from '@coral-xyz/anchor';
+import { Program } from '@anchor-lang/core';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { Gametokenpool } from '../../target/types/gametokenpool';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';

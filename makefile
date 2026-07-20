@@ -41,15 +41,11 @@ build:
 
 test:
 	@cd anchor && \
-		IS_TESTING_ON_CHAIN=false anchor test --skip-local-validator --skip-deploy
+		anchor test
 
-test/onchain:
+test/skip-deploy:
 	@cd anchor && \
-		IS_TESTING_ON_CHAIN=true anchor test --skip-local-validator
-
-test/onchain/skip-deploy:
-	@cd anchor && \
-		IS_TESTING_ON_CHAIN=true anchor test --skip-local-validator --skip-deploy
+		anchor test --skip-deploy
 
 deploy:
 	@$(MAKE) build

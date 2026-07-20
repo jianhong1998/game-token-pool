@@ -88,7 +88,7 @@ pub fn process_user_quit_game(context: Context<UserQuitGame>) -> Result<()> {
   if game_account_balance != 0 {
     msg!("Game is having token while last player quiting game. Transfering all balance to the last player...");
 
-    let cpi_program = context.accounts.token_program.to_account_info();
+    let cpi_program = context.accounts.token_program.key();
     let cpi_accounts = TransferChecked {
       from: game_token_account.to_account_info(),
       to: context.accounts.user_token_account.to_account_info(),

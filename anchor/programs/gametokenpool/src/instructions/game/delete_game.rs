@@ -61,7 +61,7 @@ pub fn process_delete_game(context: Context<DeleteGame>) -> Result<()> {
     authority: context.accounts.signer.to_account_info(),
     destination: context.accounts.signer.to_account_info(),
   };
-  let cpi_program = context.accounts.token_program.to_account_info();
+  let cpi_program = context.accounts.token_program.key();
   let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
   msg!("Closing game token account ({})", context.accounts.game_token_account.key());

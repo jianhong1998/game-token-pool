@@ -1,0 +1,12 @@
+{
+  "task_id": "task-1-establish-a-green-baseline-on-the-current-toolchain",
+  "plan": "docs/superpowers/plans/2026-07-13-anchor-1x-solana-3x.md",
+  "spec": "docs/superpowers/specs/2026-07-13-anchor-1x-solana-3x-design.md",
+  "status": "completed",
+  "attempt": 0,
+  "worktree": null,
+  "completed_steps": [
+    "determined-old-toolchain-unbuildable-on-this-machine"
+  ],
+  "note": "See logs/task-1-and-2-resequencing-decision.md. Old toolchain unbuildable on this machine under any solana-cli pairing tried; user decided to resequence Task 2 to run after Task 3, under the new toolchain."
+}

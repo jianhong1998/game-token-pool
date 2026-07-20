@@ -3,6 +3,7 @@ use anchor_spl::token_interface::{
   mint_to, transfer_checked, Mint, MintTo, TokenAccount, TokenInterface, TransferChecked,
 };
 
+use crate::constants::SPACE_DISCRIMINATOR;
 use crate::states::{Pool, User};
 
 #[derive(Accounts)]
@@ -47,7 +48,7 @@ pub struct AddUserToPool<'info> {
   #[account(
     init,
     payer = signer,
-    space = User::INIT_SPACE,
+    space = SPACE_DISCRIMINATOR + User::INIT_SPACE,
     seeds = [
       b"user",
       user_name.as_bytes().as_ref(),
@@ -78,7 +79,7 @@ pub fn process_add_user_to_pool(
   let signer_key = context.accounts.signer.key();
   let user = &mut context.accounts.user;
   let pool = &context.accounts.pool;
-  let cpi_program = context.accounts.token_program.to_account_info();
+  let cpi_program = context.accounts.token_program.key();
 
   // Create user accounts
   user.authority = signer_key.clone();
@@ -100,7 +101,7 @@ pub fn process_add_user_to_pool(
   };
   let mint_to_signer_seeds: &[&[&[u8]]] = &[&[b"mint", signer_key.as_ref(), &[pool.mint_bump]]];
   let mint_to_cpi_context =
-    CpiContext::new_with_signer(cpi_program.clone(), mint_to_cpi_accounts, mint_to_signer_seeds);
+    CpiContext::new_with_signer(cpi_program, mint_to_cpi_accounts, mint_to_signer_seeds);
   mint_to(mint_to_cpi_context, amount)?;
   msg!("Token minted successfully ✅");
 

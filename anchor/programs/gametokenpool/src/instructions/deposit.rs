@@ -68,7 +68,7 @@ pub fn process_deposit(context: Context<Deposit>, _user_name: String, amount: u6
   let pool = &context.accounts.pool;
   let user = &mut context.accounts.user;
 
-  let cpi_program  = context.accounts.token_program.to_account_info();
+  let cpi_program = context.accounts.token_program.key();
 
   let mint_to_signer_seeds: &[&[&[u8]]] = &[&[
     b"mint",
@@ -80,7 +80,7 @@ pub fn process_deposit(context: Context<Deposit>, _user_name: String, amount: u6
     mint: context.accounts.mint.to_account_info(),
     to: context.accounts.user_token_account.to_account_info()
   };
-  let mint_to_context = CpiContext::new_with_signer(cpi_program.clone(), mint_to_cpi_accounts, mint_to_signer_seeds);
+  let mint_to_context = CpiContext::new_with_signer(cpi_program, mint_to_cpi_accounts, mint_to_signer_seeds);
   // let decimals = context.accounts.mint.decimals;
 
   msg!("Minting token...");

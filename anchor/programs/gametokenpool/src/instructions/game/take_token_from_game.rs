@@ -104,7 +104,7 @@ pub fn process_take_token_from_game(
     mint: context.accounts.pool_mint.to_account_info(),
     authority: context.accounts.signer.to_account_info(),
   };
-  let cpi_program = context.accounts.token_program.to_account_info();
+  let cpi_program = context.accounts.token_program.key();
   let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
   transfer_checked(cpi_context, amount, decimals)?;

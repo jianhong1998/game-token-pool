@@ -1,5 +1,5 @@
 // Here we export some useful types and functions for interacting with the Anchor program.
-import { AnchorProvider, Program } from '@coral-xyz/anchor';
+import { AnchorProvider, Program } from '@anchor-lang/core';
 import { Cluster, PublicKey } from '@solana/web3.js';
 import GametokenpoolIDL from '../target/idl/gametokenpool.json';
 import type { Gametokenpool } from '../target/types/gametokenpool';
@@ -15,7 +15,7 @@ export function getGametokenpoolProgram(
   provider: AnchorProvider,
   address?: PublicKey
 ) {
-  return new Program(
+  return new Program<Gametokenpool>(
     {
       ...GametokenpoolIDL,
       address: address ? address.toBase58() : GametokenpoolIDL.address,

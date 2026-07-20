@@ -97,7 +97,7 @@ pub fn process_transfer_token_to_game(
   );
 
   let decimals = context.accounts.pool_mint.decimals;
-  let cpi_program = context.accounts.token_program.to_account_info();
+  let cpi_program = context.accounts.token_program.key();
   let cpi_account = TransferChecked {
     from: user_token_account.to_account_info(),
     to: context.accounts.game_token_account.to_account_info(),

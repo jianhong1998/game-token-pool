@@ -77,7 +77,7 @@ pub fn process_user_end_game(context: Context<UserEndGame>, _user_name: String) 
       mint: context.accounts.mint.to_account_info(),
       authority: signer.to_account_info(),
     };
-    let cpi_context = CpiContext::new(cpi_program.to_account_info(), cpi_accounts);
+    let cpi_context = CpiContext::new(cpi_program.key(), cpi_accounts);
     let decimals = context.accounts.mint.decimals;
 
     msg!("User has token on hand, transfering back to pool...");
@@ -91,7 +91,7 @@ pub fn process_user_end_game(context: Context<UserEndGame>, _user_name: String) 
     destination: signer.to_account_info(),
   };
   let close_account_cpi_context =
-    CpiContext::new(cpi_program.to_account_info(), close_account_cpi_accounts);
+    CpiContext::new(cpi_program.key(), close_account_cpi_accounts);
 
   msg!("Closing user token account...");
   close_account(close_account_cpi_context)?;

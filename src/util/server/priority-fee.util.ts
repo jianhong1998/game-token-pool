@@ -13,6 +13,10 @@ export class PriorityFeeUtil {
 
     let lamports: number = 0;
 
+    if (recentPriorityFees.length === 0) {
+      return lamports;
+    }
+
     switch (priorityLevel) {
       case 'min':
         lamports = Math.min(...recentPriorityFees);
