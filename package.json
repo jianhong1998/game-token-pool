@@ -2,6 +2,7 @@
   "name": "template-next-tailwind-counter",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.15.3",
   "scripts": {
     "anchor": "cd anchor && anchor",
     "anchor-build": "cd anchor && anchor build",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@anchor-lang/core": "^1.1.2",
+    "@coral-xyz/anchor": "^0.32.1",
     "@solana/buffer-layout": "^4.0.1",
     "@solana/spl-token": "^0.4.12",
     "@solana/web3.js": "^1.98.0",
@@ -23,6 +25,7 @@
     "@tanstack/react-query": "^5.101.2",
     "@tanstack/react-query-next-experimental": "^5.101.2",
     "@vercel/speed-insights": "^1.2.0",
+    "bn.js": "^5.2.5",
     "bs58": "^6.0.0",
     "daisyui": "^4.12.10",
     "date-fns": "^4.1.0",
@@ -35,7 +38,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.6",
     "@solana-developers/helpers": "^2.5.6",
-    "@types/bn.js": "^5.1.0",
+    "@types/bn.js": "^5.2.0",
     "@types/jest": "^29.0.3",
     "@types/node": "^20",
     "@types/react": "^19.2.17",
@@ -48,7 +51,9 @@
     "ts-jest": "^29.0.2",
     "typescript": "^5"
   },
-  "overrides": {
-    "postcss": "^8.5.10"
+  "pnpm": {
+    "overrides": {
+      "postcss": "^8.5.10"
+    }
   }
 }

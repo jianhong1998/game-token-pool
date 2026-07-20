@@ -163,6 +163,35 @@ Q2).
 
 ---
 
+## Q7: Why swap npm → pnpm and make → just?
+
+**Answer:** Tooling preference, not a defect fix — both npm and make worked
+fine. Executed as a straight swap with no behavior change to the app or
+program.
+
+**Decision:**
+
+- **npm → pnpm.** `pnpm-lock.yaml` generated via `pnpm import` from the
+  existing `package-lock.json` (not a fresh `pnpm install`) to preserve the
+  exact already-resolved dependency versions — consistent with this repo's
+  policy of pinning toolchain versions exactly rather than letting a
+  migration silently bump transitive deps. `packageManager: "pnpm@9.15.3"`
+  pinned exactly for the same reason. `package.json`'s `overrides` moved to
+  `pnpm.overrides` (pnpm does not read a root-level `overrides` key).
+- **make → just.** One `justfile` at the repo root, flat structure mirroring
+  the old `makefile` 1:1 (no `just` modules, no `[group(...)]` tags — 16
+  recipes read fine as a flat list). `just` recipe names can't contain `/`,
+  so the old slash-style targets (`up/build`, `solana/set/dev`, etc.) were
+  renamed with dashes (`up-build`, `solana-set-dev`, etc.). `makefile`
+  deleted in the same change — hard cutover, no transition period.
+
+**Reason:** Direct instruction, not a debated architectural trade-off.
+Recorded here per this repo's convention of logging the reasoning behind
+toolchain changes so a future reader isn't left guessing why the lockfile
+strategy or recipe names look the way they do.
+
+---
+
 ## Sequencing
 
 The web app imports `@coral-xyz/anchor` and `anchor/target/types`, so the two
