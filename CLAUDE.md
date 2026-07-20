@@ -29,21 +29,21 @@ types are correct.
 ### Web app
 
 ```shell
-npm run dev         # Next dev server
-npm run build        # Next build
-npm run typecheck    # tsc --noEmit
-npm run lint         # eslint .
-npm test             # jest (src/**/*.test.ts, ts-jest, node env)
+pnpm run dev         # Next dev server
+pnpm run build        # Next build
+pnpm run typecheck    # tsc --noEmit
+pnpm run lint         # eslint .
+pnpm test             # jest (src/**/*.test.ts, ts-jest, node env)
 ```
 
-Run a single web test: `npx jest src/util/server/priority-fee.util.test.ts`.
+Run a single web test: `pnpm exec jest src/util/server/priority-fee.util.test.ts`.
 
 ### Anchor program
 
 ```shell
-npm run anchor-build      # cd anchor && anchor build
-npm run anchor-test       # cd anchor && anchor test
-npm run anchor -- keys sync   # sync program ID after a build
+pnpm run anchor-build      # cd anchor && anchor build
+pnpm run anchor-test       # cd anchor && anchor test
+pnpm run anchor -- keys sync   # sync program ID after a build
 
 # equivalently, from anchor/
 anchor build
@@ -62,13 +62,13 @@ test` run means full coverage.
 ### Docker / local validator
 
 ```shell
-make up/build          # docker compose up --build: surfpool + client
-make up                # docker compose up (no rebuild)
-make down               # compose down + prune image
-make build              # anchor build
-make deploy              # build + anchor deploy (local surfpool)
-make deploy/with-airdrop # airdrop to program-owner/fee-payer, then deploy
-make deploy/dev          # build + anchor deploy --provider.cluster devnet
+just up-build            # docker compose up --build: surfpool + client
+just up                  # docker compose up (no rebuild)
+just down                # compose down + prune image
+just build               # anchor build
+just deploy               # build + anchor deploy (local surfpool)
+just deploy-with-airdrop  # airdrop to program-owner/fee-payer, then deploy
+just deploy-dev           # build + anchor deploy --provider.cluster devnet
 ```
 
 The `client` container reaches the validator at `http://surfpool:8899` via
