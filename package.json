@@ -2,6 +2,7 @@
   "name": "template-next-tailwind-counter",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.15.3",
   "scripts": {
     "anchor": "cd anchor && anchor",
     "anchor-build": "cd anchor && anchor build",
@@ -48,7 +49,9 @@
     "ts-jest": "^29.0.2",
     "typescript": "^5"
   },
-  "overrides": {
-    "postcss": "^8.5.10"
+  "pnpm": {
+    "overrides": {
+      "postcss": "^8.5.10"
+    }
   }
 }
