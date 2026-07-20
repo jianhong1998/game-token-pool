@@ -1,0 +1,9 @@
+{
+  "task_id": "task-2-switch-dockerfile-to-pnpm",
+  "plan": "docs/superpowers/plans/2026-07-20-pnpm-just-migration.md",
+  "spec": "docs/superpowers/specs/2026-07-20-pnpm-just-migration-design.md",
+  "status": "completed",
+  "attempt": 1,
+  "worktree": ".worktrees/task-2-switch-dockerfile-to-pnpm",
+  "completed_steps": ["tdd-loop-complete"]
+}

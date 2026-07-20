@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tooling swap: npm → pnpm, GNU Make → just</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 780px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; }
+  header { border-bottom: 2px solid #ccc; margin-bottom: 1.5rem; padding-bottom: 1rem; }
+  .badge { display: inline-block; background: #eee; border-radius: 4px; padding: 0.15rem 0.5rem; font-size: 0.85rem; margin-right: 0.5rem; }
+  section.area { margin: 2rem 0; padding-top: 1rem; border-top: 1px solid #ddd; }
+  .quiz { background: #f7f7f7; border-radius: 6px; padding: 1rem; margin-top: 1rem; }
+  .quiz details { margin: 0.75rem 0; }
+  .quiz summary { cursor: pointer; font-weight: 600; }
+  .quiz .answer { margin-top: 0.5rem; padding: 0.5rem 0.75rem; background: #fff; border-left: 3px solid #888; }
+  ul.plain li { margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">diff-review</span>
+  <span class="badge">refactor/restructure-apps @ 2026-07-20-pnpm-just-migration (base c379028)</span>
+  <span class="badge">2026-07-20</span>
+  <h1>Tooling swap: npm → pnpm, GNU Make → just</h1>
+  <p>Six commits swap the repo's package manager (npm → pnpm) and task runner (GNU Make → just) across the app, Docker, CI, and docs, with an explicit constraint of zero behavior change to the Solana program or web app. The lockfile was migrated (not regenerated) to avoid dependency drift, and every make target got a 1:1 just recipe with dash-renamed names.</p>
+</header>
+
+<section>
+  <h2>Why</h2>
+  <p>This is a pure tooling-preference change, not a fix for anything broken — npm and make both worked fine before. The repo already has a strong convention of pinning toolchain versions exactly (Anchor 1.1.2, Solana CLI 3.1.10, surfpool 1.5.0) to avoid silent drift; that same philosophy drove the two riskiest choices here: generating pnpm-lock.yaml via <code>pnpm import</code> from the existing package-lock.json (preserving already-resolved versions) instead of a fresh <code>pnpm install</code> (which could re-resolve transitive deps within the same semver ranges), and pinning <code>packageManager: "pnpm@9.15.3"</code> exactly rather than a floating range.</p>
+  <p>Because docs (README.md, CLAUDE.md) and Docker/CI both reference package-manager and task-runner commands, the plan intentionally landed both halves of the swap together rather than splitting pnpm and just into separate change sets — splitting them would have meant touching the same doc files twice for no benefit.</p>
+</section>
+
+<section class="area">
+  <h2>Package manager migration: npm → pnpm (lockfile, package.json)</h2>
+  <p>Commit 7b1e395 is the foundation everything else depends on. <code>pnpm import</code> reads the existing <code>package-lock.json</code> and writes <code>pnpm-lock.yaml</code> with the same already-resolved dependency versions, rather than letting pnpm's resolver pick fresh versions within the same semver ranges — the review confirmed all 29 direct dependencies resolved identically, with the only lockfile diff being the metadata change from moving <code>overrides</code> to <code>pnpm.overrides</code> (pnpm doesn't read a root-level <code>overrides</code> key, so leaving it in place would have silently stopped pinning postcss to <code>^8.5.10</code>). <code>package.json</code> also gained <code>"packageManager": "pnpm@9.15.3"</code>, pinned exactly rather than as a range, matching the repo's existing toolchain-pinning convention — this also lets <code>pnpm/action-setup@v4</code> in CI read the version without a separate pin, so <code>packageManager</code> stays the single source of truth. <code>package-lock.json</code> was deleted in the same commit as a hard cutover.</p>
+
+  <div class="quiz">
+    <h3>Self-check</h3>
+    <details>
+      <summary>Why did the migration use `pnpm import` instead of just running `pnpm install` against the old package-lock.json?</summary>
+      <div class="answer"><strong>To avoid dependency drift — a fresh `pnpm install` could re-resolve transitive dependencies to different versions within the same semver ranges, which conflicts with the repo's practice of pinning toolchain/dependency versions exactly.</strong><br>Documented in decisions.md Q7 and the spec's Requirements section; the review verified all 29 direct deps resolved byte-identically afterward.</div>
+    </details>
+    <details>
+      <summary>Why did `overrides` need to move to `pnpm.overrides` instead of staying at the top level of package.json?</summary>
+      <div class="answer"><strong>pnpm does not read a root-level `overrides` key — only npm/Yarn do — so leaving it in place would have silently stopped pinning postcss to `^8.5.10`.</strong><br>Called out explicitly in the plan's Requirements and reflected in the actual diff (package.json's trailing block changed from `"overrides": {...}` to `"pnpm": { "overrides": {...} }`).</div>
+    </details>
+    <details>
+      <summary>Why is `packageManager` pinned to an exact version (`pnpm@9.15.3`) rather than a caret range?</summary>
+      <div class="answer"><strong>To match the repo's existing convention of pinning toolchain versions exactly (Anchor 1.1.2, Solana CLI 3.1.10, surfpool 1.5.0), and so `pnpm/action-setup@v4` in CI can read that exact version with no separate `version:` input.</strong><br>decisions.md Q7 and the CI workflow diff both rely on this single source of truth for the pnpm version used in Actions.</div>
+    </details>
+  </div>
+</section>
+
+<section class="area">
+  <h2>Consumers of the pnpm switch: Dockerfile.client and CI workflows</h2>
+  <p>Two commits build on Task 1's lockfile. <code>a310e67</code> (Dockerfile.client) replaces the npm install block with an already-sketched-but-commented-out pnpm block: <code>ENV PNPM_HOME</code>, <code>RUN corepack enable</code>, <code>COPY pnpm-lock.yaml</code>, <code>RUN pnpm install --frozen-lockfile</code>, and <code>CMD ["pnpm", "run", "dev"]</code> (fixing a typo — the old commented sketch had <code>"pn"</code> instead of <code>"pnpm"</code>). <code>6885e6c</code> updates both <code>test-web.yml</code> and <code>test-anchor.yml</code>: adds a <code>pnpm/action-setup@v4</code> step, switches <code>actions/setup-node</code>'s cache key from <code>'npm'</code> to <code>'pnpm'</code>, and replaces <code>npm ci</code> / <code>npm run &lt;script&gt;</code> with <code>pnpm install --frozen-lockfile</code> / <code>pnpm run &lt;script&gt;</code>. Critically, <code>test-anchor.yml</code>'s Solana/Anchor/surfpool toolchain installation steps (Solana CLI, Rust, AVM, Anchor CLI, surfpool) are completely untouched — only the four Node/pnpm-adjacent lines and the two final <code>run:</code> commands changed, since those are orthogonal to the package-manager swap.</p>
+
+  <div class="quiz">
+    <h3>Self-check</h3>
+    <details>
+      <summary>What ordering dependency exists between the Dockerfile.client commit and the lockfile-migration commit?</summary>
+      <div class="answer"><strong>Dockerfile.client's `RUN pnpm install --frozen-lockfile` requires `pnpm-lock.yaml` to already exist at the repo root, so Task 1 (lockfile migration) had to land before Task 2 (Docker).</strong><br>Called out in the plan's Task 2 Interfaces section and confirmed in decisions.md's orchestration note (Wave 2 needed Wave 1 merged first).</div>
+    </details>
+    <details>
+      <summary>Why didn't the Anchor/Solana/surfpool toolchain-installation steps in test-anchor.yml need any changes?</summary>
+      <div class="answer"><strong>Those steps install Rust, the Solana CLI, AVM, Anchor CLI, and surfpool directly via curl/cargo — none of them go through npm or pnpm, so they're orthogonal to the package-manager swap.</strong><br>The diff shows only the 'Install pnpm'/'Install Node.js'/'Install dependencies' steps and the final two `run:` lines changed in test-anchor.yml; every Solana-specific step and its comments are byte-identical to before.</div>
+    </details>
+    <details>
+      <summary>What typo did the Dockerfile.client change fix along the way?</summary>
+      <div class="answer"><strong>The old commented-out pnpm sketch had `CMD [ "pn", "run", "dev" ]` — missing the trailing `pm`; the landed version corrects it to `CMD [ "pnpm", "run", "dev" ]`.</strong><br>Visible in the plan's Task 2 walkthrough and the actual Dockerfile.client diff.</div>
+    </details>
+  </div>
+</section>
+
+<section class="area">
+  <h2>Task runner migration: GNU Make → just</h2>
+  <p>Commit 31b13bc replaces <code>makefile</code> with a new root <code>justfile</code> in one change (no transition period — both files never coexist in the committed history). The justfile mirrors the makefile's 16 targets 1:1, flat, with no <code>just</code> modules or <code>[group(...)]</code> tags (judged unnecessary structure for 16 recipes that already read fine alphabetically). Because <code>just</code> recipe names can't contain <code>/</code>, every slash-style Make target was renamed with dashes — <code>up/build</code> → <code>up-build</code>, <code>solana/set/dev</code> → <code>solana-set-dev</code>, <code>deploy/with-airdrop</code> → <code>deploy-with-airdrop</code>, etc. Recursive <code>$(MAKE) target</code> calls became <code>just target</code> calls, which <code>just</code> supports natively. One deliberate non-fix: the original makefile's <code>PROJECT_DEPLOY_KEY="~/.config/solana/devnet-id.json"</code> had embedded literal quote characters that end up in the expanded <code>--provider.wallet</code> argument, which means the shell does <em>not</em> tilde-expand it — a plausible oversight in the original Makefile. The justfile's <code>project_deploy_key</code> variable reproduces this exact quoted, non-expanding behavior rather than 'fixing' it, since correcting shell-expansion semantics is out of scope for a mechanical tooling swap.</p>
+
+  <div class="quiz">
+    <h3>Self-check</h3>
+    <details>
+      <summary>Why couldn't the Makefile's target names be copied verbatim into the justfile?</summary>
+      <div class="answer"><strong>`just` recipe names cannot contain `/`, so slash-style targets like `up/build`, `solana/set/dev`, and `deploy/with-airdrop` had to be renamed using dashes instead (`up-build`, `solana-set-dev`, `deploy-with-airdrop`).</strong><br>Stated directly in the plan's Global Constraints and reflected in the justfile diff — every renamed recipe follows this dash convention.</div>
+    </details>
+    <details>
+      <summary>The justfile's `deploy-dev` recipe still wraps `project_deploy_key` in quotes even though this prevents tilde-expansion of the path. Was this fixed or intentionally preserved, and why?</summary>
+      <div class="answer"><strong>Intentionally preserved — the original Makefile had the same quoting behavior (a possible oversight), and 'fixing' it would be a behavior change outside the scope of a pure tooling-preference migration.</strong><br>Documented in the plan's note ahead of Task 4 Step 1 and in the justfile's own comment: 'Quoted deliberately: reproduces the original Makefile's literal (non-tilde-expanding) behavior.'</div>
+    </details>
+    <details>
+      <summary>Why weren't `[group(...)]` tags or separate `just` modules used to organize the 16 recipes?</summary>
+      <div class="answer"><strong>Judged unnecessary — 16 recipes already read fine as a flat, alphabetically-sortable list, so extra structure would add complexity without benefit.</strong><br>decisions.md Q7 and the spec's Task-runner requirements both state this explicitly as a deliberate simplicity choice, matching the Makefile's own flat shape 1:1.</div>
+    </details>
+  </div>
+</section>
+
+<section class="area">
+  <h2>Documentation and decision record (README, CLAUDE.md, decisions.md)</h2>
+  <p>Commit e22281e updates README.md and CLAUDE.md so every <code>npm ci</code>/<code>npm run x</code> becomes <code>pnpm install --frozen-lockfile</code>/<code>pnpm run x</code>, <code>npx jest ...</code> becomes <code>pnpm exec jest ...</code>, and every <code>make x</code>/<code>make x/y</code> becomes <code>just x</code>/<code>just x-y</code>, using the exact recipe names from the justfile commit. A word-boundary verification grep was needed here rather than the plan's literal suggested one, because a naive <code>grep "npm "</code> false-positives against the substring <code>npm </code> inside <code>pnpm </code>. Commit 3e39f65 then adds a new <code>Q7</code> entry to <code>docs/modernization/decisions.md</code>, following the file's existing <code>Answer</code>/<code>Decision</code>/<code>Reason</code> format used by Q1–Q6, recording that this was a direct tooling-preference instruction (not a debated architecture trade-off) and capturing the <code>pnpm import</code> and dash-renaming rationale for future readers.</p>
+
+  <div class="quiz">
+    <h3>Self-check</h3>
+    <details>
+      <summary>Why did the plan's literal Step 3 verification grep (`grep -n "npm \|npm run\|npm ci\|make "`) need to be adjusted before use?</summary>
+      <div class="answer"><strong>It false-positives against the string `pnpm ` because `npm ` is a literal substring of `pnpm `, so a naive grep would flag every correct pnpm reference as a stray npm reference.</strong><br>Recorded in the loop's decisions.md under task-5 and reused in task-7's repo-wide sweep — a word-boundary-aware check was used instead.</div>
+    </details>
+    <details>
+      <summary>What replaced `npx jest src/util/server/priority-fee.util.test.ts` in CLAUDE.md, and why not just `pnpm jest ...`?</summary>
+      <div class="answer"><strong>`pnpm exec jest src/util/server/priority-fee.util.test.ts` — `pnpm exec` is pnpm's equivalent of `npx` for running a locally-installed binary.</strong><br>Called out explicitly in the plan's Task 5 note and visible in the actual CLAUDE.md diff.</div>
+    </details>
+    <details>
+      <summary>Is the new Q7 entry in decisions.md framed as resolving a debated trade-off, or something else?</summary>
+      <div class="answer"><strong>Something else — it's explicitly framed as a direct instruction/tooling preference, not a debated architectural trade-off, distinguishing it from other Q&amp;A entries that record genuine design decisions.</strong><br>Q7's 'Reason' section states: 'Direct instruction, not a debated architectural trade-off. Recorded here per this repo's convention of logging the reasoning behind toolchain changes.'</div>
+    </details>
+  </div>
+</section>
+
+<section class="area">
+  <h2>Execution process and what's still open</h2>
+  <p>The plan describes the six tasks as sequential and independently-committable, but the autonomous loop's default is to spawn every task's worktree agent in parallel from the same base commit — which would break for Task 2 (Docker), since it needs Task 1's <code>pnpm-lock.yaml</code> physically present to verify its build. This was resolved by running three waves instead of one flat parallel batch: Wave 1 = Tasks {1, 3, 4, 5, 6} (verified mutually independent — Task 5's doc content is fully spelled out in the plan, so it doesn't actually need Task 4's justfile to exist on disk to write correct docs), squash-merged; Wave 2 = Task 2 alone (needs Wave 1 merged); Wave 3 = Task 7, a verification-only pass with no worktree since it modifies no files. All 7 tasks passed on the first attempt, and code review round 1 found zero actionable (blocking/important) issues — only four minor items were deferred rather than fixed, none of which block merging.</p>
+
+  <div class="quiz">
+    <h3>Self-check</h3>
+    <details>
+      <summary>Why couldn't all six tasks be run as one fully-parallel worktree batch, as the pipeline normally defaults to?</summary>
+      <div class="answer"><strong>Task 2 (Dockerfile.client) needs Task 1's generated `pnpm-lock.yaml` file physically on disk to run its own build verification, so it can't start from the same pre-migration base commit as Task 1 in parallel — it has to run after Task 1 is merged.</strong><br>Documented in both the loop summary's 'Execution note' and decisions.md's orchestration-deviation entry; resolved via the 3-wave split (Wave 1 independent tasks → merge → Wave 2 Task 2 → merge → Wave 3 Task 7 verification).</div>
+    </details>
+    <details>
+      <summary>What is deferred finding F1, and does it block this change from merging?</summary>
+      <div class="answer"><strong>F1: the `anchor test` (surfpool jest) suite was never re-run locally under pnpm — only `anchor-build` was, per the plan's documented scope. It does not block merging; CI's `test-anchor.yml` is correctly wired to run `pnpm run anchor test`, it just hasn't executed yet since no PR is open on this branch.</strong><br>From code-review/round-1.md's consolidated issues table and the loop summary's deferred-issues list — flagged minor, not actionable, with a recommendation to trigger CI before merging to get real confirmation.</div>
+    </details>
+    <details>
+      <summary>What is deferred finding F4, and why was it left as-is instead of fixed?</summary>
+      <div class="answer"><strong>F4: the justfile's `down-clean` recipe invokes `clean-image` twice — once implicitly via `just down` (which already calls `clean-image`), and once again explicitly. It was left as-is because it's a byte-for-byte carryover from the original makefile's `down/clean` target, and the migration's stated intent was a 1:1 behavioral mirror, not a bug fix.</strong><br>Verified in round-1.md by comparing against `git show c379028:makefile:14-23` — the double-invocation exists identically in the pre-migration makefile, so reproducing it was correct, not a defect introduced by this change.</div>
+    </details>
+    <details>
+      <summary>How many actionable (blocking/important) issues did code review round 1 find, and how many loop iterations did review take?</summary>
+      <div class="answer"><strong>Zero actionable issues, found in a single review iteration (1 of a possible ≤5) — only 4 minor/informational items were noted, all deferred rather than fixed.</strong><br>Loop summary's Review section: 'Loop iterations: 1 of ≤5', 'Actionable issues found: 0', 'Actionable issues fixed: 0'.</div>
+    </details>
+  </div>
+</section>
+
+<section>
+  <h2>Challenges &amp; decisions</h2>
+  <ul class="plain">
+    <li>Plan described the 6 tasks as sequential/dependent, but the loop's default worktree spawn is fully parallel — resolved by running 3 waves: Wave 1 = {Task 1, 3, 4, 5, 6} (mutually independent), squash-merged, then Wave 2 = {Task 2} (needed Task 1's pnpm-lock.yaml on disk), then Wave 3 = {Task 7} (verification-only, needed everything merged).</li>
+    <li>Chose `pnpm import` over a fresh `pnpm install` specifically to avoid transitive dependency version drift — verified afterward that all 29 direct dependencies resolved identically, with the only lockfile change being the anticipated postcss-override resolution metadata.</li>
+    <li>The plan's literal stray-reference verification grep false-positived against `pnpm ` (since it contains the substring `npm `); a word-boundary-aware grep was substituted in both Task 5 (docs) and Task 7 (repo-wide sweep).</li>
+    <li>Task 7 checked each chained verification command's exit code individually rather than trusting a single piped `&&` chain, since piping through something like `tail` can mask an earlier command's true exit status.</li>
+    <li>Deliberately preserved a likely-unintentional quirk from the original Makefile — the quoted, non-tilde-expanding `PROJECT_DEPLOY_KEY`/`project_deploy_key` — rather than 'fixing' it, since correcting shell-expansion semantics was judged out of scope for a pure tooling-preference migration.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Known risks &amp; deferred items</h2>
+  <ul class="plain">
+    <li>F1: `anchor test` (surfpool jest suite) was never re-run locally under pnpm post-migration — only `anchor-build` was, per the plan's documented scope. CI (`test-anchor.yml`) is correctly wired to run `pnpm run anchor test`, but hasn't actually executed yet since no PR is open on this branch; worth triggering CI before merging to get real confirmation.</li>
+    <li>F2: an informational-only 'multiple lockfiles' Next.js warning appeared during Task 1's isolated worktree build, caused by a stale sibling `package-lock.json` outside the worktree — not present in the merged repo, build exited 0, no action needed.</li>
+    <li>F3: `test-anchor.yml` and `test-web.yml` duplicate an identical 4-step pnpm/Node setup block. Pre-existing duplication pattern that also existed under npm — not introduced by this migration, not judged worth extracting for only 2 call sites.</li>
+    <li>F4: the justfile's `down-clean` recipe double-invokes `clean-image` (once via `just down`, once again explicitly) — a byte-for-byte carryover from the original makefile's `down/clean` target, intentional per the migration's 1:1-mirror requirement, not a bug.</li>
+  </ul>
+</section>
+
+</body>
+</html>
